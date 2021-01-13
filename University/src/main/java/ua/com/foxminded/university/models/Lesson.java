@@ -5,35 +5,31 @@ import java.util.Date;
 public class Lesson {
     private int lessonId;
     private String lessonName;
-    private int teacherId;
+    private Teacher teacher;
     private Group group;
     private Date date;
     
-    public Lesson(int lessonId, String lessonName, int teacherId, Group group, Date date) {
+    public Lesson(int lessonId, String lessonName, Teacher teacher, Group group, Date date) {
         super();
         this.lessonId = lessonId;
         this.lessonName = lessonName;
-        this.teacherId = teacherId;
+        this.teacher = teacher;
         this.group = group;
         this.date = date;
     }
-
+    
     public int getLessonId() {
         return lessonId;
     }
-
     public String getLessonName() {
         return lessonName;
     }
-
-    public int getTeacherId() {
-        return teacherId;
+    public Teacher getTeacher() {
+        return teacher;
     }
-
     public Group getGroup() {
         return group;
     }
-
     public Date getDate() {
         return date;
     }
@@ -45,7 +41,7 @@ public class Lesson {
         result = prime * result + ((group == null) ? 0 : group.hashCode());
         result = prime * result + lessonId;
         result = prime * result + ((lessonName == null) ? 0 : lessonName.hashCode());
-        result = prime * result + teacherId;
+        result = prime * result + ((teacher == null) ? 0 : teacher.hashCode());
         return result;
     }
 
@@ -74,13 +70,16 @@ public class Lesson {
                 return false;
         } else if (!lessonName.equals(other.lessonName))
             return false;
-        if (teacherId != other.teacherId)
+        if (teacher == null) {
+            if (other.teacher != null)
+                return false;
+        } else if (!teacher.equals(other.teacher))
             return false;
         return true;
     }
 
     public String toString() {
-        return "Lesson [lessonId=" + lessonId + ", lessonName=" + lessonName + ", teacherId=" + teacherId + ", group="
+        return "Lesson [lessonId=" + lessonId + ", lessonName=" + lessonName + ", teacher=" + teacher + ", group="
                 + group + ", date=" + date + "]";
-    } 
+    }
 }
