@@ -2,41 +2,41 @@ package ua.com.foxminded.university.models;
 
 public class Student {
     private int studentId;
-    private String studentFirstName;
-    private String studentLastName;
-    private int groupId;
-    
-    public Student(int studentId, String studentFirstName, String studentLastName, int groupId) {
+    private String firstName;
+    private String lastName;
+    private Group group;
+
+    public Student(int studentId, String firstName, String lastName, Group group) {
         super();
         this.studentId = studentId;
-        this.studentFirstName = studentFirstName;
-        this.studentLastName = studentLastName;
-        this.groupId = groupId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.group = group;
     }
 
     public int getStudentId() {
         return studentId;
     }
 
-    public String getStudentFirstName() {
-        return studentFirstName;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getStudentLastName() {
-        return studentLastName;
+    public String getLastName() {
+        return lastName;
     }
 
-    public int getGroupId() {
-        return groupId;
+    public Group getGroup() {
+        return group;
     }
 
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + groupId;
-        result = prime * result + ((studentFirstName == null) ? 0 : studentFirstName.hashCode());
+        result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
+        result = prime * result + ((group == null) ? 0 : group.hashCode());
+        result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
         result = prime * result + studentId;
-        result = prime * result + ((studentLastName == null) ? 0 : studentLastName.hashCode());
         return result;
     }
 
@@ -48,25 +48,28 @@ public class Student {
         if (getClass() != obj.getClass())
             return false;
         Student other = (Student) obj;
-        if (groupId != other.groupId)
-            return false;
-        if (studentFirstName == null) {
-            if (other.studentFirstName != null)
+        if (firstName == null) {
+            if (other.firstName != null)
                 return false;
-        } else if (!studentFirstName.equals(other.studentFirstName))
+        } else if (!firstName.equals(other.firstName))
+            return false;
+        if (group == null) {
+            if (other.group != null)
+                return false;
+        } else if (!group.equals(other.group))
+            return false;
+        if (lastName == null) {
+            if (other.lastName != null)
+                return false;
+        } else if (!lastName.equals(other.lastName))
             return false;
         if (studentId != other.studentId)
-            return false;
-        if (studentLastName == null) {
-            if (other.studentLastName != null)
-                return false;
-        } else if (!studentLastName.equals(other.studentLastName))
             return false;
         return true;
     }
 
     public String toString() {
-        return "Student [studentId=" + studentId + ", studentFirstName=" + studentFirstName + ", studentLastName="
-                + studentLastName + ", groupId=" + groupId + "]";
+        return "Student [studentId=" + studentId + ", firstName=" + firstName + ", lastName=" + lastName + ", group="
+                + group + "]";
     }
 }

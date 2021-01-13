@@ -8,7 +8,7 @@ public class Lesson {
     private Teacher teacher;
     private Group group;
     private Date date;
-    
+
     public Lesson(int lessonId, String lessonName, Teacher teacher, Group group, Date date) {
         super();
         this.lessonId = lessonId;
@@ -17,19 +17,23 @@ public class Lesson {
         this.group = group;
         this.date = date;
     }
-    
+
     public int getLessonId() {
         return lessonId;
     }
+
     public String getLessonName() {
         return lessonName;
     }
+
     public Teacher getTeacher() {
         return teacher;
     }
+
     public Group getGroup() {
         return group;
     }
+
     public Date getDate() {
         return date;
     }

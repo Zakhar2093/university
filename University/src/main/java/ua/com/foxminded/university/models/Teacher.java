@@ -1,35 +1,44 @@
 package ua.com.foxminded.university.models;
 
+import java.util.List;
+
 public class Teacher {
     private int teacherId;
-    private String teacherFirstName;
-    private String teacherLastName;
-    
-    public Teacher(int teacherId, String teacherFirstName, String teacherLastName) {
+    private String firstName;
+    private String lastName;
+    private List<Lesson> lessons;
+
+    public Teacher(int teacherId, String firstName, String lastName, List<Lesson> lessons) {
         super();
         this.teacherId = teacherId;
-        this.teacherFirstName = teacherFirstName;
-        this.teacherLastName = teacherLastName;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.lessons = lessons;
     }
-    
+
     public int getTeacherId() {
         return teacherId;
     }
-    
-    public String getTeacherFirstName() {
-        return teacherFirstName;
+
+    public String getFirstName() {
+        return firstName;
     }
-    
-    public String getTeacherLastName() {
-        return teacherLastName;
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public List<Lesson> getLessons() {
+        return lessons;
     }
 
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((teacherFirstName == null) ? 0 : teacherFirstName.hashCode());
+        result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
+        result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
+        result = prime * result + ((lessons == null) ? 0 : lessons.hashCode());
         result = prime * result + teacherId;
-        result = prime * result + ((teacherLastName == null) ? 0 : teacherLastName.hashCode());
         return result;
     }
 
@@ -41,23 +50,28 @@ public class Teacher {
         if (getClass() != obj.getClass())
             return false;
         Teacher other = (Teacher) obj;
-        if (teacherFirstName == null) {
-            if (other.teacherFirstName != null)
+        if (firstName == null) {
+            if (other.firstName != null)
                 return false;
-        } else if (!teacherFirstName.equals(other.teacherFirstName))
+        } else if (!firstName.equals(other.firstName))
+            return false;
+        if (lastName == null) {
+            if (other.lastName != null)
+                return false;
+        } else if (!lastName.equals(other.lastName))
+            return false;
+        if (lessons == null) {
+            if (other.lessons != null)
+                return false;
+        } else if (!lessons.equals(other.lessons))
             return false;
         if (teacherId != other.teacherId)
-            return false;
-        if (teacherLastName == null) {
-            if (other.teacherLastName != null)
-                return false;
-        } else if (!teacherLastName.equals(other.teacherLastName))
             return false;
         return true;
     }
 
     public String toString() {
-        return "Teacher [teacherId=" + teacherId + ", teacherFirstName=" + teacherFirstName + ", teacherLastName="
-                + teacherLastName + "]";
+        return "Teacher [teacherId=" + teacherId + ", firstName=" + firstName + ", lastName=" + lastName + ", lessons="
+                + lessons + "]";
     }
 }

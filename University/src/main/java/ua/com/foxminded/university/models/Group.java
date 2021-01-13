@@ -7,7 +7,7 @@ public class Group {
     private String groupName;
     private List<Student> students;
     private List<Lesson> lessons;
-    
+
     public Group(int groupId, String groupName, List<Student> students, List<Lesson> lessons) {
         super();
         this.groupId = groupId;
@@ -15,16 +15,19 @@ public class Group {
         this.students = students;
         this.lessons = lessons;
     }
-    
+
     public int getGroupId() {
         return groupId;
     }
+
     public String getGroupName() {
         return groupName;
     }
+
     public List<Student> getStudents() {
         return students;
     }
+
     public List<Lesson> getLessons() {
         return lessons;
     }
