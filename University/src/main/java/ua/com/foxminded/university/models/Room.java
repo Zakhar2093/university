@@ -36,6 +36,18 @@ public class Room {
         return lessons;
     }
 
+    public void setRoomId(int roomId) {
+        this.roomId = roomId;
+    }
+
+    public void setRoomNumber(int roomNumber) {
+        this.roomNumber = roomNumber;
+    }
+
+    public void setLessons(List<Lesson> lessons) {
+        this.lessons = lessons;
+    }
+
     public int hashCode() {
         final int prime = 31;
         int result = 1;

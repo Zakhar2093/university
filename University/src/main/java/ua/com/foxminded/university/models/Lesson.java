@@ -10,6 +10,10 @@ public class Lesson {
     private Room room;
     private Date date;
     
+    public Lesson() {
+        super();
+    }
+
     public Lesson(int lessonId, String lessonName, Teacher teacher, Group group, Room room, Date date) {
         super();
         this.lessonId = lessonId;
