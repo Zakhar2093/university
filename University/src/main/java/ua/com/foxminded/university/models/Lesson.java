@@ -7,35 +7,22 @@ public class Lesson {
     private String lessonName;
     private Teacher teacher;
     private Group group;
+    private Room room;
     private Date date;
-
-    public Lesson(int lessonId, String lessonName, Teacher teacher, Group group, Date date) {
+    
+    public Lesson(int lessonId, String lessonName, Teacher teacher, Group group, Room room, Date date) {
         super();
         this.lessonId = lessonId;
         this.lessonName = lessonName;
         this.teacher = teacher;
         this.group = group;
+        this.room = room;
         this.date = date;
     }
 
-    public int getLessonId() {
-        return lessonId;
-    }
-
-    public String getLessonName() {
-        return lessonName;
-    }
-
-    public Teacher getTeacher() {
-        return teacher;
-    }
-
-    public Group getGroup() {
-        return group;
-    }
-
-    public Date getDate() {
-        return date;
+    public String toString() {
+        return "Lesson [lessonId=" + lessonId + ", lessonName=" + lessonName + ", teacher=" + teacher + ", group="
+                + group + ", room=" + room + ", date=" + date + "]";
     }
 
     public int hashCode() {
@@ -45,6 +32,7 @@ public class Lesson {
         result = prime * result + ((group == null) ? 0 : group.hashCode());
         result = prime * result + lessonId;
         result = prime * result + ((lessonName == null) ? 0 : lessonName.hashCode());
+        result = prime * result + ((room == null) ? 0 : room.hashCode());
         result = prime * result + ((teacher == null) ? 0 : teacher.hashCode());
         return result;
     }
@@ -74,6 +62,11 @@ public class Lesson {
                 return false;
         } else if (!lessonName.equals(other.lessonName))
             return false;
+        if (room == null) {
+            if (other.room != null)
+                return false;
+        } else if (!room.equals(other.room))
+            return false;
         if (teacher == null) {
             if (other.teacher != null)
                 return false;
@@ -82,8 +75,51 @@ public class Lesson {
         return true;
     }
 
-    public String toString() {
-        return "Lesson [lessonId=" + lessonId + ", lessonName=" + lessonName + ", teacher=" + teacher + ", group="
-                + group + ", date=" + date + "]";
+    public int getLessonId() {
+        return lessonId;
     }
+    
+    public void setLessonId(int lessonId) {
+        this.lessonId = lessonId;
+    }
+    
+    public String getLessonName() {
+        return lessonName;
+    }
+    
+    public void setLessonName(String lessonName) {
+        this.lessonName = lessonName;
+    }
+    
+    public Teacher getTeacher() {
+        return teacher;
+    }
+    
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
+    }
+    
+    public Group getGroup() {
+        return group;
+    }
+    
+    public void setGroup(Group group) {
+        this.group = group;
+    }
+    
+    public Room getRoom() {
+        return room;
+    }
+    
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+    
+    public Date getDate() {
+        return date;
+    }
+    
+    public void setDate(Date date) {
+        this.date = date;
+    } 
 }
