@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.dao.DaoException;
-import ua.com.foxminded.university.dao.GroupDao;
+import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.models.Group;
 
 @Component

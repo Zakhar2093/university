@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.dao;
+package ua.com.foxminded.university.dao.interfaces;
 
 import java.util.List;
 

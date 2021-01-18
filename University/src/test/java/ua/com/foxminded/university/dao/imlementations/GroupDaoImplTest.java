@@ -13,8 +13,8 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import ua.com.foxminded.university.models.Group;
 import ua.com.foxminded.university.SpringConfigTest;
 import ua.com.foxminded.university.dao.DatabaseInitialization;
-import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.dao.implementations.GroupDaoImpl;
+import ua.com.foxminded.university.dao.interfaces.GroupDao;
 
 class GroupDaoImplTest {
     private DatabaseInitialization dbInit = new DatabaseInitialization();
@@ -83,5 +83,4 @@ class GroupDaoImplTest {
     void closeConext() {
         context.close();
     }
-
 }

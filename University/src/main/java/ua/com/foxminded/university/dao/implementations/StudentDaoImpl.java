@@ -11,8 +11,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.dao.DaoException;
-import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.dao.StudentMapper;
+import ua.com.foxminded.university.dao.interfaces.StudentDao;
 import ua.com.foxminded.university.models.Student;
 
 @Component    

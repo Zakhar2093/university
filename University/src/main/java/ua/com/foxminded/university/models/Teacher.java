@@ -7,6 +7,16 @@ public class Teacher {
     private String firstName;
     private String lastName;
     private List<Lesson> lessons;
+    
+    public Teacher() {
+    }
+
+    public Teacher(int teacherId, String firstName, String lastName) {
+        super();
+        this.teacherId = teacherId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 
     public Teacher(int teacherId, String firstName, String lastName, List<Lesson> lessons) {
         super();
@@ -26,6 +36,22 @@ public class Teacher {
 
     public String getLastName() {
         return lastName;
+    }
+
+    public void setTeacherId(int teacherId) {
+        this.teacherId = teacherId;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setLessons(List<Lesson> lessons) {
+        this.lessons = lessons;
     }
 
     public List<Lesson> getLessons() {

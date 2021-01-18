@@ -12,10 +12,10 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import ua.com.foxminded.university.SpringConfigTest;
 import ua.com.foxminded.university.dao.DatabaseInitialization;
-import ua.com.foxminded.university.dao.GroupDao;
-import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.dao.implementations.GroupDaoImpl;
 import ua.com.foxminded.university.dao.implementations.StudentDaoImpl;
+import ua.com.foxminded.university.dao.interfaces.GroupDao;
+import ua.com.foxminded.university.dao.interfaces.StudentDao;
 import ua.com.foxminded.university.models.Group;
 import ua.com.foxminded.university.models.Student;
 

@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.dao;
+package ua.com.foxminded.university.dao.interfaces;
 
 import ua.com.foxminded.university.models.Student;
 
