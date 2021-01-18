@@ -6,6 +6,9 @@ public class Student {
     private String lastName;
     private Group group;
 
+    public Student() {
+    }
+
     public Student(int studentId, String firstName, String lastName, Group group) {
         super();
         this.studentId = studentId;
@@ -28,6 +31,22 @@ public class Student {
 
     public Group getGroup() {
         return group;
+    }
+
+    public void setStudentId(int studentId) {
+        this.studentId = studentId;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
     }
 
     public int hashCode() {
