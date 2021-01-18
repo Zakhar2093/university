@@ -6,6 +6,16 @@ public class Room {
     private int roomId;
     private int roomNumber;
     private List<Lesson> lessons;
+    
+    public Room() {
+        super();
+    }
+
+    public Room(int roomId, int roomNumber) {
+        super();
+        this.roomId = roomId;
+        this.roomNumber = roomNumber;
+    }
 
     public Room(int roomId, int roomNumber, List<Lesson> lessons) {
         super();
