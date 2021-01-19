@@ -23,12 +23,14 @@ public class StudentDaoImpl implements StudentDao {
     private final static String PROPERTY_NAME = "src/main/resources/SqlQueries.properties";
     private final JdbcTemplate jdbcTemplate;
     private final PropertyReader propertyReader;
+    private GroupDaoImpl groupDaoImpl;
 
     @Autowired
-    public StudentDaoImpl(JdbcTemplate jdbcTemplate, PropertyReader propertyReader) {
+    public StudentDaoImpl(JdbcTemplate jdbcTemplate, PropertyReader propertyReader, GroupDaoImpl groupDaoImpl) {
         super();
         this.jdbcTemplate = jdbcTemplate;
         this.propertyReader = propertyReader;
+        this.groupDaoImpl = groupDaoImpl;
     }
     
     public void create(Student student) {
@@ -45,7 +47,7 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     public List<Student> getAll() {
-        return jdbcTemplate.query(propertyReader.read(PROPERTY_NAME, "student.getAll"), new StudentMapper());
+        return jdbcTemplate.query(propertyReader.read(PROPERTY_NAME, "student.getAll"), new StudentMapper(groupDaoImpl));
     }
 
     public Student getById(Integer studentId) {
@@ -53,7 +55,7 @@ public class StudentDaoImpl implements StudentDao {
                 .query(
                         propertyReader.read(PROPERTY_NAME, "student.getById"), 
                         new Object[]{studentId}, 
-                        new StudentMapper()
+                        new StudentMapper(groupDaoImpl)
                         )
                 .stream()
                 .findAny()

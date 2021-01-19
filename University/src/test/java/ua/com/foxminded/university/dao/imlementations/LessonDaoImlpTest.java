@@ -53,7 +53,7 @@ class LessonDaoImlpTest {
         Room room = new Room(1, 101);
         roomDao.create(room);
         
-        Lesson lesson = new Lesson(1, "Math", teacher, group, room, new Date(1));
+        Lesson lesson = new Lesson(1, "Math", teacher, group, room, null);
         lessonDao.create(lesson);
         Lesson expected = lesson;
         Lesson actual = lessonDao.getById(1);
@@ -109,7 +109,7 @@ class LessonDaoImlpTest {
         
         
         Lesson lessonBeforeUpdating = new Lesson(1, "Math", teacher, group, room, new Date(1));
-        Lesson lessonAfterUpdating = new Lesson(1, "Math", teacher, group, room, new Date(1));
+        Lesson lessonAfterUpdating = new Lesson(1, "Math", teacher2, group, room, new Date(1));
         lessonDao.create(lessonBeforeUpdating);
         lessonDao.update(lessonAfterUpdating);
         Lesson expected = lessonAfterUpdating;

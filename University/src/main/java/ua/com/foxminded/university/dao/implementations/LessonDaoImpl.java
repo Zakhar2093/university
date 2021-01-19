@@ -12,7 +12,10 @@ import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.dao.DaoException;
+import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.dao.interfaces.LessonDao;
+import ua.com.foxminded.university.dao.interfaces.RoomDao;
+import ua.com.foxminded.university.dao.interfaces.TeacherDao;
 import ua.com.foxminded.university.dao.mappers.LessonMapper;
 import ua.com.foxminded.university.models.Lesson;
 
@@ -22,15 +25,23 @@ public class LessonDaoImpl implements LessonDao{
     private final static String PROPERTY_NAME = "src/main/resources/SqlQueries.properties";
     private final JdbcTemplate jdbcTemplate;
     private final PropertyReader propertyReader;
+    
+    private GroupDao groupDao;
+    private TeacherDao teacherDao;
+    private RoomDao roomDao;
 
-    @Autowired
-    public LessonDaoImpl(JdbcTemplate jdbcTemplate, PropertyReader propertyReader) {
+    @Autowired 
+    public LessonDaoImpl(JdbcTemplate jdbcTemplate, PropertyReader propertyReader, GroupDao groupDao,
+            TeacherDao teacherDao, RoomDao roomDao) {
         super();
         this.jdbcTemplate = jdbcTemplate;
         this.propertyReader = propertyReader;
+        this.groupDao = groupDao;
+        this.teacherDao = teacherDao;
+        this.roomDao = roomDao;
     }
 
-    
+
     public void create(Lesson lesson) {
         jdbcTemplate.update(
                 propertyReader.read(PROPERTY_NAME, "lesson.create"), 
@@ -48,7 +59,7 @@ public class LessonDaoImpl implements LessonDao{
     }
 
     public List<Lesson> getAll() {
-        return jdbcTemplate.query(propertyReader.read(PROPERTY_NAME, "lesson.getAll"), new LessonMapper());
+        return jdbcTemplate.query(propertyReader.read(PROPERTY_NAME, "lesson.getAll"), new LessonMapper(groupDao, teacherDao, roomDao));
     }
 
     public Lesson getById(Integer lessonId) {
@@ -56,7 +67,7 @@ public class LessonDaoImpl implements LessonDao{
                 .query(
                         propertyReader.read(PROPERTY_NAME, "lesson.getById"), 
                         new Object[] { lessonId },
-                        new LessonMapper()
+                        new LessonMapper(groupDao, teacherDao, roomDao)
                         )
                 .stream()
                 .findAny()
