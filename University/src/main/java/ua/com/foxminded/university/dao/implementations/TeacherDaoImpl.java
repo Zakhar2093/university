@@ -1,16 +1,12 @@
 package ua.com.foxminded.university.dao.implementations;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.List;
-import java.util.Properties;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.interfaces.TeacherDao;
 import ua.com.foxminded.university.models.Teacher;
@@ -18,47 +14,53 @@ import ua.com.foxminded.university.models.Teacher;
 @Component
 public class TeacherDaoImpl implements TeacherDao{
     
+    private final static String PROPERTY_NAME = "src/main/resources/SqlQueries.properties";
     private final JdbcTemplate jdbcTemplate;
+    private final PropertyReader propertyReader;
 
     @Autowired
-    public TeacherDaoImpl(JdbcTemplate jdbcTemplate) {
+    public TeacherDaoImpl(JdbcTemplate jdbcTemplate, PropertyReader propertyReader) {
         super();
         this.jdbcTemplate = jdbcTemplate;
+        this.propertyReader = propertyReader;
     }
     
     public void create(Teacher teacher) {
-        jdbcTemplate.update(readProperty("Teacher_create"), teacher.getFirstName(), teacher.getLastName());
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "teacher.create"), 
+                teacher.getFirstName(),
+                teacher.getLastName()
+                );
     }
 
     public void delete(Integer teacherId) {
-        jdbcTemplate.update(readProperty("Teacher_delete"), teacherId);
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "teacher.delete"), teacherId);
     }
 
     public List<Teacher> getAll() {
-        return jdbcTemplate.query(readProperty("Teacher_getAll"), new BeanPropertyRowMapper<>(Teacher.class));
+        return jdbcTemplate.query(
+                propertyReader.read(PROPERTY_NAME, "teacher.getAll"),
+                new BeanPropertyRowMapper<>(Teacher.class)
+                );
     }
 
     public Teacher getById(Integer teacherId) {
-        return jdbcTemplate.query(readProperty("Teacher_getById"), new Object[]{teacherId}, new BeanPropertyRowMapper<>(Teacher.class))
-                .stream().findAny().orElseThrow(() -> new DaoException("Teacher with such id does not exist"));
+        return jdbcTemplate
+                .query(
+                        propertyReader.read(PROPERTY_NAME, "teacher.getById"), 
+                        new Object[]{teacherId}, 
+                        new BeanPropertyRowMapper<>(Teacher.class)
+                        )
+                .stream()
+                .findAny()
+                .orElseThrow(() -> new DaoException("Teacher with such id does not exist"));
     }
 
     public void update(Teacher teacher) {
-        jdbcTemplate.update(readProperty("Teacher_update"), teacher.getFirstName(), 
-                                                            teacher.getLastName(), 
-                                                            teacher.getTeacherId());
-    }
-    
-    private String readProperty(String key) {
-        Properties property = new Properties();
-        try {
-            FileInputStream fis = new FileInputStream("src/main/resources/SqlQueries.properties");
-            property.load(fis);
-        } catch (FileNotFoundException e1) {
-            e1.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return property.getProperty(key);
+        jdbcTemplate.update(
+                propertyReader.read(PROPERTY_NAME, "teacher.update"), 
+                teacher.getFirstName(), 
+                teacher.getLastName(), 
+                teacher.getTeacherId()
+                );
     }
 }
