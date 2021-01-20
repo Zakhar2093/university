@@ -3,7 +3,7 @@ package ua.com.foxminded.university.dao.imlementations;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
@@ -53,7 +53,7 @@ class LessonDaoImlpTest {
         Room room = new Room(1, 101);
         roomDao.create(room);
         
-        Lesson lesson = new Lesson(1, "Math", teacher, group, room, null);
+        Lesson lesson = new Lesson(1, "Math", teacher, group, room, new Date());
         lessonDao.create(lesson);
         Lesson expected = lesson;
         Lesson actual = lessonDao.getById(1);
@@ -70,9 +70,9 @@ class LessonDaoImlpTest {
         roomDao.create(room);
         
         List<Lesson> lessons = new ArrayList<>();
-        lessons.add(new Lesson(1, "Math", teacher, group, room, new Date(1)));
-        lessons.add(new Lesson(2, "Bio", teacher, group, room, new Date(1)));
-        lessons.add(new Lesson(3, "History", teacher, group, room, new Date(1)));
+        lessons.add(new Lesson(1, "Math", teacher, group, room, new Date()));
+        lessons.add(new Lesson(2, "Bio", teacher, group, room, new Date()));
+        lessons.add(new Lesson(3, "History", teacher, group, room, new Date()));
         lessonDao.create(lessons.get(0));
         lessonDao.create(lessons.get(1));
         lessonDao.create(lessons.get(2));
@@ -90,7 +90,7 @@ class LessonDaoImlpTest {
         Room room = new Room(1, 101);
         roomDao.create(room);
         
-        lessonDao.create(new Lesson(1, "Math", teacher, group, room, new Date(1)));
+        lessonDao.create(new Lesson(1, "Math", teacher, group, room, new Date()));
         lessonDao.delete(1);
         List<Lesson> actual = lessonDao.getAll();
         assertTrue(actual.size() == 0);
@@ -103,13 +103,13 @@ class LessonDaoImlpTest {
         Teacher teacher = new Teacher(1, "one", "one");
         teacherDao.create(teacher);
         Teacher teacher2 = new Teacher(2, "two", "two");
-        teacherDao.create(teacher);
+        teacherDao.create(teacher2);
         Room room = new Room(1, 101);
         roomDao.create(room);
         
         
-        Lesson lessonBeforeUpdating = new Lesson(1, "Math", teacher, group, room, new Date(1));
-        Lesson lessonAfterUpdating = new Lesson(1, "Math", teacher2, group, room, new Date(1));
+        Lesson lessonBeforeUpdating = new Lesson(1, "Math", teacher, group, room, new Date());
+        Lesson lessonAfterUpdating = new Lesson(1, "Bio", teacher, group, room, new Date());
         lessonDao.create(lessonBeforeUpdating);
         lessonDao.update(lessonAfterUpdating);
         Lesson expected = lessonAfterUpdating;

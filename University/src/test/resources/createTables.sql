@@ -41,7 +41,7 @@ CREATE TABLE university.lessons(
     teacher_id INTEGER,
     group_id INTEGER,
     room_id INTEGER,
-    lesson_date date,
+    lesson_date timestamp,
     PRIMARY KEY (lesson_id),
     FOREIGN KEY (teacher_id) REFERENCES university.teachers(teacher_id),
     FOREIGN KEY (group_id) REFERENCES university.groups(group_id),
