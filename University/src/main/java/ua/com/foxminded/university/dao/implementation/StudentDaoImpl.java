@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.dao.implementations;
+package ua.com.foxminded.university.dao.implementation;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -14,8 +14,8 @@ import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.interfaces.RoomDao;
 import ua.com.foxminded.university.dao.interfaces.StudentDao;
-import ua.com.foxminded.university.dao.mappers.StudentMapper;
-import ua.com.foxminded.university.models.Student;
+import ua.com.foxminded.university.dao.mapper.StudentMapper;
+import ua.com.foxminded.university.model.Student;
 
 @Component    
 public class StudentDaoImpl implements StudentDao {

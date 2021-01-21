@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.dao.imlementations;
+package ua.com.foxminded.university.dao.imlementation;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,9 +12,9 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import ua.com.foxminded.university.SpringConfigTest;
 import ua.com.foxminded.university.dao.DatabaseInitialization;
-import ua.com.foxminded.university.dao.implementations.RoomDaoImpl;
+import ua.com.foxminded.university.dao.implementation.RoomDaoImpl;
 import ua.com.foxminded.university.dao.interfaces.RoomDao;
-import ua.com.foxminded.university.models.Room;
+import ua.com.foxminded.university.model.Room;
 
 class RoomDaoImplTest {
     private DatabaseInitialization dbInit = new DatabaseInitialization();

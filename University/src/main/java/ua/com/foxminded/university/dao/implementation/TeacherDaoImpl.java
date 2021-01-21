@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.dao.implementations;
+package ua.com.foxminded.university.dao.implementation;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.interfaces.TeacherDao;
-import ua.com.foxminded.university.models.Teacher;
+import ua.com.foxminded.university.model.Teacher;
 
 @Component
 public class TeacherDaoImpl implements TeacherDao{

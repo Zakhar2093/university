@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.dao.implementations;
+package ua.com.foxminded.university.dao.implementation;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,10 +12,10 @@ import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.dao.interfaces.LessonDao;
 import ua.com.foxminded.university.dao.interfaces.RoomDao;
 import ua.com.foxminded.university.dao.interfaces.TeacherDao;
-import ua.com.foxminded.university.dao.mappers.LessonMapper;
-import ua.com.foxminded.university.models.Lesson;
-import ua.com.foxminded.university.models.Student;
-import ua.com.foxminded.university.models.Teacher;
+import ua.com.foxminded.university.dao.mapper.LessonMapper;
+import ua.com.foxminded.university.model.Lesson;
+import ua.com.foxminded.university.model.Student;
+import ua.com.foxminded.university.model.Teacher;
 
 @Component
 public class LessonDaoImpl implements LessonDao{

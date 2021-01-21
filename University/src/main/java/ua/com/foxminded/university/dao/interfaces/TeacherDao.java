@@ -1,6 +1,6 @@
 package ua.com.foxminded.university.dao.interfaces;
 
-import ua.com.foxminded.university.models.Teacher;
+import ua.com.foxminded.university.model.Teacher;
 
 public interface TeacherDao extends GenericDao<Teacher, Integer>{
 

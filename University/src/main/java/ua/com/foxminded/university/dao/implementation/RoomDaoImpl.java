@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.dao.implementations;
+package ua.com.foxminded.university.dao.implementation;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.interfaces.RoomDao;
-import ua.com.foxminded.university.models.Room;
+import ua.com.foxminded.university.model.Room;
 
 @Component
 public class RoomDaoImpl implements RoomDao {

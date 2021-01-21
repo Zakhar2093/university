@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.dao.imlementations;
+package ua.com.foxminded.university.dao.imlementation;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,21 +14,21 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import ua.com.foxminded.university.SpringConfigTest;
 import ua.com.foxminded.university.dao.DatabaseInitialization;
-import ua.com.foxminded.university.dao.implementations.GroupDaoImpl;
-import ua.com.foxminded.university.dao.implementations.LessonDaoImpl;
-import ua.com.foxminded.university.dao.implementations.RoomDaoImpl;
-import ua.com.foxminded.university.dao.implementations.StudentDaoImpl;
-import ua.com.foxminded.university.dao.implementations.TeacherDaoImpl;
+import ua.com.foxminded.university.dao.implementation.GroupDaoImpl;
+import ua.com.foxminded.university.dao.implementation.LessonDaoImpl;
+import ua.com.foxminded.university.dao.implementation.RoomDaoImpl;
+import ua.com.foxminded.university.dao.implementation.StudentDaoImpl;
+import ua.com.foxminded.university.dao.implementation.TeacherDaoImpl;
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.dao.interfaces.LessonDao;
 import ua.com.foxminded.university.dao.interfaces.RoomDao;
 import ua.com.foxminded.university.dao.interfaces.StudentDao;
 import ua.com.foxminded.university.dao.interfaces.TeacherDao;
-import ua.com.foxminded.university.models.Group;
-import ua.com.foxminded.university.models.Lesson;
-import ua.com.foxminded.university.models.Room;
-import ua.com.foxminded.university.models.Student;
-import ua.com.foxminded.university.models.Teacher;
+import ua.com.foxminded.university.model.Group;
+import ua.com.foxminded.university.model.Lesson;
+import ua.com.foxminded.university.model.Room;
+import ua.com.foxminded.university.model.Student;
+import ua.com.foxminded.university.model.Teacher;
 
 class LessonDaoImlpTest {
     private static final String FORMATTER = "yyyy.MM.dd-HH.mm.ss";

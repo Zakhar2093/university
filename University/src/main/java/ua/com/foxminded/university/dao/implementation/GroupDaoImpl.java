@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.dao.implementations;
+package ua.com.foxminded.university.dao.implementation;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
-import ua.com.foxminded.university.models.Group;
+import ua.com.foxminded.university.model.Group;
 
 @Component
 public class GroupDaoImpl implements GroupDao {

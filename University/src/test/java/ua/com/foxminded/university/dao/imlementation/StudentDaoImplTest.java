@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.dao.imlementations;
+package ua.com.foxminded.university.dao.imlementation;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,12 +12,12 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import ua.com.foxminded.university.SpringConfigTest;
 import ua.com.foxminded.university.dao.DatabaseInitialization;
-import ua.com.foxminded.university.dao.implementations.GroupDaoImpl;
-import ua.com.foxminded.university.dao.implementations.StudentDaoImpl;
+import ua.com.foxminded.university.dao.implementation.GroupDaoImpl;
+import ua.com.foxminded.university.dao.implementation.StudentDaoImpl;
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.dao.interfaces.StudentDao;
-import ua.com.foxminded.university.models.Group;
-import ua.com.foxminded.university.models.Student;
+import ua.com.foxminded.university.model.Group;
+import ua.com.foxminded.university.model.Student;
 
 class StudentDaoImplTest {
 

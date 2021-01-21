@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.dao.mappers;
+package ua.com.foxminded.university.dao.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,13 +8,13 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.SpringConfig;
-import ua.com.foxminded.university.dao.implementations.GroupDaoImpl;
-import ua.com.foxminded.university.dao.implementations.RoomDaoImpl;
-import ua.com.foxminded.university.dao.implementations.TeacherDaoImpl;
+import ua.com.foxminded.university.dao.implementation.GroupDaoImpl;
+import ua.com.foxminded.university.dao.implementation.RoomDaoImpl;
+import ua.com.foxminded.university.dao.implementation.TeacherDaoImpl;
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.dao.interfaces.RoomDao;
 import ua.com.foxminded.university.dao.interfaces.TeacherDao;
-import ua.com.foxminded.university.models.Lesson;
+import ua.com.foxminded.university.model.Lesson;
 
 @Component
 public class LessonMapper implements RowMapper<Lesson>{

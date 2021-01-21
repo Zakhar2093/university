@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.dao.mappers;
+package ua.com.foxminded.university.dao.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.dao.implementations.GroupDaoImpl;
+import ua.com.foxminded.university.dao.implementation.GroupDaoImpl;
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
-import ua.com.foxminded.university.models.Student;
+import ua.com.foxminded.university.model.Student;
 
 @Component
 public class StudentMapper implements RowMapper<Student> {

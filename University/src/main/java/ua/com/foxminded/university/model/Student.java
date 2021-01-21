@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.models;
+package ua.com.foxminded.university.model;
 
 public class Student {
     private int studentId;
