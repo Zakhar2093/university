@@ -45,7 +45,7 @@ class TeacherDaoImplTest {
     }
 
     @Test
-    void whenCreateAndGetByIdAreColledSouldInsertAndGetCorrectData() {
+    void getByIdAndCreateSouldInsertAndGetCorrectData() {
         Teacher teacher = new Teacher(1, "one", "one");
         teacherDao.create(teacher);
         Teacher expected = teacher;
@@ -54,7 +54,7 @@ class TeacherDaoImplTest {
     }
 
     @Test
-    void whenCreateAndGetAllAreColledSouldInsertAndGetCorrectData() {
+    void getAllAndCreateSouldInsertAndGetCorrectData() {
         List<Teacher> teachers = new ArrayList<>();
         teachers.add(new Teacher(1, "one", "one"));
         teachers.add(new Teacher(2, "two", "two"));
@@ -68,7 +68,7 @@ class TeacherDaoImplTest {
     }
 
     @Test
-    void whenDeleteIsColledSouldDeleteCorrectData() {
+    void deleteSouldDeleteCorrectData() {
         Group group = new Group(1, "any name");
         groupDao.create(group);
         Teacher teacher = new Teacher(1, "one", "one");
@@ -84,7 +84,7 @@ class TeacherDaoImplTest {
     }
 
     @Test
-    void whenUpdateIsColledSouldUpdateCorrectData() {
+    void updateSouldUpdateCorrectData() {
         Teacher groupBeforeUpdating = new Teacher(1, "one", "one");
         Teacher groupAfterUpdating = new Teacher(1, "two", "one");
         teacherDao.create(groupBeforeUpdating);

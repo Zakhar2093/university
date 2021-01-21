@@ -45,7 +45,7 @@ class RoomDaoImplTest {
     }
 
     @Test
-    void whenCreateAndGetByIdAreColledSouldInsertAndGetCorrectData() {
+    void getByIdAndCreateSouldInsertAndGetCorrectData() {
         Room room = new Room(1, 101);
         roomDao.create(room);
         Room expected = room;
@@ -54,7 +54,7 @@ class RoomDaoImplTest {
     }
 
     @Test
-    void whenCreateAndGetAllAreColledSouldInsertAndGetCorrectData() {
+    void getAllAndCreateSouldInsertAndGetCorrectData() {
         List<Room> rooms = new ArrayList<>();
         rooms.add(new Room(1, 101));
         rooms.add(new Room(2, 102));
@@ -68,7 +68,7 @@ class RoomDaoImplTest {
     }
 
     @Test
-    void whenDeleteIsColledSouldDeleteCorrectData() {
+    void deleteSouldDeleteCorrectData() {
         Group group = new Group(1, "any name");
         groupDao.create(group);
         Teacher teacher = new Teacher(1, "one", "one");
@@ -84,7 +84,7 @@ class RoomDaoImplTest {
     }
 
     @Test
-    void whenUpdateIsColledSouldUpdateCorrectData() {
+    void updateIsColledSouldUpdateCorrectData() {
         Room groupBeforeUpdating = new Room(1, 101);
         Room groupAfterUpdating = new Room(1, 102);
         roomDao.create(groupBeforeUpdating);

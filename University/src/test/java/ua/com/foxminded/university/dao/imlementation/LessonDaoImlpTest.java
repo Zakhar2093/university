@@ -10,7 +10,9 @@ import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.SpringConfigTest;
 import ua.com.foxminded.university.dao.DatabaseInitialization;
@@ -30,15 +32,21 @@ import ua.com.foxminded.university.model.Room;
 import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.model.Teacher;
 
+@Component
 class LessonDaoImlpTest {
     private static final String FORMAT = "yyyy.MM.dd-HH.mm.ss";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(FORMAT);
     private DatabaseInitialization dbInit = new DatabaseInitialization();
     private AnnotationConfigApplicationContext context;
+//    @Autowired
     private LessonDao lessonDao;
+//    @Autowired
     private GroupDao groupDao;
+//    @Autowired
     private TeacherDao teacherDao;
+//    @Autowired
     private RoomDao roomDao;
+//    @Autowired
     private StudentDao studentDao;
 
     @BeforeEach
@@ -53,7 +61,7 @@ class LessonDaoImlpTest {
     }
 
     @Test
-    void whenCreateAndGetByIdAreColledSouldInsertAndGetCorrectData() {
+    void getByIdAndCreateSouldInsertAndGetCorrectData() {
         Group group = new Group(1, "any name");
         groupDao.create(group);
         Teacher teacher = new Teacher(1, "one", "one");
@@ -70,7 +78,7 @@ class LessonDaoImlpTest {
     }
 
     @Test
-    void whenCreateAndGetAllAreColledSouldInsertAndGetCorrectData() {
+    void getAllAndCreateSouldInsertAndGetCorrectData() {
         Group group = new Group(1, "any name");
         groupDao.create(group);
         Teacher teacher = new Teacher(1, "one", "one");
@@ -92,7 +100,7 @@ class LessonDaoImlpTest {
     }
 
     @Test
-    void whenDeleteIsColledSouldDeleteCorrectData() {
+    void deleteSouldDeleteCorrectData() {
         Group group = new Group(1, "any name");
         groupDao.create(group);
         Teacher teacher = new Teacher(1, "one", "one");
@@ -108,7 +116,7 @@ class LessonDaoImlpTest {
     }
 
     @Test
-    void whenUpdateIsColledSouldUpdateCorrectData() {
+    void updateSouldUpdateCorrectData() {
         Group group = new Group(1, "any name");
         groupDao.create(group);
         Teacher teacher = new Teacher(1, "one", "one");

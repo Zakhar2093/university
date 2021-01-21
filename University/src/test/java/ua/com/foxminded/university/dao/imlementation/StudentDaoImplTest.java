@@ -36,7 +36,7 @@ class StudentDaoImplTest {
     }
 
     @Test
-    void whenCreateAndGetByIdAreColledSouldInsertAndGetCorrectData() {
+    void getByIdAndCreateSouldInsertAndGetCorrectData() {
         Group group = new Group(1, "any name");
         groupDao.create(group);
         Student student = new Student(1, "one", "one", group);
@@ -47,7 +47,7 @@ class StudentDaoImplTest {
     }
 
     @Test
-    void whenCreateAndGetAllAreColledSouldInsertAndGetCorrectData() {
+    void getAllAndCreateSouldInsertAndGetCorrectData() {
         List<Student> students = new ArrayList<>();
         Group group = new Group(1, "any name");
         groupDao.create(group);
@@ -63,7 +63,7 @@ class StudentDaoImplTest {
     }
 
     @Test
-    void whenDeleteIsColledSouldDeleteCorrectData() {
+    void deleteSouldDeleteCorrectData() {
         Group group = new Group(1, "any name");
         groupDao.create(group);
         studentDao.create(new Student(1, "one", "one", group));
@@ -73,7 +73,7 @@ class StudentDaoImplTest {
     }
 
     @Test
-    void whenUpdateIsColledSouldUpdateCorrectData() {
+    void updateSouldUpdateCorrectData() {
         Group group = new Group(1, "any name");
         groupDao.create(group);
         Student studentBeforeUpdating = new Student(1, "one", "one", group);
