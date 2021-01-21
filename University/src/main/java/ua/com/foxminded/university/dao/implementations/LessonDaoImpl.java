@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.dao.implementations;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,6 +14,8 @@ import ua.com.foxminded.university.dao.interfaces.RoomDao;
 import ua.com.foxminded.university.dao.interfaces.TeacherDao;
 import ua.com.foxminded.university.dao.mappers.LessonMapper;
 import ua.com.foxminded.university.models.Lesson;
+import ua.com.foxminded.university.models.Student;
+import ua.com.foxminded.university.models.Teacher;
 
 @Component
 public class LessonDaoImpl implements LessonDao{
@@ -36,7 +39,6 @@ public class LessonDaoImpl implements LessonDao{
         this.roomDao = roomDao;
     }
 
-
     public void create(Lesson lesson) {
         jdbcTemplate.update(
                 propertyReader.read(PROPERTY_NAME, "lesson.create"), 
@@ -47,7 +49,6 @@ public class LessonDaoImpl implements LessonDao{
                 lesson.getDate()
                 );
     }
-
 
     public void delete(Integer lessonId) {
         jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.delete"), lessonId);
@@ -78,6 +79,52 @@ public class LessonDaoImpl implements LessonDao{
                 lesson.getRoom().getRoomId(),
                 lesson.getDate(),
                 lesson.getLessonId()
+                );
+    }
+    
+    public List<Lesson> getLessonByTeacherForDay(Teacher teacher, LocalDateTime date){
+        int teacherId = teacher.getTeacherId();
+        int year = date.getYear();
+        int mounth = date.getMonthValue();
+        int day = date.getDayOfMonth();
+        return jdbcTemplate.query(
+                propertyReader.read(PROPERTY_NAME, "lesson.getLessonByTeacherForDay"), 
+                new Object[] { teacherId, year, mounth, day }, 
+                new LessonMapper(groupDao, teacherDao, roomDao)
+                );
+    }
+    
+    public List<Lesson> getLessonByTeacherForMonth(Teacher teacher, LocalDateTime date){
+        int teacherId = teacher.getTeacherId();
+        int year = date.getYear();
+        int mounth = date.getMonthValue();
+        return jdbcTemplate.query(
+                propertyReader.read(PROPERTY_NAME, "lesson.getLessonByTeacherForMonth"), 
+                new Object[] { teacherId, year, mounth}, 
+                new LessonMapper(groupDao, teacherDao, roomDao)
+                );
+    }
+    
+    public List<Lesson> getLessonByStudentForDay(Student student, LocalDateTime date){
+        int studentId = student.getStudentId();
+        int year = date.getYear();
+        int mounth = date.getMonthValue();
+        int day = date.getDayOfMonth();
+        return jdbcTemplate.query(
+                propertyReader.read(PROPERTY_NAME, "lesson.getLessonByStudentForDay"), 
+                new Object[] { studentId, year, mounth, day}, 
+                new LessonMapper(groupDao, teacherDao, roomDao)
+                );
+    }
+    
+    public List<Lesson> getLessonByStudentForMonth(Student student, LocalDateTime date){
+        int studentId = student.getStudentId();
+        int year = date.getYear();
+        int mounth = date.getMonthValue();
+        return jdbcTemplate.query(
+                propertyReader.read(PROPERTY_NAME, "lesson.getLessonByStudentForMonth"), 
+                new Object[] { studentId, year, mounth}, 
+                new LessonMapper(groupDao, teacherDao, roomDao)
                 );
     }
 }

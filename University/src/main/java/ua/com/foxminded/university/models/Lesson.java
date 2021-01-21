@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.models;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class Lesson {
@@ -8,13 +9,13 @@ public class Lesson {
     private Teacher teacher;
     private Group group;
     private Room room;
-    private Date date;
+    private LocalDateTime date;
     
     public Lesson() {
         super();
     }
 
-    public Lesson(int lessonId, String lessonName, Teacher teacher, Group group, Room room, Date date) {
+    public Lesson(int lessonId, String lessonName, Teacher teacher, Group group, Room room, LocalDateTime date) {
         super();
         this.lessonId = lessonId;
         this.lessonName = lessonName;
@@ -119,11 +120,11 @@ public class Lesson {
         this.room = room;
     }
     
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
     
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
-    } 
+    }
 }
