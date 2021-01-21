@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.dao.DaoException;
@@ -57,7 +58,9 @@ public class RoomDaoImpl implements RoomDao {
         jdbcTemplate.update(propertyReader.read(propertyName, "room.update"), room.getRoomNumber(), room.getRoomId());
     }
 
+    @Transactional
     public void delete(Integer roomId) {
+        jdbcTemplate.update(propertyReader.read(propertyName, "room.deleteRoomFromLesson"), roomId);
         jdbcTemplate.update(propertyReader.read(propertyName, "room.delete"), roomId);
     }
 }

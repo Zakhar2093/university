@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.dao.DaoException;
@@ -32,7 +33,9 @@ public class TeacherDaoImpl implements TeacherDao{
                 );
     }
 
+    @Transactional
     public void delete(Integer teacherId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "teacher.deleteteacherFromLesson"), teacherId);
         jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "teacher.delete"), teacherId);
     }
 

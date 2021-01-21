@@ -31,7 +31,8 @@ import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.model.Teacher;
 
 class LessonDaoImlpTest {
-    private static final String FORMATTER = "yyyy.MM.dd-HH.mm.ss";
+    private static final String FORMAT = "yyyy.MM.dd-HH.mm.ss";
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(FORMAT);
     private DatabaseInitialization dbInit = new DatabaseInitialization();
     private AnnotationConfigApplicationContext context;
     private LessonDao lessonDao;
@@ -60,7 +61,6 @@ class LessonDaoImlpTest {
         Room room = new Room(1, 101);
         roomDao.create(room);
         LocalDateTime date = LocalDateTime.now();
-        
         
         Lesson lesson = new Lesson(1, "Math", teacher, group, room, date);
         lessonDao.create(lesson);
@@ -142,11 +142,10 @@ class LessonDaoImlpTest {
         Room room = new Room(1, 101);
         roomDao.create(room);
         
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(FORMATTER);
-        LocalDateTime date1 = LocalDateTime.parse("2021.01.20-23.55.11", formatter);
-        LocalDateTime date2 = LocalDateTime.parse("2021.01.21-03.00.00", formatter);
-        LocalDateTime date3 = LocalDateTime.parse("2021.01.21-23.55.11", formatter);
-        LocalDateTime date4 = LocalDateTime.parse("2021.02.11-23.55.11", formatter);
+        LocalDateTime date1 = LocalDateTime.parse("2021.01.20-23.55.11", FORMATTER);
+        LocalDateTime date2 = LocalDateTime.parse("2021.01.21-03.00.00", FORMATTER);
+        LocalDateTime date3 = LocalDateTime.parse("2021.01.21-23.55.11", FORMATTER);
+        LocalDateTime date4 = LocalDateTime.parse("2021.02.11-23.55.11", FORMATTER);
         
         Lesson lesson1 = new Lesson(1, "Math", teacher, group, room, date1);
         Lesson lesson2 = new Lesson(2, "bio", teacher, group, room, date2);
@@ -179,11 +178,10 @@ class LessonDaoImlpTest {
         Room room = new Room(1, 101);
         roomDao.create(room);
         
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(FORMATTER);
-        LocalDateTime date1 = LocalDateTime.parse("2021.01.20-23.55.11", formatter);
-        LocalDateTime date2 = LocalDateTime.parse("2021.01.21-03.00.00", formatter);
-        LocalDateTime date3 = LocalDateTime.parse("2021.01.21-23.55.11", formatter);
-        LocalDateTime date4 = LocalDateTime.parse("2021.02.11-23.55.11", formatter);
+        LocalDateTime date1 = LocalDateTime.parse("2021.01.20-23.55.11", FORMATTER);
+        LocalDateTime date2 = LocalDateTime.parse("2021.01.21-03.00.00", FORMATTER);
+        LocalDateTime date3 = LocalDateTime.parse("2021.01.21-23.55.11", FORMATTER);
+        LocalDateTime date4 = LocalDateTime.parse("2021.02.11-23.55.11", FORMATTER);
         
         Lesson lesson1 = new Lesson(1, "Math", teacher, group, room, date1);
         Lesson lesson2 = new Lesson(2, "bio", teacher, group, room, date2);
@@ -221,11 +219,10 @@ class LessonDaoImlpTest {
         studentDao.create(student1);
         studentDao.create(student2);
         
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(FORMATTER);
-        LocalDateTime date1 = LocalDateTime.parse("2021.01.20-23.55.11", formatter);
-        LocalDateTime date2 = LocalDateTime.parse("2021.01.21-03.00.00", formatter);
-        LocalDateTime date3 = LocalDateTime.parse("2021.01.21-23.55.11", formatter);
-        LocalDateTime date4 = LocalDateTime.parse("2021.02.11-23.55.11", formatter);
+        LocalDateTime date1 = LocalDateTime.parse("2021.01.20-23.55.11", FORMATTER);
+        LocalDateTime date2 = LocalDateTime.parse("2021.01.21-03.00.00", FORMATTER);
+        LocalDateTime date3 = LocalDateTime.parse("2021.01.21-23.55.11", FORMATTER);
+        LocalDateTime date4 = LocalDateTime.parse("2021.02.11-23.55.11", FORMATTER);
         
         Lesson lesson1 = new Lesson(1, "Math", teacher, group, room, date1);
         Lesson lesson2 = new Lesson(2, "bio", teacher, group, room, date2);
@@ -260,11 +257,10 @@ class LessonDaoImlpTest {
         studentDao.create(student1);
         studentDao.create(student2);
         
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(FORMATTER);
-        LocalDateTime date1 = LocalDateTime.parse("2021.01.20-23.55.11", formatter);
-        LocalDateTime date2 = LocalDateTime.parse("2021.01.21-03.00.00", formatter);
-        LocalDateTime date3 = LocalDateTime.parse("2021.01.21-23.55.11", formatter);
-        LocalDateTime date4 = LocalDateTime.parse("2021.02.11-23.55.11", formatter);
+        LocalDateTime date1 = LocalDateTime.parse("2021.01.20-23.55.11", FORMATTER);
+        LocalDateTime date2 = LocalDateTime.parse("2021.01.21-03.00.00", FORMATTER);
+        LocalDateTime date3 = LocalDateTime.parse("2021.01.21-23.55.11", FORMATTER);
+        LocalDateTime date4 = LocalDateTime.parse("2021.02.11-23.55.11", FORMATTER);
         
         Lesson lesson1 = new Lesson(1, "Math", teacher, group, room, date1);
         Lesson lesson2 = new Lesson(2, "bio", teacher, group, room, date2);

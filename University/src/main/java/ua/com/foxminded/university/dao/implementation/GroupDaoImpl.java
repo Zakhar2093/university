@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.dao.DaoException;
@@ -55,9 +56,12 @@ public class GroupDaoImpl implements GroupDao {
 
     public void update(Group group) {
         jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.update"), group.getGroupName(), group.getGroupId());
-    }
-
+    } 
+    
+    @Transactional
     public void delete(Integer groupId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.deleteGroupFromStudent"), groupId);
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.deleteGroupFromLesson"), groupId);
         jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.delete"), groupId);
     }
 }
