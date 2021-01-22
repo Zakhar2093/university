@@ -10,7 +10,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
 
+import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.SpringConfigTest;
 import ua.com.foxminded.university.dao.DatabaseInitialization;
 import ua.com.foxminded.university.dao.implementation.GroupDaoImpl;
@@ -32,20 +34,24 @@ import ua.com.foxminded.university.model.Teacher;
 class GroupDaoImplTest {
     private DatabaseInitialization dbInit = new DatabaseInitialization();
     private AnnotationConfigApplicationContext context;
-    private GroupDao groupDao;
-    private StudentDao studentDao;
-    private RoomDao roomDao;
-    private TeacherDao teacherDao;
+    private JdbcTemplate jdbcTemplate;
+    private PropertyReader propertyReader;
     private LessonDao lessonDao;
+    private GroupDao groupDao;
+    private TeacherDao teacherDao;
+    private RoomDao roomDao;
+    private StudentDao studentDao;
 
     @BeforeEach
     void createBean() {
         context = new AnnotationConfigApplicationContext(SpringConfigTest.class);
-        groupDao = context.getBean("groupDaoImpl", GroupDaoImpl.class);
-        lessonDao = context.getBean("lessonDaoImpl", LessonDaoImpl.class);
-        studentDao = context.getBean("studentDaoImpl", StudentDaoImpl.class);
-        roomDao = context.getBean("roomDaoImpl", RoomDaoImpl.class);
-        teacherDao = context.getBean("teacherDaoImpl", TeacherDaoImpl.class);
+        jdbcTemplate = context.getBean("jdbcTemplate", JdbcTemplate.class);
+        propertyReader = context.getBean("propertyReader", PropertyReader.class);
+        roomDao = new RoomDaoImpl(jdbcTemplate, propertyReader);
+        groupDao = new GroupDaoImpl(jdbcTemplate, propertyReader);
+        teacherDao = new TeacherDaoImpl(jdbcTemplate, propertyReader);
+        studentDao = new StudentDaoImpl(jdbcTemplate, propertyReader, groupDao);
+        lessonDao = new LessonDaoImpl(jdbcTemplate, propertyReader, groupDao, teacherDao, roomDao);
         dbInit.initialization();
     }
 

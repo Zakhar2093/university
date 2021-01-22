@@ -9,7 +9,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
 
+import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.SpringConfigTest;
 import ua.com.foxminded.university.dao.DatabaseInitialization;
 import ua.com.foxminded.university.dao.implementation.GroupDaoImpl;
@@ -20,19 +22,21 @@ import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
 
 class StudentDaoImplTest {
-
     private DatabaseInitialization dbInit = new DatabaseInitialization();
     private AnnotationConfigApplicationContext context;
-    private StudentDao studentDao;
+    private JdbcTemplate jdbcTemplate;
+    private PropertyReader propertyReader;
     private GroupDao groupDao;
+    private StudentDao studentDao;
 
     @BeforeEach
     void createBean() {
         context = new AnnotationConfigApplicationContext(SpringConfigTest.class);
-        studentDao = context.getBean("studentDaoImpl", StudentDaoImpl.class);
-        groupDao = context.getBean("groupDaoImpl", GroupDaoImpl.class);
+        jdbcTemplate = context.getBean("jdbcTemplate", JdbcTemplate.class);
+        propertyReader = context.getBean("propertyReader", PropertyReader.class);
+        groupDao = new GroupDaoImpl(jdbcTemplate, propertyReader);
+        studentDao = new StudentDaoImpl(jdbcTemplate, propertyReader, groupDao);
         dbInit.initialization();
-
     }
 
     @Test

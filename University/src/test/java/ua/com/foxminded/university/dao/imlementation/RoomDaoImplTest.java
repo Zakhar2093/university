@@ -10,7 +10,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
 
+import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.SpringConfigTest;
 import ua.com.foxminded.university.dao.DatabaseInitialization;
 import ua.com.foxminded.university.dao.implementation.GroupDaoImpl;
@@ -29,19 +31,23 @@ import ua.com.foxminded.university.model.Teacher;
 class RoomDaoImplTest {
     private DatabaseInitialization dbInit = new DatabaseInitialization();
     private AnnotationConfigApplicationContext context;
+    private JdbcTemplate jdbcTemplate;
+    private PropertyReader propertyReader;
     private LessonDao lessonDao;
     private GroupDao groupDao;
-    private RoomDao roomDao;
     private TeacherDao teacherDao;
+    private RoomDao roomDao;
 
     @BeforeEach
     void createBean() {
         context = new AnnotationConfigApplicationContext(SpringConfigTest.class);
-        lessonDao = context.getBean("lessonDaoImpl", LessonDaoImpl.class);
-        groupDao = context.getBean("groupDaoImpl", GroupDaoImpl.class);
-        roomDao = context.getBean("roomDaoImpl", RoomDaoImpl.class);
-        teacherDao = context.getBean("teacherDaoImpl", TeacherDaoImpl.class);
-        dbInit.initialization();
+        jdbcTemplate = context.getBean("jdbcTemplate", JdbcTemplate.class);
+        propertyReader = context.getBean("propertyReader", PropertyReader.class);
+        roomDao = new RoomDaoImpl(jdbcTemplate, propertyReader);
+        groupDao = new GroupDaoImpl(jdbcTemplate, propertyReader);
+        teacherDao = new TeacherDaoImpl(jdbcTemplate, propertyReader);
+        lessonDao = new LessonDaoImpl(jdbcTemplate, propertyReader, groupDao, teacherDao, roomDao);
+        dbInit.initialization();;
     }
 
     @Test
