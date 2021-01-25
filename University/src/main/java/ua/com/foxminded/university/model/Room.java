@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.models;
+package ua.com.foxminded.university.model;
 
 import java.util.List;
 
@@ -6,6 +6,16 @@ public class Room {
     private int roomId;
     private int roomNumber;
     private List<Lesson> lessons;
+    
+    public Room() {
+        super();
+    }
+
+    public Room(int roomId, int roomNumber) {
+        super();
+        this.roomId = roomId;
+        this.roomNumber = roomNumber;
+    }
 
     public Room(int roomId, int roomNumber, List<Lesson> lessons) {
         super();
@@ -24,6 +34,18 @@ public class Room {
 
     public List<Lesson> getLessons() {
         return lessons;
+    }
+
+    public void setRoomId(int roomId) {
+        this.roomId = roomId;
+    }
+
+    public void setRoomNumber(int roomNumber) {
+        this.roomNumber = roomNumber;
+    }
+
+    public void setLessons(List<Lesson> lessons) {
+        this.lessons = lessons;
     }
 
     public int hashCode() {

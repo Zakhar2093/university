@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.models;
+package ua.com.foxminded.university.model;
 
 import java.util.List;
 
@@ -7,6 +7,15 @@ public class Group {
     private String groupName;
     private List<Student> students;
     private List<Lesson> lessons;
+
+    public Group() {
+    }
+
+    public Group(int groupId, String groupName) {
+        super();
+        this.groupId = groupId;
+        this.groupName = groupName;
+    }
 
     public Group(int groupId, String groupName, List<Student> students, List<Lesson> lessons) {
         super();
@@ -30,6 +39,22 @@ public class Group {
 
     public List<Lesson> getLessons() {
         return lessons;
+    }
+
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public void setStudents(List<Student> students) {
+        this.students = students;
+    }
+
+    public void setLessons(List<Lesson> lessons) {
+        this.lessons = lessons;
     }
 
     public int hashCode() {
