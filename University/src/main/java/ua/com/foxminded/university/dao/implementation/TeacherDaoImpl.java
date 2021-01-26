@@ -33,10 +33,12 @@ public class TeacherDaoImpl implements TeacherDao{
                 );
     }
 
-    @Transactional
     public void delete(Integer teacherId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "teacher.deleteteacherFromLesson"), teacherId);
         jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "teacher.delete"), teacherId);
+    }
+    
+    public void deleteTeacherFromLessons(Integer teacherId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "teacher.deleteTeacherFromLessons"), teacherId);
     }
 
     public List<Teacher> getAll() {
@@ -65,5 +67,13 @@ public class TeacherDaoImpl implements TeacherDao{
                 teacher.getLastName(), 
                 teacher.getTeacherId()
                 );
+    }
+    
+    public void deactivate(Integer teacherId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "teacher.deactivate"), teacherId);
+    }
+    
+    public void activate(Integer teacherId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "teacher.activate"), teacherId);
     }
 }

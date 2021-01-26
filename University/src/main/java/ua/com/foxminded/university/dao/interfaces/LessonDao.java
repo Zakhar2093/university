@@ -15,4 +15,17 @@ public interface LessonDao extends GenericDao<Lesson, Integer> {
     List<Lesson> getLessonByStudentForDay(Student student, LocalDateTime date);
 
     List<Lesson> getLessonByStudentForMonth(Student student, LocalDateTime date);
+    
+    void addGroupToLesson(Integer groupId, Integer lessonId);
+    
+    void deleteGroupFromLesson(Integer lessonId);
+    
+    void addRoomToLesson(Integer roomId, Integer lessonId);
+    
+    void deleteRoomFromLesson(Integer lessonId);
+    
+    void addTeacherToLesson(Integer teacherId, Integer lessonId);
+    
+    void deleteTeacherFromLesson(Integer lessonId);
+    
 }

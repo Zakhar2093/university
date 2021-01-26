@@ -3,5 +3,7 @@ package ua.com.foxminded.university.dao.interfaces;
 import ua.com.foxminded.university.model.Room;
 
 public interface RoomDao extends GenericDao<Room, Integer>{
+    
+    void deleteRoomFromLessons(Integer roomId);
 
 }

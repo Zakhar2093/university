@@ -56,7 +56,7 @@ public class StudentDaoImpl implements StudentDao {
                 .findAny()
                 .orElseThrow(() -> new DaoException("Student with such id does not exist"));
     }
-
+    
     public void update(Student student) {
         jdbcTemplate.update(
                 propertyReader.read(PROPERTY_NAME, "student.update"), 
@@ -65,5 +65,13 @@ public class StudentDaoImpl implements StudentDao {
                 student.getLastName(), 
                 student.getStudentId()
                 );
+    }
+    
+    public void deactivate(Integer studentId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.deactivate"), studentId);
+    }
+    
+    public void activate(Integer studentId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.activate"), studentId);
     }
 }

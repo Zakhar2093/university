@@ -12,4 +12,8 @@ public interface GenericDao<T, Id> {
     void delete(Id id);
 
     void update(T t);
+    
+    void deactivate(Id id);
+    
+    void activate(Id id);
 }

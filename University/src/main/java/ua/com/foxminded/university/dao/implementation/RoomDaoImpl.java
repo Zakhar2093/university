@@ -15,7 +15,7 @@ import ua.com.foxminded.university.model.Room;
 @Component
 public class RoomDaoImpl implements RoomDao {
 
-    private final static String propertyName = "src/main/resources/SqlQueries.properties";
+    private final static String PROPERTY_NAME = "src/main/resources/SqlQueries.properties";
     private final JdbcTemplate jdbcTemplate;
     private final PropertyReader propertyReader;
 
@@ -28,7 +28,7 @@ public class RoomDaoImpl implements RoomDao {
 
     public List<Room> getAll() {
         return jdbcTemplate.query(
-                propertyReader.read(propertyName, "room.getAll"), 
+                propertyReader.read(PROPERTY_NAME, "room.getAll"), 
                 new BeanPropertyRowMapper<>(Room.class)
                 );
     }
@@ -36,7 +36,7 @@ public class RoomDaoImpl implements RoomDao {
     public Room getById(Integer roomId) {
         return jdbcTemplate
                 .query(
-                        propertyReader.read(propertyName, "room.getById"), 
+                        propertyReader.read(PROPERTY_NAME, "room.getById"), 
                         new Object[] { roomId },
                         new BeanPropertyRowMapper<>(Room.class)
                         )
@@ -46,16 +46,26 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     public void create(Room room) {
-        jdbcTemplate.update(propertyReader.read(propertyName, "room.create"), room.getRoomNumber());
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "room.create"), room.getRoomNumber());
     }
 
     public void update(Room room) {
-        jdbcTemplate.update(propertyReader.read(propertyName, "room.update"), room.getRoomNumber(), room.getRoomId());
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "room.update"), room.getRoomNumber(), room.getRoomId());
     }
 
-    @Transactional
     public void delete(Integer roomId) {
-        jdbcTemplate.update(propertyReader.read(propertyName, "room.deleteRoomFromLesson"), roomId);
-        jdbcTemplate.update(propertyReader.read(propertyName, "room.delete"), roomId);
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "room.delete"), roomId);
+    }
+    
+    public void deleteRoomFromLessons(Integer roomId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "room.deleteRoomFromLessons"), roomId);
+    }
+    
+    public void deactivate(Integer roomId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "room.deactivate"), roomId);
+    }
+    
+    public void activate(Integer roomId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "room.activate"), roomId);
     }
 }

@@ -128,4 +128,36 @@ public class LessonDaoImpl implements LessonDao{
                 new LessonMapper(groupDao, teacherDao, roomDao)
                 );
     }
+    
+    public void deactivate(Integer lessonId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.deactivate"), lessonId);
+    }
+    
+    public void activate(Integer lessonId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.activate"), lessonId);
+    }
+    
+    public void addGroupToLesson(Integer groupId, Integer lessonId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.addGroupToLesson"), groupId, lessonId);
+    }
+    
+    public void deleteGroupFromLesson(Integer lessonId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.deleteGroupFromLesson"), lessonId);
+    }
+    
+    public void addRoomToLesson(Integer roomId, Integer lessonId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.addRoomToLesson"), roomId, lessonId);
+    }
+    
+    public void deleteRoomFromLesson(Integer lessonId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.deleteRoomFromLesson"), lessonId);
+    }
+    
+    public void addTeacherToLesson(Integer teacherId, Integer lessonId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.addTeacherToLesson"), teacherId, lessonId);
+    }
+    
+    public void deleteTeacherFromLesson(Integer lessonId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.deleteTeacherFromLesson"), lessonId);
+    }
 }

@@ -53,10 +53,31 @@ public class GroupDaoImpl implements GroupDao {
         jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.update"), group.getGroupName(), group.getGroupId());
     } 
     
-    @Transactional
     public void delete(Integer groupId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.deleteGroupFromStudent"), groupId);
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.deleteGroupFromLesson"), groupId);
         jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.delete"), groupId);
+    }
+    
+    public void deleteGroupFromStudents(Integer groupId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.deleteGroupFromStudents"), groupId);
+    }
+    
+    public void deleteGroupFromLessons(Integer groupId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.deleteGroupFromLessons"), groupId);
+    }
+    
+    public void deactivate(Integer groupId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.deactivate"), groupId);
+    }
+    
+    public void activate(Integer groupId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.activate"), groupId);
+    }
+    
+    public void addStudentToGroup(Integer groupId, Integer studentId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.addStudentToGroup"), groupId, studentId);
+    }
+    
+    public void deleteStudentFromGroup(Integer studentId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.deleteStudentFromGroup"), studentId);
     }
 }
