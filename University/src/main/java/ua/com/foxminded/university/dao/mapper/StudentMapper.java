@@ -14,6 +14,7 @@ import ua.com.foxminded.university.model.Student;
 @Component
 public class StudentMapper implements RowMapper<Student> {
     
+//  @Autowired 
     private GroupDao groupDaoImpl;
     
     @Autowired
@@ -21,6 +22,7 @@ public class StudentMapper implements RowMapper<Student> {
         super();
         this.groupDaoImpl = groupDaoImpl;
     }
+    
 //    @Autowired
 //    public void setGroupDaoImpl(GroupDaoImpl groupDaoImpl) {
 //        this.groupDaoImpl = groupDaoImpl;
