@@ -19,6 +19,7 @@ import ua.com.foxminded.university.dao.implementation.StudentDaoImpl;
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.dao.interfaces.StudentDao;
 import ua.com.foxminded.university.model.Group;
+import ua.com.foxminded.university.model.Room;
 import ua.com.foxminded.university.model.Student;
 
 class StudentDaoImplTest {
@@ -41,7 +42,7 @@ class StudentDaoImplTest {
 
     @Test
     void getByIdAndCreateSouldInsertAndGetCorrectData() {
-        Group group = new Group(1, "any name");
+        Group group = new Group(1, "any name", false);
         groupDao.create(group);
         Student student = new Student(1, "one", "one", group, false);
         studentDao.create(student);
@@ -53,7 +54,7 @@ class StudentDaoImplTest {
     @Test
     void getAllAndCreateSouldInsertAndGetCorrectData() {
         List<Student> students = new ArrayList<>();
-        Group group = new Group(1, "any name");
+        Group group = new Group(1, "any name", false);
         groupDao.create(group);
         students.add(new Student(1, "one", "one", group, false));
         students.add(new Student(2, "two", "two", group, false));
@@ -66,13 +67,9 @@ class StudentDaoImplTest {
         assertEquals(expected, actual);
     }
 
-//        Group group = new Group(1, "any name");
-//        groupDao.create(group);
-//        studentDao.create(new Student(1, "one", "one", group));
-
     @Test
     void updateSouldUpdateCorrectData() {
-        Group group = new Group(1, "any name");
+        Group group = new Group(1, "any name", false);
         groupDao.create(group);
         Student studentBeforeUpdating = new Student(1, "one", "one", group, false);
         Student studentAfterUpdating = new Student(1, "two", "one", group, false);
@@ -84,7 +81,53 @@ class StudentDaoImplTest {
         assertTrue(students.size() == 1);
         assertEquals(expected, actual);
     }
-
+    
+    @Test
+    void deactivateSouldSetTrueInStudentInactive() {
+        Group group = new Group(1, "any name", false);
+        groupDao.create(group);
+        Student student = new Student(1, "one", "one", group, false);
+        studentDao.create(student); 
+        studentDao.removeStudentFromGroup(1);
+        studentDao.deactivate(1);
+        assertTrue(studentDao.getById(1).isStudentInactive());
+    }
+    
+    @Test
+    void activateSouldSetFolseInStudentInactive() {
+        Group group = new Group(1, "any name", false);
+        groupDao.create(group);
+        Student student = new Student(1, "one", "one", group, false);
+        studentDao.create(student);
+        studentDao.removeStudentFromGroup(1);
+        studentDao.deactivate(1);
+        assertTrue(studentDao.getById(1).isStudentInactive());
+        studentDao.activate(1);
+        assertFalse(studentDao.getById(1).isStudentInactive());
+    }
+    
+    @Test
+    void removeStudentFromGroupSouldSetNullInStudentGroupId() {
+        Group group = new Group(1, "any name", false);
+        groupDao.create(group);
+        Student student = new Student(1, "one", "one", group, false);
+        studentDao.create(student); 
+        studentDao.removeStudentFromGroup(1);
+        assertTrue(studentDao.getById(1).getGroup() == null);
+    }
+    
+    @Test
+    void addStudentToGroupSouldSetGroupInStudentGroupId() {
+        Group group = new Group(1, "any name", false);
+        groupDao.create(group);
+        Student student = new Student(1, "one", "one", group, false);
+        studentDao.create(student); 
+        studentDao.removeStudentFromGroup(1);
+        assertTrue(studentDao.getById(1).getGroup() == null);
+        studentDao.addStudentToGroup(1, 1);
+        assertTrue(studentDao.getById(1).getGroup().equals(group));
+    }
+    
     @AfterEach
     void closeConext() {
         context.close();

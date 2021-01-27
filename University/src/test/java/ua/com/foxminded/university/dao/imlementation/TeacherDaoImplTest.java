@@ -106,8 +106,8 @@ class TeacherDaoImplTest {
     }
     
     @Test
-    void removeRoomFromLessonsSouldSetNullInLessonsTeacherId() {
-        Group group = new Group(1, "any name");
+    void removeTeacherFromLessonsSouldSetNullInLessonsTeacherId() {
+        Group group = new Group(1, "any name", false);
         groupDao.create(group);
         Teacher teacher1 = new Teacher(1, "one", "one", false);
         teacherDao.create(teacher1);
@@ -131,7 +131,6 @@ class TeacherDaoImplTest {
                 .filter((x) -> x.getTeacher() != null)
                 .collect(Collectors.toList()
                         ); 
-        lessonDao.getAll().stream().forEach((x) -> System.out.println(x));
         assertEquals(expected, actual);
     }
 
