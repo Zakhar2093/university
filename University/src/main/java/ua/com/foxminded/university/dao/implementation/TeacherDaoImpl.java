@@ -34,7 +34,7 @@ public class TeacherDaoImpl implements TeacherDao{
                 );
     }
 
-    public void removeTeacherFromLessons(Integer teacherId) {
+    public void removeTeacherFromAllLessons(Integer teacherId) {
         jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "teacher.removeTeacherFromLessons"), teacherId);
     }
 
@@ -54,7 +54,7 @@ public class TeacherDaoImpl implements TeacherDao{
                         )
                 .stream()
                 .findAny()
-                .orElseThrow(() -> new DaoException("Teacher with such id does not exist"));
+                .orElse(null);
     }
 
     public void update(Teacher teacher) {

@@ -1,6 +1,7 @@
 package ua.com.foxminded.university.model;
 
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 public class Teacher {
     private int teacherId;
@@ -12,11 +13,12 @@ public class Teacher {
     public Teacher() {
     }
 
-    public Teacher(int teacherId, String firstName, String lastName) {
+    public Teacher(int teacherId, String firstName, String lastName, boolean teacherInactive) {
         super();
         this.teacherId = teacherId;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.teacherInactive = teacherInactive;
     }
 
     public Teacher(int teacherId, String firstName, String lastName, List<Lesson> lessons, boolean teacherInactive) {

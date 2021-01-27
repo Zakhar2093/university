@@ -109,7 +109,7 @@ class RoomDaoImplTest {
     void removeRoomFromLessonsSouldSetNullInLessonsRoomId() {
         Group group = new Group(1, "any name");
         groupDao.create(group);
-        Teacher teacher = new Teacher(1, "one", "one");
+        Teacher teacher = new Teacher(1, "one", "one", false);
         teacherDao.create(teacher);
         Room room1 = new Room(1, 101);
         roomDao.create(room1);
