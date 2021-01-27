@@ -4,5 +4,5 @@ import ua.com.foxminded.university.model.Teacher;
 
 public interface TeacherDao extends GenericDao<Teacher, Integer>{
 
-    void deleteTeacherFromLessons(Integer teacherId);
+    void removeTeacherFromLessons(Integer teacherId);
 }

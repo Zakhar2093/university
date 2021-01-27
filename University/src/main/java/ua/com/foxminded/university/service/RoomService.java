@@ -38,7 +38,7 @@ public class RoomService {
 
     @Transactional
     public void deactivate(Integer roomId) {
-        roomDao.deleteRoomFromLessons(roomId);
+        roomDao.removeRoomFromLessons(roomId);
         roomDao.deactivate(roomId);
     }
     

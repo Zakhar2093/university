@@ -41,7 +41,7 @@ public class StudentService {
     
     @Transactional
     public void deactivate(Integer studentId) {
-        groupDao.deleteStudentFromGroup(studentId);
+        groupDao.removeStudentFromGroup(studentId);
         studentDao.deactivate(studentId);
     }
     

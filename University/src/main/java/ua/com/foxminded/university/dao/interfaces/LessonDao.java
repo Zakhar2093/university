@@ -18,14 +18,14 @@ public interface LessonDao extends GenericDao<Lesson, Integer> {
     
     void addGroupToLesson(Integer groupId, Integer lessonId);
     
-    void deleteGroupFromLesson(Integer lessonId);
+    void removeGroupFromLesson(Integer lessonId);
     
     void addRoomToLesson(Integer roomId, Integer lessonId);
     
-    void deleteRoomFromLesson(Integer lessonId);
+    void removeRoomFromLesson(Integer lessonId);
     
     void addTeacherToLesson(Integer teacherId, Integer lessonId);
     
-    void deleteTeacherFromLesson(Integer lessonId);
+    void removeTeacherFromLesson(Integer lessonId);
     
 }

@@ -43,9 +43,9 @@ public class LessonService {
     
     @Transactional
     public void deactivate(Integer lessonId) {
-        lessonDao.deleteGroupFromLesson(lessonId);
-        lessonDao.deleteRoomFromLesson(lessonId);
-        lessonDao.deleteTeacherFromLesson(lessonId);
+        lessonDao.removeGroupFromLesson(lessonId);
+        lessonDao.removeRoomFromLesson(lessonId);
+        lessonDao.removeTeacherFromLesson(lessonId);
         lessonDao.deactivate(lessonId);
     }
     
@@ -57,24 +57,24 @@ public class LessonService {
         lessonDao.addGroupToLesson(groupId, lessonId);
     }    
     
-    public void deleteGroupFromLesson(Integer lessonId) {
-        lessonDao.deleteGroupFromLesson(lessonId);
+    public void removeGroupFromLesson(Integer lessonId) {
+        lessonDao.removeGroupFromLesson(lessonId);
     }
     
     public void addRoomToLesson(Integer roomId, Integer lessonId) {
         lessonDao.addRoomToLesson(roomId, lessonId);
     }
     
-    public void deleteRoomFromLesson(Integer lessonId) {
-        lessonDao.deleteRoomFromLesson(lessonId);
+    public void removeRoomFromLesson(Integer lessonId) {
+        lessonDao.removeRoomFromLesson(lessonId);
     }
     
     public void addTeacherToLesson(Integer teacherId, Integer lessonId) {
         lessonDao.addTeacherToLesson(teacherId, lessonId);
     }
     
-    public void deleteTeacherFromLesson(Integer lessonId) {
-        lessonDao.deleteTeacherFromLesson(lessonId);
+    public void removeTeacherFromLesson(Integer lessonId) {
+        lessonDao.removeTeacherFromLesson(lessonId);
     }
     
     public List<Lesson> getLessonByTeacherForDay(Teacher teacher, LocalDateTime date){

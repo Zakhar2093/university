@@ -38,7 +38,7 @@ public class TeacherService {
     
     @Transactional
     public void deactivate(Integer teacherId) {
-        teacherDao.deleteTeacherFromLessons(teacherId);
+        teacherDao.removeTeacherFromLessons(teacherId);
         teacherDao.deactivate(teacherId);
     }
     

@@ -137,23 +137,23 @@ public class LessonDaoImpl implements LessonDao{
         jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.addGroupToLesson"), groupId, lessonId);
     }
     
-    public void deleteGroupFromLesson(Integer lessonId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.deleteGroupFromLesson"), lessonId);
+    public void removeGroupFromLesson(Integer lessonId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.removeGroupFromLesson"), lessonId);
     }
     
     public void addRoomToLesson(Integer roomId, Integer lessonId) {
         jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.addRoomToLesson"), roomId, lessonId);
     }
     
-    public void deleteRoomFromLesson(Integer lessonId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.deleteRoomFromLesson"), lessonId);
+    public void removeRoomFromLesson(Integer lessonId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.removeRoomFromLesson"), lessonId);
     }
     
     public void addTeacherToLesson(Integer teacherId, Integer lessonId) {
         jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.addTeacherToLesson"), teacherId, lessonId);
     }
     
-    public void deleteTeacherFromLesson(Integer lessonId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.deleteTeacherFromLesson"), lessonId);
+    public void removeTeacherFromLesson(Integer lessonId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.removeTeacherFromLesson"), lessonId);
     }
 }

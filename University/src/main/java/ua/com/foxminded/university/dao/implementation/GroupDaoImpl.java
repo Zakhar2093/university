@@ -36,7 +36,8 @@ public class GroupDaoImpl implements GroupDao {
     public Group getById(Integer groupId) {
         return jdbcTemplate
                 .query(
-                        propertyReader.read(PROPERTY_NAME, "group.getById"), 
+                        propertyReader.read(PROPERTY_NAME, "group.get"
+                                + "ById"), 
                         new Object[] { groupId }, 
                         new BeanPropertyRowMapper<>(Group.class)
                         )
@@ -53,12 +54,12 @@ public class GroupDaoImpl implements GroupDao {
         jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.update"), group.getGroupName(), group.getGroupId());
     } 
     
-    public void delete(Integer groupId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.delete"), groupId);
+    public void removeGroupFromStudents(Integer groupId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.removeGroupFromStudents"), groupId);
     }
-    
-    public void deleteGroupFromLessons(Integer groupId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.deleteGroupFromLessons"), groupId);
+
+    public void removeGroupFromLessons(Integer groupId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.removeGroupFromLessons"), groupId);
     }
     
     public void deactivate(Integer groupId) {
@@ -73,7 +74,9 @@ public class GroupDaoImpl implements GroupDao {
         jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.addStudentToGroup"), groupId, studentId);
     }
     
-    public void deleteStudentFromGroup(Integer studentId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.deleteStudentFromGroup"), studentId);
+    public void removeStudentFromGroup(Integer studentId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.removeStudentFromGroup"), studentId);
     }
+
+    
 }
