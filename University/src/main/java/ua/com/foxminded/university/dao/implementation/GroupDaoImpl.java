@@ -69,14 +69,4 @@ public class GroupDaoImpl implements GroupDao {
     public void activate(Integer groupId) {
         jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.activate"), groupId);
     }
-    
-    public void addStudentToGroup(Integer groupId, Integer studentId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.addStudentToGroup"), groupId, studentId);
-    }
-    
-    public void removeStudentFromGroup(Integer studentId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.removeStudentFromGroup"), studentId);
-    }
-
-    
 }

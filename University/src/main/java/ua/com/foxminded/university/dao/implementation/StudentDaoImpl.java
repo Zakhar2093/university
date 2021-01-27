@@ -72,4 +72,12 @@ public class StudentDaoImpl implements StudentDao {
     public void activate(Integer studentId) {
         jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.activate"), studentId);
     }
+    
+    public void removeStudentFromGroup(Integer studentId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.removeStudentFromGroup"), studentId);
+    }
+    
+    public void addStudentToGroup(Integer groupId, Integer studentId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.addStudentToGroup"), groupId, studentId);
+    } 
 }

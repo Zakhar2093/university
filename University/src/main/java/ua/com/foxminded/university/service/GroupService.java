@@ -46,12 +46,4 @@ public class GroupService {
     public void activate(Integer groupId) {
         groupDao.activate(groupId);
     }
-    
-    public void addStudentToGroup(Integer groupId, Integer studentId) {
-        groupDao.addStudentToGroup(groupId, studentId);
-    }
-    
-    public void removeStudentFromGroup(Integer studentId) {
-        groupDao.removeStudentFromGroup(studentId);
-    }
 }
