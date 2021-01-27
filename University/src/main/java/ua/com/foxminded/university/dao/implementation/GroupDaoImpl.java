@@ -43,7 +43,7 @@ public class GroupDaoImpl implements GroupDao {
                         )
                 .stream()
                 .findAny()
-                .orElseThrow(() -> new DaoException("Group with such id does not exist"));
+                .orElse(null);
     }
 
     public void create(Group group) {
@@ -54,11 +54,11 @@ public class GroupDaoImpl implements GroupDao {
         jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.update"), group.getGroupName(), group.isGroupInactive(), group.getGroupId());
     } 
     
-    public void removeGroupFromStudents(Integer groupId) {
+    public void removeGroupFromAllStudents(Integer groupId) {
         jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.removeGroupFromStudents"), groupId);
     }
 
-    public void removeGroupFromLessons(Integer groupId) {
+    public void removeGroupFromAllLessons(Integer groupId) {
         jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.removeGroupFromLessons"), groupId);
     }
     

@@ -38,8 +38,8 @@ public class GroupService {
     
     @Transactional
     public void deactivate(Integer groupId) {
-        groupDao.removeGroupFromLessons(groupId);
-        groupDao.removeGroupFromStudents(groupId);
+        groupDao.removeGroupFromAllLessons(groupId);
+        groupDao.removeGroupFromAllStudents(groupId);
         groupDao.deactivate(groupId);
     }
     

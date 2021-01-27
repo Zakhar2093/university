@@ -4,7 +4,7 @@ import ua.com.foxminded.university.model.Group;
 
 public interface GroupDao extends GenericDao<Group, Integer> {
     
-    void removeGroupFromStudents(Integer groupId);
+    void removeGroupFromAllStudents(Integer groupId);
     
-    void removeGroupFromLessons(Integer groupId);
+    void removeGroupFromAllLessons(Integer groupId);
 }

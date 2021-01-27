@@ -12,10 +12,11 @@ public class Group {
     public Group() {
     }
 
-    public Group(int groupId, String groupName) {
+    public Group(int groupId, String groupName, boolean groupInactive) {
         super();
         this.groupId = groupId;
         this.groupName = groupName;
+        this.groupInactive = groupInactive;
     }
 
     public Group(int groupId, String groupName, List<Student> students, List<Lesson> lessons, boolean groupInactive) {
