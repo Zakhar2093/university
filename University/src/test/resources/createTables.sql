@@ -49,13 +49,12 @@ CREATE TABLE university.lessons(
 );
 
 ALTER TABLE university.groups
-  ADD COLUMN "groups_inactive" BOOLEAN DEFAULT FALSE;
+  ADD COLUMN group_inactive BOOLEAN DEFAULT FALSE;
 ALTER TABLE university.students
-  ADD COLUMN "student_inactive" BOOLEAN DEFAULT FALSE;
+  ADD COLUMN student_inactive BOOLEAN DEFAULT FALSE;
 ALTER TABLE university.teachers
-  ADD COLUMN "teachers_inactive" BOOLEAN DEFAULT FALSE;
+  ADD COLUMN teacher_inactive BOOLEAN DEFAULT FALSE;
 ALTER TABLE university.rooms
-  ADD COLUMN "rooms_inactive" BOOLEAN DEFAULT FALSE;
+  ADD COLUMN room_inactive BOOLEAN DEFAULT FALSE;
 ALTER TABLE university.lessons
-  ADD COLUMN "lessons_inactive" BOOLEAN DEFAULT FALSE;
-  
+  ADD COLUMN lesson_inactive BOOLEAN DEFAULT FALSE;

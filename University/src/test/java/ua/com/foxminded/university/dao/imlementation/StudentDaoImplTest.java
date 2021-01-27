@@ -43,7 +43,7 @@ class StudentDaoImplTest {
     void getByIdAndCreateSouldInsertAndGetCorrectData() {
         Group group = new Group(1, "any name");
         groupDao.create(group);
-        Student student = new Student(1, "one", "one", group);
+        Student student = new Student(1, "one", "one", group, false);
         studentDao.create(student);
         Student expected = student;
         Student actual = studentDao.getById(1);
@@ -55,9 +55,9 @@ class StudentDaoImplTest {
         List<Student> students = new ArrayList<>();
         Group group = new Group(1, "any name");
         groupDao.create(group);
-        students.add(new Student(1, "one", "one", group));
-        students.add(new Student(2, "two", "two", group));
-        students.add(new Student(3, "three", "three", group));
+        students.add(new Student(1, "one", "one", group, false));
+        students.add(new Student(2, "two", "two", group, false));
+        students.add(new Student(3, "three", "three", group, false));
         studentDao.create(students.get(0));
         studentDao.create(students.get(1));
         studentDao.create(students.get(2));
@@ -74,8 +74,8 @@ class StudentDaoImplTest {
     void updateSouldUpdateCorrectData() {
         Group group = new Group(1, "any name");
         groupDao.create(group);
-        Student studentBeforeUpdating = new Student(1, "one", "one", group);
-        Student studentAfterUpdating = new Student(1, "two", "one", group);
+        Student studentBeforeUpdating = new Student(1, "one", "one", group, false);
+        Student studentAfterUpdating = new Student(1, "two", "one", group, false);
         studentDao.create(studentBeforeUpdating);
         studentDao.update(studentAfterUpdating);
         Student expected = studentAfterUpdating;

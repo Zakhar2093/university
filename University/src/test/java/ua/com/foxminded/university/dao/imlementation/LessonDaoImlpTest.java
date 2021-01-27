@@ -69,7 +69,7 @@ class LessonDaoImlpTest {
         roomDao.create(room);
         LocalDateTime date = LocalDateTime.now();
         
-        Lesson lesson = new Lesson(1, "Math", teacher, group, room, date);
+        Lesson lesson = new Lesson(1, "Math", teacher, group, room, date, false);
         lessonDao.create(lesson);
         Lesson expected = lesson;
         Lesson actual = lessonDao.getById(1);
@@ -87,9 +87,9 @@ class LessonDaoImlpTest {
         LocalDateTime date = LocalDateTime.now();
         
         List<Lesson> lessons = new ArrayList<>();
-        lessons.add(new Lesson(1, "Math", teacher, group, room, date));
-        lessons.add(new Lesson(2, "Bio", teacher, group, room, date));
-        lessons.add(new Lesson(3, "History", teacher, group, room, date));
+        lessons.add(new Lesson(1, "Math", teacher, group, room, date, false));
+        lessons.add(new Lesson(2, "Bio", teacher, group, room, date, false));
+        lessons.add(new Lesson(3, "History", teacher, group, room, date, false));
         lessonDao.create(lessons.get(0));
         lessonDao.create(lessons.get(1));
         lessonDao.create(lessons.get(2));
@@ -121,8 +121,8 @@ class LessonDaoImlpTest {
         LocalDateTime date = LocalDateTime.now();
         
         
-        Lesson lessonBeforeUpdating = new Lesson(1, "Math", teacher, group, room, date);
-        Lesson lessonAfterUpdating = new Lesson(1, "Bio", teacher, group, room, date);
+        Lesson lessonBeforeUpdating = new Lesson(1, "Math", teacher, group, room, date, false);
+        Lesson lessonAfterUpdating = new Lesson(1, "Bio", teacher, group, room, date, false);
         lessonDao.create(lessonBeforeUpdating);
         lessonDao.update(lessonAfterUpdating);
         Lesson expected = lessonAfterUpdating;
@@ -148,11 +148,11 @@ class LessonDaoImlpTest {
         LocalDateTime date3 = LocalDateTime.parse("2021.01.21-23.55.11", FORMATTER);
         LocalDateTime date4 = LocalDateTime.parse("2021.02.11-23.55.11", FORMATTER);
         
-        Lesson lesson1 = new Lesson(1, "Math", teacher, group, room, date1);
-        Lesson lesson2 = new Lesson(2, "bio", teacher, group, room, date2);
-        Lesson lesson3 = new Lesson(3, "bio", teacher2, group, room, date2);
-        Lesson lesson4 = new Lesson(4, "history", teacher, group, room, date3);
-        Lesson lesson5 = new Lesson(5, "english", teacher, group, room, date4);
+        Lesson lesson1 = new Lesson(1, "Math", teacher, group, room, date1, false);
+        Lesson lesson2 = new Lesson(2, "bio", teacher, group, room, date2, false);
+        Lesson lesson3 = new Lesson(3, "bio", teacher2, group, room, date2, false);
+        Lesson lesson4 = new Lesson(4, "history", teacher, group, room, date3, false);
+        Lesson lesson5 = new Lesson(5, "english", teacher, group, room, date4, false);
         
         lessonDao.create(lesson1);
         lessonDao.create(lesson2);
@@ -184,11 +184,11 @@ class LessonDaoImlpTest {
         LocalDateTime date3 = LocalDateTime.parse("2021.01.21-23.55.11", FORMATTER);
         LocalDateTime date4 = LocalDateTime.parse("2021.02.11-23.55.11", FORMATTER);
         
-        Lesson lesson1 = new Lesson(1, "Math", teacher, group, room, date1);
-        Lesson lesson2 = new Lesson(2, "bio", teacher, group, room, date2);
-        Lesson lesson3 = new Lesson(3, "bio", teacher2, group, room, date2);
-        Lesson lesson4 = new Lesson(4, "history", teacher, group, room, date3);
-        Lesson lesson5 = new Lesson(5, "english", teacher, group, room, date4);
+        Lesson lesson1 = new Lesson(1, "Math", teacher, group, room, date1, false);
+        Lesson lesson2 = new Lesson(2, "bio", teacher, group, room, date2, false);
+        Lesson lesson3 = new Lesson(3, "bio", teacher2, group, room, date2, false);
+        Lesson lesson4 = new Lesson(4, "history", teacher, group, room, date3, false);
+        Lesson lesson5 = new Lesson(5, "english", teacher, group, room, date4, false);
         
         lessonDao.create(lesson1);
         lessonDao.create(lesson2);
@@ -215,8 +215,8 @@ class LessonDaoImlpTest {
         teacherDao.create(teacher2);
         Room room = new Room(1, 101);
         roomDao.create(room);
-        Student student1 = new Student(1, "student1", "student1", group);
-        Student student2 = new Student(2, "student2", "student2", group);
+        Student student1 = new Student(1, "student1", "student1", group, false);
+        Student student2 = new Student(2, "student2", "student2", group, false);
         studentDao.create(student1);
         studentDao.create(student2);
         
@@ -225,10 +225,10 @@ class LessonDaoImlpTest {
         LocalDateTime date3 = LocalDateTime.parse("2021.01.21-23.55.11", FORMATTER);
         LocalDateTime date4 = LocalDateTime.parse("2021.02.11-23.55.11", FORMATTER);
         
-        Lesson lesson1 = new Lesson(1, "Math", teacher, group, room, date1);
-        Lesson lesson2 = new Lesson(2, "bio", teacher, group, room, date2);
-        Lesson lesson3 = new Lesson(3, "history", teacher, group, room, date3);
-        Lesson lesson4 = new Lesson(4, "english", teacher, group, room, date4);
+        Lesson lesson1 = new Lesson(1, "Math", teacher, group, room, date1, false);
+        Lesson lesson2 = new Lesson(2, "bio", teacher, group, room, date2, false);
+        Lesson lesson3 = new Lesson(3, "history", teacher, group, room, date3, false);
+        Lesson lesson4 = new Lesson(4, "english", teacher, group, room, date4, false);
         
         lessonDao.create(lesson1);
         lessonDao.create(lesson2);
@@ -253,8 +253,8 @@ class LessonDaoImlpTest {
         teacherDao.create(teacher2);
         Room room = new Room(1, 101);
         roomDao.create(room);
-        Student student1 = new Student(1, "student1", "student1", group);
-        Student student2 = new Student(2, "student2", "student2", group);
+        Student student1 = new Student(1, "student1", "student1", group, false);
+        Student student2 = new Student(2, "student2", "student2", group, false);
         studentDao.create(student1);
         studentDao.create(student2);
         
@@ -263,10 +263,10 @@ class LessonDaoImlpTest {
         LocalDateTime date3 = LocalDateTime.parse("2021.01.21-23.55.11", FORMATTER);
         LocalDateTime date4 = LocalDateTime.parse("2021.02.11-23.55.11", FORMATTER);
         
-        Lesson lesson1 = new Lesson(1, "Math", teacher, group, room, date1);
-        Lesson lesson2 = new Lesson(2, "bio", teacher, group, room, date2);
-        Lesson lesson3 = new Lesson(3, "history", teacher, group, room, date3);
-        Lesson lesson4 = new Lesson(4, "english", teacher, group, room, date4);
+        Lesson lesson1 = new Lesson(1, "Math", teacher, group, room, date1, false);
+        Lesson lesson2 = new Lesson(2, "bio", teacher, group, room, date2, false);
+        Lesson lesson3 = new Lesson(3, "history", teacher, group, room, date3, false);
+        Lesson lesson4 = new Lesson(4, "english", teacher, group, room, date4, false);
         
         lessonDao.create(lesson1);
         lessonDao.create(lesson2);
