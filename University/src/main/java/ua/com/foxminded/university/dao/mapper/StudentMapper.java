@@ -34,6 +34,7 @@ public class StudentMapper implements RowMapper<Student> {
         student.setFirstName(rs.getString("first_name"));
         student.setLastName(rs.getString("last_name"));
         student.setGroup(groupDaoImpl.getById(rs.getInt("group_id")));
+        student.setStudentInactive(rs.getBoolean("student_inactive"));
         return student;
     }
 }

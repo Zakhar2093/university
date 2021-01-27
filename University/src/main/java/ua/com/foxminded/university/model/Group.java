@@ -7,6 +7,7 @@ public class Group {
     private String groupName;
     private List<Student> students;
     private List<Lesson> lessons;
+    private boolean groupInactive;
 
     public Group() {
     }
@@ -17,12 +18,13 @@ public class Group {
         this.groupName = groupName;
     }
 
-    public Group(int groupId, String groupName, List<Student> students, List<Lesson> lessons) {
+    public Group(int groupId, String groupName, List<Student> students, List<Lesson> lessons, boolean groupInactive) {
         super();
         this.groupId = groupId;
         this.groupName = groupName;
         this.students = students;
         this.lessons = lessons;
+        this.groupInactive = groupInactive;
     }
 
     public int getGroupId() {
@@ -57,16 +59,27 @@ public class Group {
         this.lessons = lessons;
     }
 
+    public boolean isGroupInactive() {
+        return groupInactive;
+    }
+
+    public void setGroupInactive(boolean groupInactive) {
+        this.groupInactive = groupInactive;
+    }
+
+    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + groupId;
+        result = prime * result + (groupInactive ? 1231 : 1237);
         result = prime * result + ((groupName == null) ? 0 : groupName.hashCode());
         result = prime * result + ((lessons == null) ? 0 : lessons.hashCode());
         result = prime * result + ((students == null) ? 0 : students.hashCode());
         return result;
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
@@ -76,6 +89,8 @@ public class Group {
             return false;
         Group other = (Group) obj;
         if (groupId != other.groupId)
+            return false;
+        if (groupInactive != other.groupInactive)
             return false;
         if (groupName == null) {
             if (other.groupName != null)
@@ -95,8 +110,9 @@ public class Group {
         return true;
     }
 
+    @Override
     public String toString() {
         return "Group [groupId=" + groupId + ", groupName=" + groupName + ", students=" + students + ", lessons="
-                + lessons + "]";
+                + lessons + ", groupInactive=" + groupInactive + "]";
     }
 }

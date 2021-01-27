@@ -33,7 +33,8 @@ public class StudentDaoImpl implements StudentDao {
                 propertyReader.read(PROPERTY_NAME, "student.create"), 
                 student.getFirstName(), 
                 student.getLastName(), 
-                student.getGroup().getGroupId()
+                student.getGroup().getGroupId(),
+                student.isStudentInactive()
                 );
     }
 
@@ -58,7 +59,8 @@ public class StudentDaoImpl implements StudentDao {
                 propertyReader.read(PROPERTY_NAME, "student.update"), 
                 student.getGroup().getGroupId(),
                 student.getFirstName(), 
-                student.getLastName(), 
+                student.getLastName(),
+                student.isStudentInactive(),
                 student.getStudentId()
                 );
     }

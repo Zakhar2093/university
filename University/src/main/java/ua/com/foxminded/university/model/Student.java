@@ -5,16 +5,26 @@ public class Student {
     private String firstName;
     private String lastName;
     private Group group;
+    private boolean studentInactive;
 
     public Student() {
     }
-
-    public Student(int studentId, String firstName, String lastName, Group group) {
+   
+    public Student(int studentId, String firstName, String lastName, Group group, boolean studentInactive) {
         super();
         this.studentId = studentId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.group = group;
+        this.studentInactive = studentInactive;
+    }
+
+    public boolean isStudentInactive() {
+        return studentInactive;
+    }
+
+    public void setStudentInactive(boolean studentInactive) {
+        this.studentInactive = studentInactive;
     }
 
     public int getStudentId() {
@@ -49,16 +59,19 @@ public class Student {
         this.group = group;
     }
 
+    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
         result = prime * result + ((group == null) ? 0 : group.hashCode());
+        result = prime * result + (studentInactive ? 1231 : 1237);
         result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
         result = prime * result + studentId;
         return result;
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
@@ -77,6 +90,8 @@ public class Student {
                 return false;
         } else if (!group.equals(other.group))
             return false;
+        if (studentInactive != other.studentInactive)
+            return false;
         if (lastName == null) {
             if (other.lastName != null)
                 return false;
@@ -87,8 +102,9 @@ public class Student {
         return true;
     }
 
+    @Override
     public String toString() {
         return "Student [studentId=" + studentId + ", firstName=" + firstName + ", lastName=" + lastName + ", group="
-                + group + "]";
+                + group + ", studentInactive=" + studentInactive + "]";
     }
 }

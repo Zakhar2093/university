@@ -47,7 +47,8 @@ public class LessonDaoImpl implements LessonDao{
                 lesson.getTeacher().getTeacherId(), 
                 lesson.getGroup().getGroupId(),
                 lesson.getRoom().getRoomId(),
-                lesson.getDate()
+                lesson.getDate(),           
+                lesson.isLessonInactive()
                 );
     }
 
@@ -75,6 +76,7 @@ public class LessonDaoImpl implements LessonDao{
                 lesson.getGroup().getGroupId(),
                 lesson.getRoom().getRoomId(),
                 lesson.getDate(),
+                lesson.isLessonInactive(),
                 lesson.getLessonId()
                 );
     }

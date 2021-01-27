@@ -29,7 +29,8 @@ public class TeacherDaoImpl implements TeacherDao{
     public void create(Teacher teacher) {
         jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "teacher.create"), 
                 teacher.getFirstName(),
-                teacher.getLastName()
+                teacher.getLastName(),
+                teacher.isTeacherInactive()
                 );
     }
 
@@ -60,7 +61,8 @@ public class TeacherDaoImpl implements TeacherDao{
         jdbcTemplate.update(
                 propertyReader.read(PROPERTY_NAME, "teacher.update"), 
                 teacher.getFirstName(), 
-                teacher.getLastName(), 
+                teacher.getLastName(),
+                teacher.isTeacherInactive(),
                 teacher.getTeacherId()
                 );
     }

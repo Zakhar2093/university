@@ -3,14 +3,9 @@ package ua.com.foxminded.university.dao.mapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.SpringConfig;
-import ua.com.foxminded.university.dao.implementation.GroupDaoImpl;
-import ua.com.foxminded.university.dao.implementation.RoomDaoImpl;
-import ua.com.foxminded.university.dao.implementation.TeacherDaoImpl;
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.dao.interfaces.RoomDao;
 import ua.com.foxminded.university.dao.interfaces.TeacherDao;
@@ -38,6 +33,7 @@ public class LessonMapper implements RowMapper<Lesson>{
         lesson.setGroup(groupDao.getById(rs.getInt("group_id")));
         lesson.setRoom(roomDao.getById(rs.getInt("room_id")));
         lesson.setDate(rs.getTimestamp("lesson_date").toLocalDateTime());
+        lesson.setLessonInactive(rs.getBoolean("lesson_inactive"));
         return lesson;
     }
 }

@@ -47,11 +47,11 @@ public class GroupDaoImpl implements GroupDao {
     }
 
     public void create(Group group) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.create"), group.getGroupName());
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.create"), group.getGroupName(), group.isGroupInactive());
     }
 
     public void update(Group group) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.update"), group.getGroupName(), group.getGroupId());
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.update"), group.getGroupName(), group.isGroupInactive(), group.getGroupId());
     } 
     
     public void removeGroupFromStudents(Integer groupId) {

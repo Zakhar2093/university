@@ -6,6 +6,7 @@ public class Room {
     private int roomId;
     private int roomNumber;
     private List<Lesson> lessons;
+    private boolean roomInactive;
     
     public Room() {
         super();
@@ -17,11 +18,20 @@ public class Room {
         this.roomNumber = roomNumber;
     }
 
-    public Room(int roomId, int roomNumber, List<Lesson> lessons) {
+    public Room(int roomId, int roomNumber, List<Lesson> lessons, boolean roomInactive) {
         super();
         this.roomId = roomId;
         this.roomNumber = roomNumber;
         this.lessons = lessons;
+        this.roomInactive = roomInactive;
+    }
+
+    public boolean isRoomInactive() {
+        return roomInactive;
+    }
+
+    public void setRoomInactive(boolean roomInactive) {
+        this.roomInactive = roomInactive;
     }
 
     public int getRoomId() {
@@ -48,15 +58,18 @@ public class Room {
         this.lessons = lessons;
     }
 
+    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((lessons == null) ? 0 : lessons.hashCode());
         result = prime * result + roomId;
+        result = prime * result + (roomInactive ? 1231 : 1237);
         result = prime * result + roomNumber;
         return result;
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
@@ -72,12 +85,16 @@ public class Room {
             return false;
         if (roomId != other.roomId)
             return false;
+        if (roomInactive != other.roomInactive)
+            return false;
         if (roomNumber != other.roomNumber)
             return false;
         return true;
     }
 
+    @Override
     public String toString() {
-        return "Room [roomId=" + roomId + ", roomNumber=" + roomNumber + ", lessons=" + lessons + "]";
+        return "Room [roomId=" + roomId + ", roomNumber=" + roomNumber + ", lessons=" + lessons + ", roomInactive="
+                + roomInactive + "]";
     }
 }

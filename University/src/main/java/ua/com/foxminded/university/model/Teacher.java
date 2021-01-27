@@ -7,6 +7,7 @@ public class Teacher {
     private String firstName;
     private String lastName;
     private List<Lesson> lessons;
+    private boolean teacherInactive;
     
     public Teacher() {
     }
@@ -18,12 +19,13 @@ public class Teacher {
         this.lastName = lastName;
     }
 
-    public Teacher(int teacherId, String firstName, String lastName, List<Lesson> lessons) {
+    public Teacher(int teacherId, String firstName, String lastName, List<Lesson> lessons, boolean teacherInactive) {
         super();
         this.teacherId = teacherId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.lessons = lessons;
+        this.teacherInactive = teacherInactive;
     }
 
     public int getTeacherId() {
@@ -57,7 +59,16 @@ public class Teacher {
     public List<Lesson> getLessons() {
         return lessons;
     }
+    
+    public boolean isTeacherInactive() {
+        return teacherInactive;
+    }
 
+    public void setTeacherInactive(boolean teacherInactive) {
+        this.teacherInactive = teacherInactive;
+    }
+
+    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
@@ -65,9 +76,11 @@ public class Teacher {
         result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
         result = prime * result + ((lessons == null) ? 0 : lessons.hashCode());
         result = prime * result + teacherId;
+        result = prime * result + (teacherInactive ? 1231 : 1237);
         return result;
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
@@ -93,11 +106,14 @@ public class Teacher {
             return false;
         if (teacherId != other.teacherId)
             return false;
+        if (teacherInactive != other.teacherInactive)
+            return false;
         return true;
     }
 
+    @Override
     public String toString() {
         return "Teacher [teacherId=" + teacherId + ", firstName=" + firstName + ", lastName=" + lastName + ", lessons="
-                + lessons + "]";
+                + lessons + ", teacherInactive=" + teacherInactive + "]";
     }
 }

@@ -46,11 +46,11 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     public void create(Room room) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "room.create"), room.getRoomNumber());
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "room.create"), room.getRoomNumber(), room.isRoomInactive());
     }
 
     public void update(Room room) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "room.update"), room.getRoomNumber(), room.getRoomId());
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "room.update"), room.getRoomNumber(), room.isRoomInactive(), room.getRoomId());
     }
 
     public void removeRoomFromLessons(Integer roomId) {

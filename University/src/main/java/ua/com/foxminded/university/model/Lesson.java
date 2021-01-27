@@ -10,12 +10,14 @@ public class Lesson {
     private Group group;
     private Room room;
     private LocalDateTime date;
+    private boolean lessonInactive;
     
     public Lesson() {
         super();
     }
 
-    public Lesson(int lessonId, String lessonName, Teacher teacher, Group group, Room room, LocalDateTime date) {
+    public Lesson(int lessonId, String lessonName, Teacher teacher, Group group, Room room, LocalDateTime date,
+            boolean lessonInactive) {
         super();
         this.lessonId = lessonId;
         this.lessonName = lessonName;
@@ -23,25 +25,30 @@ public class Lesson {
         this.group = group;
         this.room = room;
         this.date = date;
+        this.lessonInactive = lessonInactive;
     }
 
+    @Override
     public String toString() {
         return "Lesson [lessonId=" + lessonId + ", lessonName=" + lessonName + ", teacher=" + teacher + ", group="
-                + group + ", room=" + room + ", date=" + date + "]";
+                + group + ", room=" + room + ", date=" + date + ", lessonInactive=" + lessonInactive + "]";
     }
 
+    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((date == null) ? 0 : date.hashCode());
         result = prime * result + ((group == null) ? 0 : group.hashCode());
         result = prime * result + lessonId;
+        result = prime * result + (lessonInactive ? 1231 : 1237);
         result = prime * result + ((lessonName == null) ? 0 : lessonName.hashCode());
         result = prime * result + ((room == null) ? 0 : room.hashCode());
         result = prime * result + ((teacher == null) ? 0 : teacher.hashCode());
         return result;
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
@@ -62,6 +69,8 @@ public class Lesson {
             return false;
         if (lessonId != other.lessonId)
             return false;
+        if (lessonInactive != other.lessonInactive)
+            return false;
         if (lessonName == null) {
             if (other.lessonName != null)
                 return false;
@@ -78,6 +87,14 @@ public class Lesson {
         } else if (!teacher.equals(other.teacher))
             return false;
         return true;
+    }
+
+    public boolean isLessonInactive() {
+        return lessonInactive;
+    }
+
+    public void setLessonInactive(boolean lessonInactive) {
+        this.lessonInactive = lessonInactive;
     }
 
     public int getLessonId() {
