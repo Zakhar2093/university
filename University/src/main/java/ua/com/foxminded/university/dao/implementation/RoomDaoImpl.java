@@ -42,7 +42,8 @@ public class RoomDaoImpl implements RoomDao {
                         )
                 .stream()
                 .findAny()
-                .orElseThrow(() -> new DaoException("Room with such id does not exist"));
+                .orElse(null);
+//                .orElseThrow(() -> new DaoException("Room with such id does not exist"));
     }
 
     public void create(Room room) {
@@ -53,7 +54,7 @@ public class RoomDaoImpl implements RoomDao {
         jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "room.update"), room.getRoomNumber(), room.isRoomInactive(), room.getRoomId());
     }
 
-    public void removeRoomFromLessons(Integer roomId) {
+    public void removeRoomFromAllLessons(Integer roomId) {
         jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "room.removeRoomFromLessons"), roomId);
     }
     

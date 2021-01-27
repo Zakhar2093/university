@@ -4,6 +4,6 @@ import ua.com.foxminded.university.model.Room;
 
 public interface RoomDao extends GenericDao<Room, Integer>{
     
-    void removeRoomFromLessons(Integer roomId);
+    void removeRoomFromAllLessons(Integer roomId);
 
 }
