@@ -77,22 +77,15 @@ class GroupDaoImplTest {
         assertEquals(expected, actual);
     }
 
-    @Test
-    void deleteSouldDeleteCorrectData() {
-        Group group = new Group(1, "any name");
-        groupDao.create(group);
-        Teacher teacher = new Teacher(1, "one", "one");
-        teacherDao.create(teacher);
-        Room room = new Room(1, 101);
-        roomDao.create(room);   
-        Lesson lesson1 = new Lesson(1, "Math", teacher, group, room, LocalDateTime.now());
-        lessonDao.create(lesson1);
-        studentDao.create(new Student(1, "student1", "student1", group));
-        
-        groupDao.delete(1);
-        List<Group> actual = groupDao.getAll();
-        assertTrue(actual.size() == 0);
-    }
+//        Group group = new Group(1, "any name");
+//        groupDao.create(group);
+//        Teacher teacher = new Teacher(1, "one", "one");
+//        teacherDao.create(teacher);
+//        Room room = new Room(1, 101);
+//        roomDao.create(room);   
+//        Lesson lesson1 = new Lesson(1, "Math", teacher, group, room, LocalDateTime.now());
+//        lessonDao.create(lesson1);
+//        studentDao.create(new Student(1, "student1", "student1", group));
 
     @Test
     void updateSouldUpdateCorrectData() {

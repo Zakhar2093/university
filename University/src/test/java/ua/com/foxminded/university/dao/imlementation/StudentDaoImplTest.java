@@ -66,15 +66,9 @@ class StudentDaoImplTest {
         assertEquals(expected, actual);
     }
 
-    @Test
-    void deleteSouldDeleteCorrectData() {
-        Group group = new Group(1, "any name");
-        groupDao.create(group);
-        studentDao.create(new Student(1, "one", "one", group));
-        studentDao.delete(1);
-        List<Student> actual = studentDao.getAll();
-        assertTrue(actual.size() == 0);
-    }
+//        Group group = new Group(1, "any name");
+//        groupDao.create(group);
+//        studentDao.create(new Student(1, "one", "one", group));
 
     @Test
     void updateSouldUpdateCorrectData() {

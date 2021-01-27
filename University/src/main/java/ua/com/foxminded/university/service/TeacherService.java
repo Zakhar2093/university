@@ -32,12 +32,6 @@ public class TeacherService {
         return teacherDao.getById(teacherId);
     }
 
-    @Transactional
-    public void delete(Integer teacherId) {
-        teacherDao.deleteTeacherFromLessons(teacherId);
-        teacherDao.delete(teacherId);
-    }
-
     public void update(Teacher teacher) {
         teacherDao.update(teacher);
     }

@@ -32,13 +32,6 @@ public class GroupService {
         return groupDao.getById(groupId);
     }
 
-    @Transactional
-    public void delete(Integer groupId) {
-        groupDao.deleteGroupFromLessons(groupId);
-        groupDao.deleteGroupFromStudents(groupId);
-        groupDao.delete(groupId);
-    }
-
     public void update(Group group) {
         groupDao.update(group);
     }

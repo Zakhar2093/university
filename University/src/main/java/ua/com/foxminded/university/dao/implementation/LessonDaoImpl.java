@@ -51,10 +51,6 @@ public class LessonDaoImpl implements LessonDao{
                 );
     }
 
-    public void delete(Integer lessonId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.delete"), lessonId);
-    }
-
     public List<Lesson> getAll() {
         return jdbcTemplate.query(propertyReader.read(PROPERTY_NAME, "lesson.getAll"), new LessonMapper(groupDao, teacherDao, roomDao));
     }

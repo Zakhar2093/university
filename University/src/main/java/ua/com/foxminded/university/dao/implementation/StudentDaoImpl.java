@@ -37,10 +37,6 @@ public class StudentDaoImpl implements StudentDao {
                 );
     }
 
-    public void delete(Integer studentId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.delete"), studentId);
-    }
-
     public List<Student> getAll() {
         return jdbcTemplate.query(propertyReader.read(PROPERTY_NAME, "student.getAll"), new StudentMapper(groupDaoImpl));
     }

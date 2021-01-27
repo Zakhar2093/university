@@ -35,10 +35,6 @@ public class StudentService {
         return studentDao.getById(studentId);
     }
 
-    public void delete(Integer studentId) {
-        studentDao.delete(studentId);
-    }
-
     public void update(Student student) {
         studentDao.update(student);
     }

@@ -33,10 +33,6 @@ public class TeacherDaoImpl implements TeacherDao{
                 );
     }
 
-    public void delete(Integer teacherId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "teacher.delete"), teacherId);
-    }
-    
     public void deleteTeacherFromLessons(Integer teacherId) {
         jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "teacher.deleteTeacherFromLessons"), teacherId);
     }

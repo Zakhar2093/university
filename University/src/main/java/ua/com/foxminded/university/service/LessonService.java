@@ -37,14 +37,6 @@ public class LessonService {
         return lessonDao.getById(lessonId);
     }
 
-    @Transactional
-    public void delete(Integer lessonId) {
-        lessonDao.deleteGroupFromLesson(lessonId);
-        lessonDao.deleteRoomFromLesson(lessonId);
-        lessonDao.deleteTeacherFromLesson(lessonId);
-        lessonDao.delete(lessonId);
-    }
-
     public void update(Lesson lesson) { 
         lessonDao.update(lesson);
     }

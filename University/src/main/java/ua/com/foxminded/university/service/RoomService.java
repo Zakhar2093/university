@@ -31,12 +31,6 @@ public class RoomService {
     public Room getById(Integer roomId) {
         return roomDao.getById(roomId);
     }
-    
-    @Transactional
-    public void delete(Integer roomId) {
-        roomDao.deleteRoomFromLessons(roomId);
-        roomDao.delete(roomId);
-    }
 
     public void update(Room room) {
         roomDao.update(room);

@@ -57,10 +57,6 @@ public class GroupDaoImpl implements GroupDao {
         jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.delete"), groupId);
     }
     
-    public void deleteGroupFromStudents(Integer groupId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.deleteGroupFromStudents"), groupId);
-    }
-    
     public void deleteGroupFromLessons(Integer groupId) {
         jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.deleteGroupFromLessons"), groupId);
     }
