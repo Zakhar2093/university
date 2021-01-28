@@ -45,4 +45,8 @@ public class RoomService {
     public void activate(Integer roomId) {
         roomDao.activate(roomId);
     }
+    
+    public void getRoomByLesson(Integer lessonId) {
+        roomDao.getRoomByLesson(lessonId);
+    }
 }

@@ -64,4 +64,10 @@ class RoomServiceTest {
         roomService.activate(1);
         verify(roomDao, only()).activate(anyInt());
     }
+    
+    @Test
+    void getRoomByLessonShouldInvokeOnlyOnce() {
+        roomService.getRoomByLesson(1);;
+        verify(roomDao, only()).getRoomByLesson(anyInt());
+    }
 }

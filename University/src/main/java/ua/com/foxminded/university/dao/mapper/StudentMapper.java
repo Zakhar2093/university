@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
+import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.implementation.GroupDaoImpl;
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.model.Student;
@@ -33,8 +34,14 @@ public class StudentMapper implements RowMapper<Student> {
         student.setStudentId(rs.getInt("student_id"));
         student.setFirstName(rs.getString("first_name"));
         student.setLastName(rs.getString("last_name"));
-        student.setGroup(groupDaoImpl.getById(rs.getInt("group_id")));
         student.setStudentInactive(rs.getBoolean("student_inactive"));
+        
+        try {
+            student.setGroup(groupDaoImpl.getGroupByStudent(rs.getInt("student_id")));
+        } catch (DaoException e) {
+            student.setGroup(null);
+        }
+        
         return student;
     }
 }

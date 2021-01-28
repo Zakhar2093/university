@@ -133,6 +133,22 @@ class RoomDaoImplTest {
                         ); 
         assertEquals(expected, actual);
     }
+    
+    @Test
+    void getRoomByLessonSouldReturnCorrectRoom() {
+        Group group = new Group(1, "any name", false);
+        groupDao.create(group);
+        Teacher teacher = new Teacher(1, "one", "one", false);
+        teacherDao.create(teacher);
+        Room room1 = new Room(1, 101);
+        roomDao.create(room1);
+        Lesson lesson1 = new Lesson(1, "Math", teacher, group, room1, LocalDateTime.now(), false);
+        lessonDao.create(lesson1);
+        
+        Room expected = room1;
+        Room actual = roomDao.getRoomByLesson(1);
+        assertEquals(expected, actual);
+    }
 
     @AfterEach
     void closeConext() {

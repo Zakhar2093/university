@@ -68,4 +68,16 @@ class GroupServiceTest {
         groupService.activate(1);
         verify(groupDao, only()).activate(anyInt());
     }
+    
+    @Test
+    void getGroupByLessonShouldInvokeOnlyOnce() {
+        groupService.getGroupByLesson(1);;
+        verify(groupDao, only()).getGroupByLesson(anyInt());
+    }
+    
+    @Test
+    void getGroupByStudentShouldInvokeOnlyOnce() {
+        groupService.getGroupByStudent(1);;
+        verify(groupDao, only()).getGroupByStudent(anyInt());
+    }
 }

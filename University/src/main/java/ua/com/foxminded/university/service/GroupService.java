@@ -46,4 +46,12 @@ public class GroupService {
     public void activate(Integer groupId) {
         groupDao.activate(groupId);
     }
+    
+    public void getGroupByLesson(Integer lessonId) {
+        groupDao.getGroupByLesson(lessonId);
+    }
+    
+    public void getGroupByStudent(Integer studentId) {
+        groupDao.getGroupByStudent(studentId);
+    }
 }

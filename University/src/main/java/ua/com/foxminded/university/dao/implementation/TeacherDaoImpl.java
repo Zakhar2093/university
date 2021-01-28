@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.interfaces.TeacherDao;
+import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Teacher;
 
 @Component
@@ -53,8 +54,9 @@ public class TeacherDaoImpl implements TeacherDao{
                         new BeanPropertyRowMapper<>(Teacher.class)
                         )
                 .stream()
-                .findAny()
-                .orElse(null);
+                .findFirst()
+                .orElseThrow(() -> new DaoException("Group with such id does not exist")
+                        );
     }
 
     public void update(Teacher teacher) {
@@ -74,4 +76,17 @@ public class TeacherDaoImpl implements TeacherDao{
     public void activate(Integer teacherId) {
         jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "teacher.activate"), teacherId);
     }
+    
+    public Teacher getTeacherByLesson(Integer lessonId) {
+        return jdbcTemplate
+            .query(
+                    propertyReader.read(PROPERTY_NAME, "teacher.getRoomByLesson"), 
+                    new Object[] { lessonId },
+                    new BeanPropertyRowMapper<>(Teacher.class)
+                )
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new DaoException("Teacher with such id does not exist")
+                        );
+   }
 }

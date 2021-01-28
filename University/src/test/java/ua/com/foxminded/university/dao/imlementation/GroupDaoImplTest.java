@@ -163,6 +163,34 @@ class GroupDaoImplTest {
         
         assertEquals(expected, actual);
     }
+    
+    @Test
+    void getGroupByLessonSouldReturnCorrectGroup() {
+        Group group = new Group(1, "any name", false);
+        groupDao.create(group);
+        Teacher teacher = new Teacher(1, "one", "one", false);
+        teacherDao.create(teacher);
+        Room room1 = new Room(1, 101);
+        roomDao.create(room1);
+        Lesson lesson1 = new Lesson(1, "Math", teacher, group, room1, LocalDateTime.now(), false);
+        lessonDao.create(lesson1);
+        
+        Group expected = group;
+        Group actual = groupDao.getGroupByLesson(1);
+        assertEquals(expected, actual);
+    }
+    
+    @Test
+    void getGroupByStudentSouldReturnCorrectGroup() {
+        Group group = new Group(1, "any name", false);
+        groupDao.create(group);
+        Student student = new Student(1, "one", "one", group,false);
+        studentDao.create(student);
+        
+        Group expected = group;
+        Group actual = groupDao.getGroupByStudent(1);
+        assertEquals(expected, actual);
+    }
 
     private List<Group> createTestGroups() {
         List<Group> groups = new ArrayList<>();

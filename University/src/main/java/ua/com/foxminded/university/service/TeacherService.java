@@ -45,4 +45,8 @@ public class TeacherService {
     public void activate(Integer teacherId) {
         teacherDao.activate(teacherId);
     }
+    
+    public void getTeacherByLesson(Integer lessonId) {
+        teacherDao.getTeacherByLesson(lessonId);
+    }
 }

@@ -69,4 +69,10 @@ class TeacherServiceTest {
         teacherService.activate(1);
         verify(teacherDao, only()).activate(anyInt());
     }
+    
+    @Test
+    void getTeacherByLessonShouldInvokeOnlyOnce() {
+        teacherService.getTeacherByLesson(1);
+        verify(teacherDao, only()).getTeacherByLesson(anyInt());
+    }
 }

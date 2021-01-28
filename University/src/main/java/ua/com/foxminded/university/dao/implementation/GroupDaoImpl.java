@@ -11,6 +11,7 @@ import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.model.Group;
+import ua.com.foxminded.university.model.Room;
 
 @Component
 public class GroupDaoImpl implements GroupDao {
@@ -42,8 +43,9 @@ public class GroupDaoImpl implements GroupDao {
                         new BeanPropertyRowMapper<>(Group.class)
                         )
                 .stream()
-                .findAny()
-                .orElse(null);
+                .findFirst()
+                .orElseThrow(() -> new DaoException("Group with such id does not exist")
+                        );
     }
 
     public void create(Group group) {
@@ -69,4 +71,30 @@ public class GroupDaoImpl implements GroupDao {
     public void activate(Integer groupId) {
         jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.activate"), groupId);
     }
+    
+    public Group getGroupByLesson(Integer lessonId) {
+        return jdbcTemplate
+            .query(
+                    propertyReader.read(PROPERTY_NAME, "group.getRoomByLesson"), 
+                    new Object[] { lessonId },
+                    new BeanPropertyRowMapper<>(Group.class)
+                )
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new DaoException("Group with such id does not exist")
+                        );
+   }
+    
+    public Group getGroupByStudent(Integer studentId) {
+        return jdbcTemplate
+            .query(
+                    propertyReader.read(PROPERTY_NAME, "group.getRoomByStudent"), 
+                    new Object[] { studentId },
+                    new BeanPropertyRowMapper<>(Group.class)
+                )
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new DaoException("Group with such id does not exist")
+                        );
+   }
 }

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.interfaces.RoomDao;
+import ua.com.foxminded.university.model.Lesson;
 import ua.com.foxminded.university.model.Room;
 
 @Component
@@ -41,9 +42,10 @@ public class RoomDaoImpl implements RoomDao {
                         new BeanPropertyRowMapper<>(Room.class)
                         )
                 .stream()
-                .findAny()
-                .orElse(null);
-//                .orElseThrow(() -> new DaoException("Room with such id does not exist"));
+                .findFirst()
+//                .orElse(null);
+                .orElseThrow(() -> new DaoException("Room with such id does not exist"));
+                        
     }
 
     public void create(Room room) {
@@ -64,5 +66,18 @@ public class RoomDaoImpl implements RoomDao {
     
     public void activate(Integer roomId) {
         jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "room.activate"), roomId);
+    }
+    
+    public Room getRoomByLesson(Integer lessonId) {
+         return jdbcTemplate
+                 .query(
+                     propertyReader.read(PROPERTY_NAME, "room.getRoomByLesson"), 
+                     new Object[] { lessonId },
+                     new BeanPropertyRowMapper<>(Room.class)
+                 )
+                 .stream()
+                 .findFirst()
+                 .orElseThrow(() -> new DaoException("Room with such id does not exist")
+                         );
     }
 }
