@@ -70,13 +70,13 @@ class StudentServiceTest {
     }
     
     @Test
-    void addTeacherToLessonShouldInvokeOnlyOnce() {
+    void addStudentToGroupShouldInvokeOnlyOnce() {
         studentService.addStudentToGroup(1, 1);
         verify(studentDao, only()).addStudentToGroup(anyInt(), anyInt());
     }
     
     @Test
-    void removeTeacherFromLessonShouldInvokeOnlyOnce() {
+    void removeStudentFromGroupShouldInvokeOnlyOnce() {
         studentService.removeStudentFromGroup(1);
         verify(studentDao, only()).removeStudentFromGroup(anyInt());
     }
