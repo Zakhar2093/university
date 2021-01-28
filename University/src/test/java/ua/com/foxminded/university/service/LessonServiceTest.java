@@ -8,6 +8,7 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.eq;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import ua.com.foxminded.university.dao.DatabaseInitialization;
@@ -118,27 +120,29 @@ class LessonServiceTest {
     
     @Test
     void getLessonByTeacherForDayShouldInvokeOnlyOnce(){
-//        List<String> list = mock(List.class);
-        lessonService.getLessonByTeacherForDay(new Teacher(), LocalDateTime.now());
-//        when(lessonDao.getLessonByTeacherForDay(any(Teacher.class), LocalDateTime.now())).thenReturn(list)));
-        verify(lessonDao, only()).getLessonByTeacherForDay(any(Teacher.class), LocalDateTime.now());
+        LocalDateTime time = LocalDateTime.now();
+        lessonService.getLessonByTeacherForDay(new Teacher(), time);
+        verify(lessonDao, only()).getLessonByTeacherForDay(any(Teacher.class), eq(time));
     }
 
     @Test
     void getLessonByTeacherForMonthShouldInvokeOnlyOnce(){
-        lessonService.getLessonByTeacherForMonth(new Teacher(), LocalDateTime.now());
-        verify(lessonDao, only()).getLessonByTeacherForMonth(any(Teacher.class), LocalDateTime.now());
+        LocalDateTime time = LocalDateTime.now();
+        lessonService.getLessonByTeacherForMonth(new Teacher(), time);
+        verify(lessonDao, only()).getLessonByTeacherForMonth(any(Teacher.class), eq(time));
     }
 
     @Test
     void getLessonByStudentForDayShouldInvokeOnlyOnce(){
-        lessonService.getLessonByStudentForDay(new Student(), LocalDateTime.now());
-        verify(lessonDao, only()).getLessonByStudentForDay(any(Student.class), LocalDateTime.now());
+        LocalDateTime time = LocalDateTime.now();
+        lessonService.getLessonByStudentForDay(new Student(), time);
+        verify(lessonDao, only()).getLessonByStudentForDay(any(Student.class), eq(time));
     }
 
     @Test
     void getLessonByStudentForMonthShouldInvokeOnlyOnce(){
-        lessonService.getLessonByStudentForMonth(new Student(), LocalDateTime.now());
-        verify(lessonDao, only()).getLessonByStudentForMonth(any(Student.class), LocalDateTime.now());
+        LocalDateTime time = LocalDateTime.now();
+        lessonService.getLessonByStudentForMonth(new Student(), time);
+        verify(lessonDao, times(1)).getLessonByStudentForMonth(any(Student.class), eq(time));
     }
 }
