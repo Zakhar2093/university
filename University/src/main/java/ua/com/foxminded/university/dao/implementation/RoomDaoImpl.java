@@ -55,7 +55,7 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     public void removeRoomFromAllLessons(Integer roomId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "room.removeRoomFromLessons"), roomId);
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "room.removeRoomFromAllLessons"), roomId);
     }
     
     public void deactivate(Integer roomId) {
