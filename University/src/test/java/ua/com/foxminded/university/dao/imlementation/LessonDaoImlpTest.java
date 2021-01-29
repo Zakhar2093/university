@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.SpringConfigTest;
+import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.DatabaseInitialization;
 import ua.com.foxminded.university.dao.implementation.GroupDaoImpl;
 import ua.com.foxminded.university.dao.implementation.LessonDaoImpl;
@@ -61,15 +62,15 @@ class LessonDaoImlpTest {
 
     @Test
     void getByIdAndCreateSouldInsertAndGetCorrectData() {
-        Group group = new Group(1, "any name");
+        Group group = new Group(1, "any name", false);
         groupDao.create(group);
-        Teacher teacher = new Teacher(1, "one", "one");
+        Teacher teacher = new Teacher(1, "one", "one", false);
         teacherDao.create(teacher);
         Room room = new Room(1, 101);
         roomDao.create(room);
         LocalDateTime date = LocalDateTime.now();
         
-        Lesson lesson = new Lesson(1, "Math", teacher, group, room, date);
+        Lesson lesson = new Lesson(1, "Math", teacher, group, room, date, false);
         lessonDao.create(lesson);
         Lesson expected = lesson;
         Lesson actual = lessonDao.getById(1);
@@ -78,18 +79,18 @@ class LessonDaoImlpTest {
 
     @Test
     void getAllAndCreateSouldInsertAndGetCorrectData() {
-        Group group = new Group(1, "any name");
+        Group group = new Group(1, "any name", false);
         groupDao.create(group);
-        Teacher teacher = new Teacher(1, "one", "one");
+        Teacher teacher = new Teacher(1, "one", "one", false);
         teacherDao.create(teacher);
         Room room = new Room(1, 101);
         roomDao.create(room);
         LocalDateTime date = LocalDateTime.now();
         
         List<Lesson> lessons = new ArrayList<>();
-        lessons.add(new Lesson(1, "Math", teacher, group, room, date));
-        lessons.add(new Lesson(2, "Bio", teacher, group, room, date));
-        lessons.add(new Lesson(3, "History", teacher, group, room, date));
+        lessons.add(new Lesson(1, "Math", teacher, group, room, date, false));
+        lessons.add(new Lesson(2, "Bio", teacher, group, room, date, false));
+        lessons.add(new Lesson(3, "History", teacher, group, room, date, false));
         lessonDao.create(lessons.get(0));
         lessonDao.create(lessons.get(1));
         lessonDao.create(lessons.get(2));
@@ -99,36 +100,20 @@ class LessonDaoImlpTest {
     }
 
     @Test
-    void deleteSouldDeleteCorrectData() {
-        Group group = new Group(1, "any name");
-        groupDao.create(group);
-        Teacher teacher = new Teacher(1, "one", "one");
-        teacherDao.create(teacher);
-        Room room = new Room(1, 101);
-        roomDao.create(room);
-        LocalDateTime date = LocalDateTime.now();
-        
-        lessonDao.create(new Lesson(1, "Math", teacher, group, room, date));
-        lessonDao.delete(1);
-        List<Lesson> actual = lessonDao.getAll();
-        assertTrue(actual.size() == 0);
-    }
-
-    @Test
     void updateSouldUpdateCorrectData() {
-        Group group = new Group(1, "any name");
+        Group group = new Group(1, "any name", false);
         groupDao.create(group);
-        Teacher teacher = new Teacher(1, "one", "one");
+        Teacher teacher = new Teacher(1, "one", "one", false);
         teacherDao.create(teacher);
-        Teacher teacher2 = new Teacher(2, "two", "two");
+        Teacher teacher2 = new Teacher(2, "two", "two", false);
         teacherDao.create(teacher2);
         Room room = new Room(1, 101);
         roomDao.create(room);
         LocalDateTime date = LocalDateTime.now();
         
         
-        Lesson lessonBeforeUpdating = new Lesson(1, "Math", teacher, group, room, date);
-        Lesson lessonAfterUpdating = new Lesson(1, "Bio", teacher, group, room, date);
+        Lesson lessonBeforeUpdating = new Lesson(1, "Math", teacher, group, room, date, false);
+        Lesson lessonAfterUpdating = new Lesson(1, "Bio", teacher, group, room, date, false);
         lessonDao.create(lessonBeforeUpdating);
         lessonDao.update(lessonAfterUpdating);
         Lesson expected = lessonAfterUpdating;
@@ -140,10 +125,10 @@ class LessonDaoImlpTest {
     
     @Test
     void getLessonByTeacherForDayShouldReturnCorrectData() {
-        Group group = new Group(1, "any name");
+        Group group = new Group(1, "any name", false);
         groupDao.create(group);
-        Teacher teacher = new Teacher(1, "one", "one");
-        Teacher teacher2 = new Teacher(2, "two", "two");
+        Teacher teacher = new Teacher(1, "one", "one", false);
+        Teacher teacher2 = new Teacher(2, "two", "two", false);
         teacherDao.create(teacher);
         teacherDao.create(teacher2);
         Room room = new Room(1, 101);
@@ -154,11 +139,11 @@ class LessonDaoImlpTest {
         LocalDateTime date3 = LocalDateTime.parse("2021.01.21-23.55.11", FORMATTER);
         LocalDateTime date4 = LocalDateTime.parse("2021.02.11-23.55.11", FORMATTER);
         
-        Lesson lesson1 = new Lesson(1, "Math", teacher, group, room, date1);
-        Lesson lesson2 = new Lesson(2, "bio", teacher, group, room, date2);
-        Lesson lesson3 = new Lesson(3, "bio", teacher2, group, room, date2);
-        Lesson lesson4 = new Lesson(4, "history", teacher, group, room, date3);
-        Lesson lesson5 = new Lesson(5, "english", teacher, group, room, date4);
+        Lesson lesson1 = new Lesson(1, "Math", teacher, group, room, date1, false);
+        Lesson lesson2 = new Lesson(2, "bio", teacher, group, room, date2, false);
+        Lesson lesson3 = new Lesson(3, "bio", teacher2, group, room, date2, false);
+        Lesson lesson4 = new Lesson(4, "history", teacher, group, room, date3, false);
+        Lesson lesson5 = new Lesson(5, "english", teacher, group, room, date4, false);
         
         lessonDao.create(lesson1);
         lessonDao.create(lesson2);
@@ -176,10 +161,10 @@ class LessonDaoImlpTest {
     
     @Test
     void getLessonByTeacherForMonceShouldReturnCorrectData() {
-        Group group = new Group(1, "any name");
+        Group group = new Group(1, "any name", false);
         groupDao.create(group);
-        Teacher teacher = new Teacher(1, "one", "one");
-        Teacher teacher2 = new Teacher(2, "two", "two");
+        Teacher teacher = new Teacher(1, "one", "one", false);
+        Teacher teacher2 = new Teacher(2, "two", "two", false);
         teacherDao.create(teacher);
         teacherDao.create(teacher2);
         Room room = new Room(1, 101);
@@ -190,11 +175,11 @@ class LessonDaoImlpTest {
         LocalDateTime date3 = LocalDateTime.parse("2021.01.21-23.55.11", FORMATTER);
         LocalDateTime date4 = LocalDateTime.parse("2021.02.11-23.55.11", FORMATTER);
         
-        Lesson lesson1 = new Lesson(1, "Math", teacher, group, room, date1);
-        Lesson lesson2 = new Lesson(2, "bio", teacher, group, room, date2);
-        Lesson lesson3 = new Lesson(3, "bio", teacher2, group, room, date2);
-        Lesson lesson4 = new Lesson(4, "history", teacher, group, room, date3);
-        Lesson lesson5 = new Lesson(5, "english", teacher, group, room, date4);
+        Lesson lesson1 = new Lesson(1, "Math", teacher, group, room, date1, false);
+        Lesson lesson2 = new Lesson(2, "bio", teacher, group, room, date2, false);
+        Lesson lesson3 = new Lesson(3, "bio", teacher2, group, room, date2, false);
+        Lesson lesson4 = new Lesson(4, "history", teacher, group, room, date3, false);
+        Lesson lesson5 = new Lesson(5, "english", teacher, group, room, date4, false);
         
         lessonDao.create(lesson1);
         lessonDao.create(lesson2);
@@ -213,16 +198,16 @@ class LessonDaoImlpTest {
     
     @Test
     void getLessonByStudentForDayShouldReturnCorrectData() {
-        Group group = new Group(1, "any name");
+        Group group = new Group(1, "any name", false);
         groupDao.create(group);
-        Teacher teacher = new Teacher(1, "one", "one");
-        Teacher teacher2 = new Teacher(2, "two", "two");
+        Teacher teacher = new Teacher(1, "one", "one", false);
+        Teacher teacher2 = new Teacher(2, "two", "two", false);
         teacherDao.create(teacher);
         teacherDao.create(teacher2);
         Room room = new Room(1, 101);
         roomDao.create(room);
-        Student student1 = new Student(1, "student1", "student1", group);
-        Student student2 = new Student(2, "student2", "student2", group);
+        Student student1 = new Student(1, "student1", "student1", group, false);
+        Student student2 = new Student(2, "student2", "student2", group, false);
         studentDao.create(student1);
         studentDao.create(student2);
         
@@ -231,10 +216,10 @@ class LessonDaoImlpTest {
         LocalDateTime date3 = LocalDateTime.parse("2021.01.21-23.55.11", FORMATTER);
         LocalDateTime date4 = LocalDateTime.parse("2021.02.11-23.55.11", FORMATTER);
         
-        Lesson lesson1 = new Lesson(1, "Math", teacher, group, room, date1);
-        Lesson lesson2 = new Lesson(2, "bio", teacher, group, room, date2);
-        Lesson lesson3 = new Lesson(3, "history", teacher, group, room, date3);
-        Lesson lesson4 = new Lesson(4, "english", teacher, group, room, date4);
+        Lesson lesson1 = new Lesson(1, "Math", teacher, group, room, date1, false);
+        Lesson lesson2 = new Lesson(2, "bio", teacher, group, room, date2, false);
+        Lesson lesson3 = new Lesson(3, "history", teacher, group, room, date3, false);
+        Lesson lesson4 = new Lesson(4, "english", teacher, group, room, date4, false);
         
         lessonDao.create(lesson1);
         lessonDao.create(lesson2);
@@ -251,16 +236,16 @@ class LessonDaoImlpTest {
     
     @Test
     void getLessonByStudentForMonthShouldReturnCorrectData() {
-        Group group = new Group(1, "any name");
+        Group group = new Group(1, "any name", false);
         groupDao.create(group);
-        Teacher teacher = new Teacher(1, "one", "one");
-        Teacher teacher2 = new Teacher(2, "two", "two");
+        Teacher teacher = new Teacher(1, "one", "one", false);
+        Teacher teacher2 = new Teacher(2, "two", "two", false);
         teacherDao.create(teacher);
         teacherDao.create(teacher2);
         Room room = new Room(1, 101);
         roomDao.create(room);
-        Student student1 = new Student(1, "student1", "student1", group);
-        Student student2 = new Student(2, "student2", "student2", group);
+        Student student1 = new Student(1, "student1", "student1", group, false);
+        Student student2 = new Student(2, "student2", "student2", group, false);
         studentDao.create(student1);
         studentDao.create(student2);
         
@@ -269,10 +254,10 @@ class LessonDaoImlpTest {
         LocalDateTime date3 = LocalDateTime.parse("2021.01.21-23.55.11", FORMATTER);
         LocalDateTime date4 = LocalDateTime.parse("2021.02.11-23.55.11", FORMATTER);
         
-        Lesson lesson1 = new Lesson(1, "Math", teacher, group, room, date1);
-        Lesson lesson2 = new Lesson(2, "bio", teacher, group, room, date2);
-        Lesson lesson3 = new Lesson(3, "history", teacher, group, room, date3);
-        Lesson lesson4 = new Lesson(4, "english", teacher, group, room, date4);
+        Lesson lesson1 = new Lesson(1, "Math", teacher, group, room, date1, false);
+        Lesson lesson2 = new Lesson(2, "bio", teacher, group, room, date2, false);
+        Lesson lesson3 = new Lesson(3, "history", teacher, group, room, date3, false);
+        Lesson lesson4 = new Lesson(4, "english", teacher, group, room, date4, false);
         
         lessonDao.create(lesson1);
         lessonDao.create(lesson2);
@@ -286,6 +271,148 @@ class LessonDaoImlpTest {
         expected.add(lesson3);
         
         assertEquals(expected, actual);
+    }
+    
+    @Test
+    void removeTeacherFromLessonSouldSetNullInStudentTeacher() {
+        Group group = new Group(1, "any name", false);
+        groupDao.create(group);
+        Teacher teacher = new Teacher(1, "one", "one", false);
+        teacherDao.create(teacher);
+        Room room = new Room(1, 101);
+        roomDao.create(room);
+        Lesson lesson = new Lesson(1, "Math", teacher, group, room, LocalDateTime.now(), false);
+        lessonDao.create(lesson);
+        
+        lessonDao.removeTeacherFromLesson(1);
+        assertTrue(lessonDao.getById(1).getTeacher() == null);
+    }
+    
+    @Test
+    void addTeacherToLessonSouldSetTeacherInLesson() {
+        Group group = new Group(1, "any name", false);
+        groupDao.create(group);
+        Teacher teacher = new Teacher(1, "one", "one", false);
+        teacherDao.create(teacher);
+        Room room = new Room(1, 101);
+        roomDao.create(room);
+        Lesson lesson = new Lesson(1, "Math", teacher, group, room, LocalDateTime.now(), false);
+        lessonDao.create(lesson);
+        
+        lessonDao.removeTeacherFromLesson(1);
+        assertTrue(lessonDao.getById(1).getTeacher() == null);
+        lessonDao.addTeacherToLesson(1, 1);
+        assertTrue(lessonDao.getById(1).getTeacher().equals(teacher));
+    }
+    
+    @Test
+    void removeRoomFromLessonSouldSetNullInStudentRoom() {
+        Group group = new Group(1, "any name", false);
+        groupDao.create(group);
+        Teacher teacher = new Teacher(1, "one", "one", false);
+        teacherDao.create(teacher);
+        Room room = new Room(1, 101);
+        roomDao.create(room);
+        Lesson lesson = new Lesson(1, "Math", teacher, group, room, LocalDateTime.now(), false);
+        lessonDao.create(lesson);
+        
+        lessonDao.removeTeacherFromLesson(1);
+        assertTrue(lessonDao.getById(1).getTeacher() == null);
+    }
+    
+    @Test
+    void addRoomToLessonSouldSetRoomInLesson() {
+        Group group = new Group(1, "any name", false);
+        groupDao.create(group);
+        Teacher teacher = new Teacher(1, "one", "one", false);
+        teacherDao.create(teacher);
+        Room room = new Room(1, 101);
+        roomDao.create(room);
+        Lesson lesson = new Lesson(1, "Math", teacher, group, room, LocalDateTime.now(), false);
+        lessonDao.create(lesson);
+        
+        lessonDao.removeRoomFromLesson(1);
+        assertTrue(lessonDao.getById(1).getRoom() == null);
+        lessonDao.addRoomToLesson(1, 1);
+        assertTrue(lessonDao.getById(1).getRoom().equals(room));
+    }
+    
+    @Test
+    void removeGroupFromLessonSouldSetNullInStudentGroup() {
+        Group group = new Group(1, "any name", false);
+        groupDao.create(group);
+        Teacher teacher = new Teacher(1, "one", "one", false);
+        teacherDao.create(teacher);
+        Room room = new Room(1, 101);
+        roomDao.create(room);
+        Lesson lesson = new Lesson(1, "Math", teacher, group, room, LocalDateTime.now(), false);
+        lessonDao.create(lesson);
+        
+        lessonDao.removeGroupFromLesson(1);
+        assertTrue(lessonDao.getById(1).getGroup() == null);
+    }
+    
+    @Test
+    void addGroupToLessonSouldSetGroupInLesson() {
+        Group group = new Group(1, "any name", false);
+        groupDao.create(group);
+        Teacher teacher = new Teacher(1, "one", "one", false);
+        teacherDao.create(teacher);
+        Room room = new Room(1, 101);
+        roomDao.create(room);
+        Lesson lesson = new Lesson(1, "Math", teacher, group, room, LocalDateTime.now(), false);
+        lessonDao.create(lesson);
+        
+        lessonDao.removeGroupFromLesson(1);
+        assertTrue(lessonDao.getById(1).getGroup() == null);
+        lessonDao.addGroupToLesson(1, 1);
+        assertTrue(lessonDao.getById(1).getGroup().equals(group));
+    }
+    
+    @Test
+    void deactivateSouldSetTrueInLessonInactive() {
+        Group group = new Group(1, "any name", false);
+        groupDao.create(group);
+        Teacher teacher = new Teacher(1, "one", "one", false);
+        teacherDao.create(teacher);
+        Room room = new Room(1, 101);
+        roomDao.create(room);
+        Lesson lesson = new Lesson(1, "Math", teacher, group, room, LocalDateTime.now(), false);
+        lessonDao.create(lesson);
+        
+        lessonDao.removeGroupFromLesson(1);
+        lessonDao.removeRoomFromLesson(1);
+        lessonDao.removeTeacherFromLesson(1);
+        lessonDao.deactivate(1);
+        assertTrue(lessonDao.getById(1).isLessonInactive());
+    }
+    
+    @Test
+    void activateSouldSetFolseInLessonInactive() {
+        Group group = new Group(1, "any name", false);
+        groupDao.create(group);
+        Teacher teacher = new Teacher(1, "one", "one", false);
+        teacherDao.create(teacher);
+        Room room = new Room(1, 101);
+        roomDao.create(room);
+        Lesson lesson = new Lesson(1, "Math", teacher, group, room, LocalDateTime.now(), false);
+        lessonDao.create(lesson);
+        
+        lessonDao.removeGroupFromLesson(1);
+        lessonDao.removeRoomFromLesson(1);
+        lessonDao.removeTeacherFromLesson(1);
+        lessonDao.deactivate(1);
+        assertTrue(lessonDao.getById(1).isLessonInactive());
+        lessonDao.activate(1);
+        assertFalse(lessonDao.getById(1).isLessonInactive());
+    }
+    
+    @Test
+    void whenGetByIdGetNonexistentDataShouldThrowsDaoException() {
+        DaoException thrown = assertThrows(DaoException.class, () -> {
+            lessonDao.getById(1);
+        });
+        assertTrue(thrown.getMessage().contains("Lesson with such id does not exist"));
     }
     
     @AfterEach

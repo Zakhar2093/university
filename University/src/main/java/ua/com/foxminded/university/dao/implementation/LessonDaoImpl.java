@@ -1,3 +1,4 @@
+
 package ua.com.foxminded.university.dao.implementation;
 
 import java.time.LocalDateTime;
@@ -46,12 +47,9 @@ public class LessonDaoImpl implements LessonDao{
                 lesson.getTeacher().getTeacherId(), 
                 lesson.getGroup().getGroupId(),
                 lesson.getRoom().getRoomId(),
-                lesson.getDate()
+                lesson.getDate(),           
+                lesson.isLessonInactive()
                 );
-    }
-
-    public void delete(Integer lessonId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.delete"), lessonId);
     }
 
     public List<Lesson> getAll() {
@@ -67,7 +65,7 @@ public class LessonDaoImpl implements LessonDao{
                         )
                 .stream()
                 .findAny()
-                .orElseThrow(() -> new DaoException("lesson with such id does not exist"));
+                .orElseThrow(() -> new DaoException("Lesson with such id does not exist"));
     }
 
     public void update(Lesson lesson) {
@@ -78,6 +76,7 @@ public class LessonDaoImpl implements LessonDao{
                 lesson.getGroup().getGroupId(),
                 lesson.getRoom().getRoomId(),
                 lesson.getDate(),
+                lesson.isLessonInactive(),
                 lesson.getLessonId()
                 );
     }
@@ -126,5 +125,37 @@ public class LessonDaoImpl implements LessonDao{
                 new Object[] { studentId, year, mounth}, 
                 new LessonMapper(groupDao, teacherDao, roomDao)
                 );
+    }
+    
+    public void deactivate(Integer lessonId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.deactivate"), lessonId);
+    }
+    
+    public void activate(Integer lessonId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.activate"), lessonId);
+    }
+    
+    public void addGroupToLesson(Integer groupId, Integer lessonId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.addGroupToLesson"), groupId, lessonId);
+    }
+    
+    public void removeGroupFromLesson(Integer lessonId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.removeGroupFromLesson"), lessonId);
+    }
+    
+    public void addRoomToLesson(Integer roomId, Integer lessonId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.addRoomToLesson"), roomId, lessonId);
+    }
+    
+    public void removeRoomFromLesson(Integer lessonId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.removeRoomFromLesson"), lessonId);
+    }
+    
+    public void addTeacherToLesson(Integer teacherId, Integer lessonId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.addTeacherToLesson"), teacherId, lessonId);
+    }
+    
+    public void removeTeacherFromLesson(Integer lessonId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.removeTeacherFromLesson"), lessonId);
     }
 }

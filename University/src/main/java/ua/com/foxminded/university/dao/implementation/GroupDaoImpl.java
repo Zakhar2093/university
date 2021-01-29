@@ -1,11 +1,6 @@
 package ua.com.foxminded.university.dao.implementation;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.List;
-import java.util.Properties;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,6 +11,7 @@ import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.model.Group;
+import ua.com.foxminded.university.model.Room;
 
 @Component
 public class GroupDaoImpl implements GroupDao {
@@ -41,27 +37,64 @@ public class GroupDaoImpl implements GroupDao {
     public Group getById(Integer groupId) {
         return jdbcTemplate
                 .query(
-                        propertyReader.read(PROPERTY_NAME, "group.getById"), 
+                        propertyReader.read(PROPERTY_NAME, "group.get"
+                                + "ById"), 
                         new Object[] { groupId }, 
                         new BeanPropertyRowMapper<>(Group.class)
                         )
                 .stream()
-                .findAny()
-                .orElseThrow(() -> new DaoException("Group with such id does not exist"));
+                .findFirst()
+                .orElseThrow(() -> new DaoException("Group with such id does not exist")
+                        );
     }
 
     public void create(Group group) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.create"), group.getGroupName());
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.create"), group.getGroupName(), group.isGroupInactive());
     }
 
     public void update(Group group) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.update"), group.getGroupName(), group.getGroupId());
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.update"), group.getGroupName(), group.isGroupInactive(), group.getGroupId());
     } 
     
-    @Transactional
-    public void delete(Integer groupId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.deleteGroupFromStudent"), groupId);
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.deleteGroupFromLesson"), groupId);
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.delete"), groupId);
+    public void removeGroupFromAllStudents(Integer groupId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.removeGroupFromAllStudents"), groupId);
     }
+
+    public void removeGroupFromAllLessons(Integer groupId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.removeGroupFromAllLessons"), groupId);
+    }
+    
+    public void deactivate(Integer groupId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.deactivate"), groupId);
+    }
+    
+    public void activate(Integer groupId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.activate"), groupId);
+    }
+    
+    public Group getGroupByLesson(Integer lessonId) {
+        return jdbcTemplate
+            .query(
+                    propertyReader.read(PROPERTY_NAME, "group.getRoomByLesson"), 
+                    new Object[] { lessonId },
+                    new BeanPropertyRowMapper<>(Group.class)
+                )
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new DaoException("Group with such id does not exist")
+                        );
+   }
+    
+    public Group getGroupByStudent(Integer studentId) {
+        return jdbcTemplate
+            .query(
+                    propertyReader.read(PROPERTY_NAME, "group.getRoomByStudent"), 
+                    new Object[] { studentId },
+                    new BeanPropertyRowMapper<>(Group.class)
+                )
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new DaoException("Group with such id does not exist")
+                        );
+   }
 }

@@ -1,18 +1,13 @@
 package ua.com.foxminded.university.dao.implementation;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.List;
-import java.util.Properties;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.dao.DaoException;
-import ua.com.foxminded.university.dao.interfaces.RoomDao;
+import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.dao.interfaces.StudentDao;
 import ua.com.foxminded.university.dao.mapper.StudentMapper;
 import ua.com.foxminded.university.model.Student;
@@ -23,10 +18,10 @@ public class StudentDaoImpl implements StudentDao {
     private final static String PROPERTY_NAME = "src/main/resources/SqlQueries.properties";
     private final JdbcTemplate jdbcTemplate;
     private final PropertyReader propertyReader;
-    private GroupDaoImpl groupDaoImpl;
+    private GroupDao groupDaoImpl;
 
     @Autowired
-    public StudentDaoImpl(JdbcTemplate jdbcTemplate, PropertyReader propertyReader, GroupDaoImpl groupDaoImpl) {
+    public StudentDaoImpl(JdbcTemplate jdbcTemplate, PropertyReader propertyReader , GroupDao groupDaoImpl) {
         super();
         this.jdbcTemplate = jdbcTemplate;
         this.propertyReader = propertyReader;
@@ -38,12 +33,9 @@ public class StudentDaoImpl implements StudentDao {
                 propertyReader.read(PROPERTY_NAME, "student.create"), 
                 student.getFirstName(), 
                 student.getLastName(), 
-                student.getGroup().getGroupId()
+                student.getGroup().getGroupId(),
+                student.isStudentInactive()
                 );
-    }
-
-    public void delete(Integer studentId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.delete"), studentId);
     }
 
     public List<Student> getAll() {
@@ -61,14 +53,31 @@ public class StudentDaoImpl implements StudentDao {
                 .findAny()
                 .orElseThrow(() -> new DaoException("Student with such id does not exist"));
     }
-
+    
     public void update(Student student) {
         jdbcTemplate.update(
                 propertyReader.read(PROPERTY_NAME, "student.update"), 
                 student.getGroup().getGroupId(),
                 student.getFirstName(), 
-                student.getLastName(), 
+                student.getLastName(),
+                student.isStudentInactive(),
                 student.getStudentId()
                 );
     }
+    
+    public void deactivate(Integer studentId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.deactivate"), studentId);
+    }
+    
+    public void activate(Integer studentId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.activate"), studentId);
+    }
+    
+    public void removeStudentFromGroup(Integer studentId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.removeStudentFromGroup"), studentId);
+    }
+    
+    public void addStudentToGroup(Integer groupId, Integer studentId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.addStudentToGroup"), groupId, studentId);
+    } 
 }

@@ -9,7 +9,9 @@ public interface GenericDao<T, Id> {
 
     T getById(Id id);
 
-    void delete(Id id);
-
     void update(T t);
+    
+    void deactivate(Id id);
+    
+    void activate(Id id);
 }

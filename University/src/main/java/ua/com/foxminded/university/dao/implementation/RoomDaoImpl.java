@@ -1,11 +1,6 @@
 package ua.com.foxminded.university.dao.implementation;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.List;
-import java.util.Properties;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,12 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.interfaces.RoomDao;
+import ua.com.foxminded.university.model.Lesson;
 import ua.com.foxminded.university.model.Room;
 
 @Component
 public class RoomDaoImpl implements RoomDao {
 
-    private final static String propertyName = "src/main/resources/SqlQueries.properties";
+    private final static String PROPERTY_NAME = "src/main/resources/SqlQueries.properties";
     private final JdbcTemplate jdbcTemplate;
     private final PropertyReader propertyReader;
 
@@ -33,7 +29,7 @@ public class RoomDaoImpl implements RoomDao {
 
     public List<Room> getAll() {
         return jdbcTemplate.query(
-                propertyReader.read(propertyName, "room.getAll"), 
+                propertyReader.read(PROPERTY_NAME, "room.getAll"), 
                 new BeanPropertyRowMapper<>(Room.class)
                 );
     }
@@ -41,26 +37,47 @@ public class RoomDaoImpl implements RoomDao {
     public Room getById(Integer roomId) {
         return jdbcTemplate
                 .query(
-                        propertyReader.read(propertyName, "room.getById"), 
+                        propertyReader.read(PROPERTY_NAME, "room.getById"), 
                         new Object[] { roomId },
                         new BeanPropertyRowMapper<>(Room.class)
                         )
                 .stream()
-                .findAny()
+                .findFirst()
+//                .orElse(null);
                 .orElseThrow(() -> new DaoException("Room with such id does not exist"));
+                        
     }
 
     public void create(Room room) {
-        jdbcTemplate.update(propertyReader.read(propertyName, "room.create"), room.getRoomNumber());
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "room.create"), room.getRoomNumber(), room.isRoomInactive());
     }
 
     public void update(Room room) {
-        jdbcTemplate.update(propertyReader.read(propertyName, "room.update"), room.getRoomNumber(), room.getRoomId());
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "room.update"), room.getRoomNumber(), room.isRoomInactive(), room.getRoomId());
     }
 
-    @Transactional
-    public void delete(Integer roomId) {
-        jdbcTemplate.update(propertyReader.read(propertyName, "room.deleteRoomFromLesson"), roomId);
-        jdbcTemplate.update(propertyReader.read(propertyName, "room.delete"), roomId);
+    public void removeRoomFromAllLessons(Integer roomId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "room.removeRoomFromAllLessons"), roomId);
+    }
+    
+    public void deactivate(Integer roomId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "room.deactivate"), roomId);
+    }
+    
+    public void activate(Integer roomId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "room.activate"), roomId);
+    }
+    
+    public Room getRoomByLesson(Integer lessonId) {
+         return jdbcTemplate
+                 .query(
+                     propertyReader.read(PROPERTY_NAME, "room.getRoomByLesson"), 
+                     new Object[] { lessonId },
+                     new BeanPropertyRowMapper<>(Room.class)
+                 )
+                 .stream()
+                 .findFirst()
+                 .orElseThrow(() -> new DaoException("Room with such id does not exist")
+                         );
     }
 }

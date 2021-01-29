@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.interfaces.TeacherDao;
+import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Teacher;
 
 @Component
@@ -29,14 +30,13 @@ public class TeacherDaoImpl implements TeacherDao{
     public void create(Teacher teacher) {
         jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "teacher.create"), 
                 teacher.getFirstName(),
-                teacher.getLastName()
+                teacher.getLastName(),
+                teacher.isTeacherInactive()
                 );
     }
 
-    @Transactional
-    public void delete(Integer teacherId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "teacher.deleteteacherFromLesson"), teacherId);
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "teacher.delete"), teacherId);
+    public void removeTeacherFromAllLessons(Integer teacherId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "teacher.removeTeacherFromAllLessons"), teacherId);
     }
 
     public List<Teacher> getAll() {
@@ -54,16 +54,39 @@ public class TeacherDaoImpl implements TeacherDao{
                         new BeanPropertyRowMapper<>(Teacher.class)
                         )
                 .stream()
-                .findAny()
-                .orElseThrow(() -> new DaoException("Teacher with such id does not exist"));
+                .findFirst()
+                .orElseThrow(() -> new DaoException("Teacher with such id does not exist")
+                        );
     }
 
     public void update(Teacher teacher) {
         jdbcTemplate.update(
                 propertyReader.read(PROPERTY_NAME, "teacher.update"), 
                 teacher.getFirstName(), 
-                teacher.getLastName(), 
+                teacher.getLastName(),
+                teacher.isTeacherInactive(),
                 teacher.getTeacherId()
                 );
     }
+    
+    public void deactivate(Integer teacherId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "teacher.deactivate"), teacherId);
+    }
+    
+    public void activate(Integer teacherId) {
+        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "teacher.activate"), teacherId);
+    }
+    
+    public Teacher getTeacherByLesson(Integer lessonId) {
+        return jdbcTemplate
+            .query(
+                    propertyReader.read(PROPERTY_NAME, "teacher.getRoomByLesson"), 
+                    new Object[] { lessonId },
+                    new BeanPropertyRowMapper<>(Teacher.class)
+                )
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new DaoException("Teacher with such id does not exist")
+                        );
+   }
 }

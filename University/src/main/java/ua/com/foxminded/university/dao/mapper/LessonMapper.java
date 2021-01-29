@@ -3,14 +3,10 @@ package ua.com.foxminded.university.dao.mapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.SpringConfig;
-import ua.com.foxminded.university.dao.implementation.GroupDaoImpl;
-import ua.com.foxminded.university.dao.implementation.RoomDaoImpl;
-import ua.com.foxminded.university.dao.implementation.TeacherDaoImpl;
+import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.dao.interfaces.RoomDao;
 import ua.com.foxminded.university.dao.interfaces.TeacherDao;
@@ -34,10 +30,19 @@ public class LessonMapper implements RowMapper<Lesson>{
         Lesson lesson = new Lesson();
         lesson.setLessonId(rs.getInt("lesson_id"));
         lesson.setLessonName(rs.getString("lesson_name"));
-        lesson.setTeacher(teacherDao.getById(rs.getInt("teacher_id")));
-        lesson.setGroup(groupDao.getById(rs.getInt("group_id")));
-        lesson.setRoom(roomDao.getById(rs.getInt("room_id")));
+        
+        if (rs.getInt("group_id") != 0) {
+            lesson.setGroup(groupDao.getGroupByLesson(rs.getInt("lesson_id")));
+        }
+        if (rs.getInt("teacher_id") != 0) {
+            lesson.setTeacher(teacherDao.getTeacherByLesson(rs.getInt("lesson_id")));
+        }
+        if (rs.getInt("room_id") != 0) {
+            lesson.setRoom(roomDao.getRoomByLesson(rs.getInt("lesson_id")));
+        }
+        
         lesson.setDate(rs.getTimestamp("lesson_date").toLocalDateTime());
+        lesson.setLessonInactive(rs.getBoolean("lesson_inactive"));
         return lesson;
     }
 }

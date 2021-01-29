@@ -47,3 +47,14 @@ CREATE TABLE university.lessons(
     FOREIGN KEY (group_id) REFERENCES university.groups(group_id),
     FOREIGN KEY (room_id) REFERENCES university.rooms(room_id)
 );
+
+ALTER TABLE university.groups
+  ADD COLUMN group_inactive BOOLEAN DEFAULT FALSE;
+ALTER TABLE university.students
+  ADD COLUMN student_inactive BOOLEAN DEFAULT FALSE;
+ALTER TABLE university.teachers
+  ADD COLUMN teacher_inactive BOOLEAN DEFAULT FALSE;
+ALTER TABLE university.rooms
+  ADD COLUMN room_inactive BOOLEAN DEFAULT FALSE;
+ALTER TABLE university.lessons
+  ADD COLUMN lesson_inactive BOOLEAN DEFAULT FALSE;
