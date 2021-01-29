@@ -15,19 +15,13 @@ import ua.com.foxminded.university.model.Student;
 @Component
 public class StudentMapper implements RowMapper<Student> {
     
-//  @Autowired 
-    private GroupDao groupDaoImpl;
+    private GroupDao groupDao;
     
     @Autowired
-    public StudentMapper(GroupDao groupDaoImpl) {
+    public StudentMapper(GroupDao groupDao) {
         super();
-        this.groupDaoImpl = groupDaoImpl;
+        this.groupDao = groupDao;
     }
-    
-//    @Autowired
-//    public void setGroupDaoImpl(GroupDaoImpl groupDaoImpl) {
-//        this.groupDaoImpl = groupDaoImpl;
-//    }
 
     public Student mapRow(ResultSet rs, int rowNum) throws SQLException {    
         Student student = new Student();
@@ -36,12 +30,9 @@ public class StudentMapper implements RowMapper<Student> {
         student.setLastName(rs.getString("last_name"));
         student.setStudentInactive(rs.getBoolean("student_inactive"));
         
-        try {
-            student.setGroup(groupDaoImpl.getGroupByStudent(rs.getInt("student_id")));
-        } catch (DaoException e) {
-            student.setGroup(null);
+        if (rs.getInt("group_id") != 0) {
+            student.setGroup(groupDao.getGroupByStudent(rs.getInt("student_id")));
         }
-        
         return student;
     }
 }

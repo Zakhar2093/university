@@ -31,24 +31,15 @@ public class LessonMapper implements RowMapper<Lesson>{
         lesson.setLessonId(rs.getInt("lesson_id"));
         lesson.setLessonName(rs.getString("lesson_name"));
         
-        try {
-            lesson.setTeacher(teacherDao.getTeacherByLesson(rs.getInt("lesson_id")));
-        } catch (DaoException e) {
-            lesson.setTeacher(null);
-        }
-        
-        try {
+        if (rs.getInt("group_id") != 0) {
             lesson.setGroup(groupDao.getGroupByLesson(rs.getInt("lesson_id")));
-        } catch (DaoException e) {
-            lesson.setGroup(null);
         }
-        
-        try {
+        if (rs.getInt("teacher_id") != 0) {
+            lesson.setTeacher(teacherDao.getTeacherByLesson(rs.getInt("lesson_id")));
+        }
+        if (rs.getInt("room_id") != 0) {
             lesson.setRoom(roomDao.getRoomByLesson(rs.getInt("lesson_id")));
-        } catch (DaoException e) {
-            lesson.setRoom(null);
         }
-
         
         lesson.setDate(rs.getTimestamp("lesson_date").toLocalDateTime());
         lesson.setLessonInactive(rs.getBoolean("lesson_inactive"));
