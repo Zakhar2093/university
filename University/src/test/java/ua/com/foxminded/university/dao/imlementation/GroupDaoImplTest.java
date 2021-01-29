@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.SpringConfigTest;
+import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.DatabaseInitialization;
 import ua.com.foxminded.university.dao.implementation.GroupDaoImpl;
 import ua.com.foxminded.university.dao.implementation.LessonDaoImpl;
@@ -166,30 +167,54 @@ class GroupDaoImplTest {
     
     @Test
     void getGroupByLessonSouldReturnCorrectGroup() {
-        Group group = new Group(1, "any name", false);
-        groupDao.create(group);
-        Teacher teacher = new Teacher(1, "one", "one", false);
-        teacherDao.create(teacher);
-        Room room1 = new Room(1, 101);
-        roomDao.create(room1);
-        Lesson lesson1 = new Lesson(1, "Math", teacher, group, room1, LocalDateTime.now(), false);
-        lessonDao.create(lesson1);
-        
-        Group expected = group;
+        Group expected = createLesson().getGroup();
         Group actual = groupDao.getGroupByLesson(1);
         assertEquals(expected, actual);
     }
     
     @Test
     void getGroupByStudentSouldReturnCorrectGroup() {
+        Group expected = createStudent().getGroup();
+        Group actual = groupDao.getGroupByStudent(1);
+        assertEquals(expected, actual);
+    }
+    
+    @Test
+    void whenGetByIdGetNonexistentDataShouldThrowsDaoException() {
+        DaoException thrown = assertThrows(DaoException.class, () -> {
+            groupDao.getById(1);
+        });
+        assertTrue(thrown.getMessage().contains("Group with such id does not exist"));
+    }
+    
+    @Test
+    void whenGetGroupByStudentGetNonexistentDataShouldThrowsDaoException() {
+        createStudent();
+        groupDao.removeGroupFromAllStudents(1);
+        DaoException thrown = assertThrows(DaoException.class, () -> {
+            groupDao.getGroupByStudent(1);
+        });
+        assertTrue(thrown.getMessage().contains("Group with such id does not exist"));
+    }
+    
+    private Student createStudent() {
         Group group = new Group(1, "any name", false);
         groupDao.create(group);
         Student student = new Student(1, "one", "one", group,false);
         studentDao.create(student);
-        
-        Group expected = group;
-        Group actual = groupDao.getGroupByStudent(1);
-        assertEquals(expected, actual);
+        return student;
+    }
+    
+    private Lesson createLesson() {
+        Group group = new Group(1, "any name", false);
+        groupDao.create(group);
+        Teacher teacher = new Teacher(1, "one", "one", false);
+        teacherDao.create(teacher);
+        Room room1 = new Room(1, 101);
+        roomDao.create(room1);
+        Lesson lesson = new Lesson(1, "Math", teacher, group, room1, LocalDateTime.now(), false);
+        lessonDao.create(lesson);
+        return lesson;
     }
 
     private List<Group> createTestGroups() {

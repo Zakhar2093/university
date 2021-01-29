@@ -55,7 +55,7 @@ public class TeacherDaoImpl implements TeacherDao{
                         )
                 .stream()
                 .findFirst()
-                .orElseThrow(() -> new DaoException("Group with such id does not exist")
+                .orElseThrow(() -> new DaoException("Teacher with such id does not exist")
                         );
     }
 

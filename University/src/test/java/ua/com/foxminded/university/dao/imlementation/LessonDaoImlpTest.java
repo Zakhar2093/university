@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.SpringConfigTest;
+import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.DatabaseInitialization;
 import ua.com.foxminded.university.dao.implementation.GroupDaoImpl;
 import ua.com.foxminded.university.dao.implementation.LessonDaoImpl;
@@ -97,16 +98,6 @@ class LessonDaoImlpTest {
         List<Lesson> actual = lessonDao.getAll();
         assertEquals(expected, actual);
     }
-
-//        Group group = new Group(1, "any name");
-//        groupDao.create(group);
-//        Teacher teacher = new Teacher(1, "one", "one");
-//        teacherDao.create(teacher);
-//        Room room = new Room(1, 101);
-//        roomDao.create(room);
-//        LocalDateTime date = LocalDateTime.now();
-//        
-//        lessonDao.create(new Lesson(1, "Math", teacher, group, room, date));
 
     @Test
     void updateSouldUpdateCorrectData() {
@@ -414,6 +405,14 @@ class LessonDaoImlpTest {
         assertTrue(lessonDao.getById(1).isLessonInactive());
         lessonDao.activate(1);
         assertFalse(lessonDao.getById(1).isLessonInactive());
+    }
+    
+    @Test
+    void whenGetByIdGetNonexistentDataShouldThrowsDaoException() {
+        DaoException thrown = assertThrows(DaoException.class, () -> {
+            lessonDao.getById(1);
+        });
+        assertTrue(thrown.getMessage().contains("Lesson with such id does not exist"));
     }
     
     @AfterEach

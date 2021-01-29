@@ -65,7 +65,7 @@ public class LessonDaoImpl implements LessonDao{
                         )
                 .stream()
                 .findAny()
-                .orElseThrow(() -> new DaoException("lesson with such id does not exist"));
+                .orElseThrow(() -> new DaoException("Lesson with such id does not exist"));
     }
 
     public void update(Lesson lesson) {

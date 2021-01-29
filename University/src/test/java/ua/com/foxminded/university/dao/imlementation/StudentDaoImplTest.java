@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.SpringConfigTest;
+import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.DatabaseInitialization;
 import ua.com.foxminded.university.dao.implementation.GroupDaoImpl;
 import ua.com.foxminded.university.dao.implementation.StudentDaoImpl;
@@ -126,6 +127,14 @@ class StudentDaoImplTest {
         assertTrue(studentDao.getById(1).getGroup() == null);
         studentDao.addStudentToGroup(1, 1);
         assertTrue(studentDao.getById(1).getGroup().equals(group));
+    }
+    
+    @Test
+    void whenGetByIdGetNonexistentDataShouldThrowsDaoException() {
+        DaoException thrown = assertThrows(DaoException.class, () -> {
+            studentDao.getById(1);
+        });
+        assertTrue(thrown.getMessage().contains("Student with such id does not exist"));
     }
     
     @AfterEach
