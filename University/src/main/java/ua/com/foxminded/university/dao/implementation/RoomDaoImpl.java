@@ -2,6 +2,7 @@ package ua.com.foxminded.university.dao.implementation;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -43,17 +44,27 @@ public class RoomDaoImpl implements RoomDao {
                         )
                 .stream()
                 .findFirst()
-//                .orElse(null);
-                .orElseThrow(() -> new DaoException("Room with such id does not exist"));
+                .orElseThrow(() -> new DaoException(String.format("Room with such id %d does not exist", roomId)));
                         
     }
 
     public void create(Room room) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "room.create"), room.getRoomNumber(), room.isRoomInactive());
+        try {
+            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "room.create"), room.getRoomNumber(), room.isRoomInactive());
+        } catch (DataIntegrityViolationException e) {
+            throw new DaoException(String.format("Room can not be created. Some field is null"), e);
+        }
     }
 
     public void update(Room room) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "room.update"), room.getRoomNumber(), room.isRoomInactive(), room.getRoomId());
+        try {
+            getById(room.getRoomId());
+            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "room.update"), room.getRoomNumber(), room.isRoomInactive(), room.getRoomId());
+        } catch (DaoException e) {
+            throw new DaoException(String.format("Room with such id %d can not be updated", room.getRoomId()), e);
+        } catch (DataIntegrityViolationException e) {
+            throw new DaoException(String.format("Room can not be updated. Some new field is null"), e);
+        }
     }
 
     public void removeRoomFromAllLessons(Integer roomId) {
@@ -61,11 +72,21 @@ public class RoomDaoImpl implements RoomDao {
     }
     
     public void deactivate(Integer roomId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "room.deactivate"), roomId);
+        try {
+            getById(roomId);
+            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "room.deactivate"), roomId);
+        } catch (DaoException e) {
+            throw new DaoException(String.format("Room with such id %d can not be deactivated", roomId), e);
+        }
     }
     
     public void activate(Integer roomId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "room.activate"), roomId);
+        try {
+            getById(roomId);
+            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "room.activate"), roomId);
+        } catch (DaoException e) {
+            throw new DaoException(String.format("Room with such id %d can not be activated", roomId), e);
+        }
     }
     
     public Room getRoomByLesson(Integer lessonId) {
@@ -77,7 +98,7 @@ public class RoomDaoImpl implements RoomDao {
                  )
                  .stream()
                  .findFirst()
-                 .orElseThrow(() -> new DaoException("Room with such id does not exist")
+                 .orElseThrow(() -> new DaoException(String.format("Such lesson (id = %d) does not have any room", lessonId))
                          );
     }
 }

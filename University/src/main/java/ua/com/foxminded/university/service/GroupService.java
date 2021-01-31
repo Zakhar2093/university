@@ -21,6 +21,7 @@ public class GroupService {
     }
     
     public void create(Group group) {
+        
         groupDao.create(group);
     }
     
@@ -33,7 +34,7 @@ public class GroupService {
     }
 
     public void update(Group group) {
-        groupDao.update(group);
+            groupDao.update(group);
     }
     
     @Transactional

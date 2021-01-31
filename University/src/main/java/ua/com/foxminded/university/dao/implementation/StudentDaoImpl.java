@@ -2,6 +2,7 @@ package ua.com.foxminded.university.dao.implementation;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -29,13 +30,17 @@ public class StudentDaoImpl implements StudentDao {
     }
     
     public void create(Student student) {
-        jdbcTemplate.update(
-                propertyReader.read(PROPERTY_NAME, "student.create"), 
-                student.getFirstName(), 
-                student.getLastName(), 
-                student.getGroup().getGroupId(),
-                student.isStudentInactive()
-                );
+        try {
+            jdbcTemplate.update(
+                    propertyReader.read(PROPERTY_NAME, "student.create"), 
+                    student.getFirstName(), 
+                    student.getLastName(), 
+                    student.getGroup().getGroupId(),
+                    student.isStudentInactive()
+                    );
+        } catch (DataIntegrityViolationException e) {
+            throw new DaoException(String.format("Student can not be created. Some field is null"), e);
+        }
     }
 
     public List<Student> getAll() {
@@ -51,33 +56,61 @@ public class StudentDaoImpl implements StudentDao {
                         )
                 .stream()
                 .findAny()
-                .orElseThrow(() -> new DaoException("Student with such id does not exist"));
+                .orElseThrow(() -> new DaoException(String.format("Student with such id %d does not exist", studentId)));
     }
     
     public void update(Student student) {
-        jdbcTemplate.update(
-                propertyReader.read(PROPERTY_NAME, "student.update"), 
-                student.getGroup().getGroupId(),
-                student.getFirstName(), 
-                student.getLastName(),
-                student.isStudentInactive(),
-                student.getStudentId()
-                );
+        try {
+            getById(student.getStudentId());
+            jdbcTemplate.update(
+                    propertyReader.read(PROPERTY_NAME, "student.update"), 
+                    student.getGroup().getGroupId(),
+                    student.getFirstName(), 
+                    student.getLastName(),
+                    student.isStudentInactive(),
+                    student.getStudentId()
+                    );
+        } catch (DaoException e) {
+            throw new DaoException(String.format("Student with such id %d can not be updated", student.getStudentId()), e);
+        } catch (DataIntegrityViolationException e) {
+            throw new DaoException(String.format("Student can not be updated. Some new field is null"), e);
+        }
     }
     
     public void deactivate(Integer studentId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.deactivate"), studentId);
+        try {
+            getById(studentId);
+            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.deactivate"), studentId);
+        } catch (DaoException e) {
+            throw new DaoException(String.format("Student with such id %d can not be deactivated", studentId), e);
+        }
     }
     
     public void activate(Integer studentId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.activate"), studentId);
+        try {
+            getById(studentId);
+            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.activate"), studentId);
+        } catch (DaoException e) {
+            throw new DaoException(String.format("Student with such id %d can not be activated", studentId), e);
+        }
     }
     
     public void removeStudentFromGroup(Integer studentId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.removeStudentFromGroup"), studentId);
+        try {
+            getById(studentId);
+            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.removeStudentFromGroup"), studentId);
+        } catch (DaoException e) {
+            throw new DaoException(String.format("Student can not be removed from Group id = %d. Student does not exist", studentId), e);
+        }
     }
     
     public void addStudentToGroup(Integer groupId, Integer studentId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.addStudentToGroup"), groupId, studentId);
+        try {
+            getById(studentId);
+            groupDaoImpl.getById(groupId);
+            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.addStudentToGroup"), groupId, studentId);
+        } catch (DaoException e) {
+            throw new DaoException(String.format("Student %d can not be added to group %d. Student or Group does not exist", studentId, groupId), e);
+        }
     } 
 }

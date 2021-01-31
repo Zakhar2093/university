@@ -134,7 +134,72 @@ class StudentDaoImplTest {
         DaoException thrown = assertThrows(DaoException.class, () -> {
             studentDao.getById(1);
         });
-        assertTrue(thrown.getMessage().contains("Student with such id does not exist"));
+        assertTrue(thrown.getMessage().contains("Student with such id 1 does not exist"));
+    }
+    
+    @Test 
+    void whenUpdateNonexistentStudentShouldThrowsDaoException() {
+        DaoException thrown = assertThrows(DaoException.class, () -> {
+            Group group = new Group(1, "any name", false);
+            groupDao.create(group);
+            studentDao.update(new Student(1, "one", "one", group, false));
+        });
+        assertTrue(thrown.getMessage().contains("Student with such id 1 can not be updated"));
+    }
+    
+    @Test 
+    void whenDeactivateNonexistentStudentShouldThrowsDaoException() {
+        DaoException thrown = assertThrows(DaoException.class, () -> {
+            studentDao.deactivate(1);
+        });
+        assertTrue(thrown.getMessage().contains("Student with such id 1 can not be deactivated"));
+    }
+    
+    @Test 
+    void whenActivateNonexistentStudentShouldThrowsDaoException() {
+        DaoException thrown = assertThrows(DaoException.class, () -> {
+            studentDao.activate(1);
+        });
+        assertTrue(thrown.getMessage().contains("Student with such id 1 can not be activated"));
+    }
+    
+    @Test
+    void whenCreateStudentWithNullShouldThrowsDaoException() {
+        DaoException thrown = assertThrows(DaoException.class, () -> {
+            Group group = new Group(1, "any name", false);
+            groupDao.create(group);
+            studentDao.create(new Student(1, null, null, group, false));
+        });
+        assertTrue(thrown.getMessage().contains("Student can not be created. Some field is null"));
+    }
+    
+    @Test
+    void whenUpdateStudentWithNullShouldThrowsDaoException() {
+        DaoException thrown = assertThrows(DaoException.class, () -> {
+            Group group = new Group(1, "any name", false);
+            groupDao.create(group);
+            Student studentBeforeUpdating = new Student(1, "one", "one", group, false);
+            Student studentAfterUpdating = new Student(1, null, "one", group, false);
+            studentDao.create(studentBeforeUpdating);
+            studentDao.update(studentAfterUpdating);
+        });
+        assertTrue(thrown.getMessage().contains("Student can not be updated. Some new field is null"));
+    }
+    
+    @Test
+    void whenAddStudentToNonexistentGroupShouldThrowsDaoException() {
+        DaoException thrown = assertThrows(DaoException.class, () -> {
+            studentDao.addStudentToGroup(1, 1);
+        });
+        assertTrue(thrown.getMessage().contains("Student 1 can not be added to group 1. Student or Group does not exist"));
+    }
+    
+    @Test
+    void whenRemoveStudentFromNonexistentGroupShouldThrowsDaoException() {
+        DaoException thrown = assertThrows(DaoException.class, () -> {
+            studentDao.removeStudentFromGroup(1);
+        });
+        assertTrue(thrown.getMessage().contains("Student can not be removed from Group id = 1. Student does not exist"));
     }
     
     @AfterEach

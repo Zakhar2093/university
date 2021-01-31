@@ -2,6 +2,7 @@ package ua.com.foxminded.university.dao.implementation;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -37,23 +38,33 @@ public class GroupDaoImpl implements GroupDao {
     public Group getById(Integer groupId) {
         return jdbcTemplate
                 .query(
-                        propertyReader.read(PROPERTY_NAME, "group.get"
-                                + "ById"), 
+                        propertyReader.read(PROPERTY_NAME, "group.getById"), 
                         new Object[] { groupId }, 
                         new BeanPropertyRowMapper<>(Group.class)
                         )
                 .stream()
                 .findFirst()
-                .orElseThrow(() -> new DaoException("Group with such id does not exist")
+                .orElseThrow(() -> new DaoException(String.format("Group with such id %d does not exist", groupId))
                         );
     }
 
     public void create(Group group) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.create"), group.getGroupName(), group.isGroupInactive());
+        try {
+            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.create"), group.getGroupName(), group.isGroupInactive());
+        } catch (DataIntegrityViolationException e) {
+            throw new DaoException(String.format("Group can not be created. Some field is null"), e);
+        }
     }
 
     public void update(Group group) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.update"), group.getGroupName(), group.isGroupInactive(), group.getGroupId());
+        try {
+            getById(group.getGroupId());
+            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.update"), group.getGroupName(), group.isGroupInactive(), group.getGroupId());
+        } catch (DaoException e) {
+            throw new DaoException(String.format("Group with such id %d can not be updated", group.getGroupId()), e);
+        } catch (DataIntegrityViolationException e) {
+            throw new DaoException(String.format("Group can not be updated. Some new field is null"), e);
+        }
     } 
     
     public void removeGroupFromAllStudents(Integer groupId) {
@@ -65,11 +76,21 @@ public class GroupDaoImpl implements GroupDao {
     }
     
     public void deactivate(Integer groupId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.deactivate"), groupId);
+        try {
+            getById(groupId);
+            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.deactivate"), groupId);
+        } catch (DaoException e) {
+            throw new DaoException(String.format("Group with such id %d can not be deactivated", groupId), e);
+        }
     }
     
     public void activate(Integer groupId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.activate"), groupId);
+        try {
+            getById(groupId);
+            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.activate"), groupId);
+        } catch (DaoException e) {
+            throw new DaoException(String.format("Group with such id %d can not be activated", groupId), e);
+        }
     }
     
     public Group getGroupByLesson(Integer lessonId) {
@@ -81,7 +102,7 @@ public class GroupDaoImpl implements GroupDao {
                 )
                 .stream()
                 .findFirst()
-                .orElseThrow(() -> new DaoException("Group with such id does not exist")
+                .orElseThrow(() -> new DaoException(String.format("Such lesson (id = %d) does not have any group", lessonId))
                         );
    }
     
@@ -94,7 +115,7 @@ public class GroupDaoImpl implements GroupDao {
                 )
                 .stream()
                 .findFirst()
-                .orElseThrow(() -> new DaoException("Group with such id does not exist")
+                .orElseThrow(() -> new DaoException(String.format("Such student (id = %d) does not have any group", studentId))
                         );
    }
 }
