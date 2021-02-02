@@ -6,81 +6,93 @@
   <name>university</name>
   <description>university</description>
   <build>
-  <sourceDirectory>src/main/java</sourceDirectory>
+  
+    <sourceDirectory>src/main/java</sourceDirectory>
     <testSourceDirectory>src/test/java</testSourceDirectory>
-    <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.22.2</version>
-        <configuration>
-            <useFile>false</useFile>
-        </configuration>
-      </plugin>
-      <plugin>
+    
+    <pluginManagement>
+        <plugins>
+            <plugin>
+		        <artifactId>maven-compiler-plugin</artifactId>
+		        <version>3.8.1</version>
+		        <configuration>
+		          <source>1.8</source>
+		          <target>1.8</target>
+		        </configuration>
+	        </plugin>
+	      
+	        <plugin>
+		          <groupId>org.apache.maven.plugins</groupId>
+		          <artifactId>maven-surefire-plugin</artifactId>
+		          <version>3.0.0-M5</version>
+	        </plugin>
+	        
+	        <plugin>
                 <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.3</version>
-                <executions>
+	            <artifactId>jacoco-maven-plugin</artifactId>
+	            <version>0.8.3</version>
+	            <executions>
                     <execution>
-                        <id>prepare-agent</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>report</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>post-unit-test</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                        <configuration>
-                            <!-- Sets the path to the file which contains the execution data. -->
+	                   <id>prepare-agent</id>
+	                       <goals>
+	                           <goal>prepare-agent</goal>
+	                        </goals>
+	                    </execution>
+	                    <execution>
+	                        <id>report</id>
+	                        <phase>prepare-package</phase>
+	                        <goals>
+	                            <goal>report</goal>
+	                        </goals>
+	                    </execution>
+	                    <execution>
+	                        <id>post-unit-test</id>
+	                        <phase>test</phase>
+	                        <goals>
+	                            <goal>report</goal>
+	                        </goals>
+	                        <configuration>
+	                            <dataFile>target/jacoco.exec</dataFile>
+	                            <outputDirectory>target/my-reports</outputDirectory>
+	                        </configuration>
+	                    </execution>
+	                </executions>
+	                <configuration>
+	                    <systemPropertyVariables>
+	                        <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
+	                    </systemPropertyVariables>
+	                </configuration>
+	            </plugin>
+	    </plugins>
+    </pluginManagement>
 
-                            <dataFile>target/jacoco.exec</dataFile>
-                            <!-- Sets the output directory for the code coverage report. -->
-                            <outputDirectory>target/my-reports</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-                <configuration>
-                    <systemPropertyVariables>
-                        <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
-                    </systemPropertyVariables>
-                </configuration>
-            </plugin>
-    </plugins>
   </build>
+  
   <dependencies>
+  
 	<dependency>
 	    <groupId>org.mybatis</groupId>
 	    <artifactId>mybatis</artifactId>
 	    <version>3.5.6</version>
 	</dependency>
+	
+    <dependency>
+	    <groupId>ch.qos.logback</groupId>
+	    <artifactId>logback-classic</artifactId>
+	    <version>1.1.7</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.0.0-M5</version>
+    </dependency>
+
+     
     <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-engine</artifactId>
         <version>5.7.0</version>
        <scope>test</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.22.2</version>
     </dependency>
     <dependency>
         <groupId>org.mockito</groupId>
