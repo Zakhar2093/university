@@ -7,11 +7,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
+import ua.com.foxminded.university.exception.DaoException;
+import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Group;
 
 @Component
 public class GroupService {
-    
+
     private GroupDao groupDao;
 
     @Autowired
@@ -19,40 +21,71 @@ public class GroupService {
         super();
         this.groupDao = groupDao;
     }
-    
+
     public void create(Group group) {
-        
-        groupDao.create(group);
+        try {
+            groupDao.create(group);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
-    
-    public List<Group> getAll(){
-        return groupDao.getAll();
+
+    public List<Group> getAll() {
+        try {
+            return groupDao.getAll();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
     public Group getById(Integer groupId) {
-        return groupDao.getById(groupId);
+        try {
+            return groupDao.getById(groupId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
     public void update(Group group) {
+        try {
             groupDao.update(group);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
-    
+
     @Transactional
     public void deactivate(Integer groupId) {
-        groupDao.removeGroupFromAllLessons(groupId);
-        groupDao.removeGroupFromAllStudents(groupId);
-        groupDao.deactivate(groupId);
+        try {
+            groupDao.removeGroupFromAllLessons(groupId);
+            groupDao.removeGroupFromAllStudents(groupId);
+            groupDao.deactivate(groupId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
-    
+
     public void activate(Integer groupId) {
-        groupDao.activate(groupId);
+        try {
+            groupDao.activate(groupId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
-    
+
     public void getGroupByLesson(Integer lessonId) {
-        groupDao.getGroupByLesson(lessonId);
+        try {
+            groupDao.getGroupByLesson(lessonId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
-    
+
     public void getGroupByStudent(Integer studentId) {
-        groupDao.getGroupByStudent(studentId);
+        try {
+            groupDao.getGroupByStudent(studentId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 }

@@ -3,22 +3,21 @@ package ua.com.foxminded.university.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import ua.com.foxminded.university.dao.DatabaseInitialization;
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
+import ua.com.foxminded.university.exception.DaoException;
+import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Group;
 
 class GroupServiceTest {
-
-    private DatabaseInitialization dbInit = new DatabaseInitialization();
 
     private GroupService groupService;
     @Mock
@@ -29,7 +28,6 @@ class GroupServiceTest {
     public void initMocks() {
         MockitoAnnotations.initMocks(this);
         groupService = new GroupService(groupDao);
-        dbInit.initialization();
     }
 
     @Test
@@ -79,5 +77,69 @@ class GroupServiceTest {
     void getGroupByStudentShouldInvokeOnlyOnce() {
         groupService.getGroupByStudent(1);;
         verify(groupDao, only()).getGroupByStudent(anyInt());
+    }
+    
+    @Test
+    void WhenCreateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException("")).when(groupDao).create(any(Group.class));
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            groupService.create(new Group());
+        });
+    }
+    
+    @Test
+    void WhenGetAllCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException("")).when(groupDao).getAll();
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            groupService.getAll();
+        });    
+    }
+    
+    @Test
+    void WhenGetByIdCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException("")).when(groupDao).getById(anyInt());
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            groupService.getById(1);
+        });
+    }
+    
+    @Test
+    void WhenUpdateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException("")).when(groupDao).update(any(Group.class));
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            groupService.update(new Group());
+        });
+    }
+    
+    @Test
+    void WhenDeactivateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException("")).when(groupDao).deactivate(anyInt());
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            groupService.deactivate(1);
+        });
+    }
+    
+    @Test
+    void WhenActivateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException("")).when(groupDao).activate(anyInt());
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            groupService.activate(1);
+        });
+    }
+    
+    @Test
+    void WhenGetGroupByLessonCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException("")).when(groupDao).getGroupByLesson(anyInt());
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            groupService.getGroupByLesson(1);;
+        });
+    }
+    
+    @Test
+    void WhenGetGroupByStudentCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException("")).when(groupDao).getGroupByStudent(anyInt());
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            groupService.getGroupByStudent(1);;
+        });
     }
 }

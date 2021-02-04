@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.service;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -7,14 +8,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import ua.com.foxminded.university.dao.DatabaseInitialization;
 import ua.com.foxminded.university.dao.interfaces.RoomDao;
+import ua.com.foxminded.university.exception.DaoException;
+import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Room;
 
 class RoomServiceTest {
-    
-    private DatabaseInitialization dbInit = new DatabaseInitialization();
-
     
     private RoomService roomService;
     @Mock
@@ -25,7 +24,6 @@ class RoomServiceTest {
     public void initMocks() {
         MockitoAnnotations.initMocks(this);
         roomService = new RoomService(roomDao);
-        dbInit.initialization();
     }
 
     @Test
@@ -69,5 +67,61 @@ class RoomServiceTest {
     void getRoomByLessonShouldInvokeOnlyOnce() {
         roomService.getRoomByLesson(1);;
         verify(roomDao, only()).getRoomByLesson(anyInt());
+    }
+    
+    @Test
+    void WhenCreateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException("")).when(roomDao).create(any(Room.class));
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            roomService.create(new Room());
+        });
+    }
+    
+    @Test
+    void WhenGetAllCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException("")).when(roomDao).getAll();
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            roomService.getAll();
+        });    
+    }
+    
+    @Test
+    void WhenGetByIdCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException("")).when(roomDao).getById(anyInt());
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            roomService.getById(1);
+        });
+    }
+    
+    @Test
+    void WhenUpdateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException("")).when(roomDao).update(any(Room.class));
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            roomService.update(new Room());
+        });
+    }
+    
+    @Test
+    void WhenDeactivateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException("")).when(roomDao).deactivate(anyInt());
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            roomService.deactivate(1);
+        });
+    }
+    
+    @Test
+    void WhenActivateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException("")).when(roomDao).activate(anyInt());
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            roomService.activate(1);
+        });
+    }
+    
+    @Test
+    void WhenGetRoomByLessonCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException("")).when(roomDao).getRoomByLesson(anyInt());
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            roomService.getRoomByLesson(1);
+        });
     }
 }

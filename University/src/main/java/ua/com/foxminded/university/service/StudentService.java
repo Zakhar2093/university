@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.dao.interfaces.StudentDao;
+import ua.com.foxminded.university.exception.DaoException;
+import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Student;
 
 @Component
@@ -21,36 +23,68 @@ public class StudentService {
     }
     
     public void create(Student student) {
-        studentDao.create(student);
+        try {
+            studentDao.create(student);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
     
     public List<Student> getAll(){
-        return studentDao.getAll();
+        try {
+            return studentDao.getAll();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
     public Student getById(Integer studentId) {
-        return studentDao.getById(studentId);
+        try {
+            return studentDao.getById(studentId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
     public void update(Student student) {
-        studentDao.update(student);
+        try {
+            studentDao.update(student);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
     
     @Transactional
     public void deactivate(Integer studentId) {
-        studentDao.removeStudentFromGroup(studentId);
-        studentDao.deactivate(studentId);
+        try {
+            studentDao.removeStudentFromGroup(studentId);
+            studentDao.deactivate(studentId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
     
     public void activate(Integer studentId) {
-        studentDao.activate(studentId);
+        try {
+            studentDao.activate(studentId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
     
     public void addStudentToGroup(Integer groupId, Integer studentId) {
-        studentDao.addStudentToGroup(groupId, studentId);
+        try {
+            studentDao.addStudentToGroup(groupId, studentId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
     
     public void removeStudentFromGroup(Integer studentId) {
-        studentDao.removeStudentFromGroup(studentId);
+        try {
+            studentDao.removeStudentFromGroup(studentId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 }
