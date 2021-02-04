@@ -8,25 +8,17 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
-import ch.qos.logback.classic.Logger;
+import org.slf4j.Logger;
 import ua.com.foxminded.university.PropertyReader;
-import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
+import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.model.Group;
-import ua.com.foxminded.university.model.Room;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
-
-
 
 @Component
-//@Slf4j
 public class GroupDaoImpl implements GroupDao {
 
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(GroupDaoImpl.class);
-    private final static String PROPERTY_NAME = "src/main/resources/SqlQueries.properties";
+    private static final Logger logger = LoggerFactory.getLogger(GroupDaoImpl.class);
+    private static final String PROPERTY_NAME = "src/main/resources/SqlQueries.properties";
     private final JdbcTemplate jdbcTemplate;
     private final PropertyReader propertyReader;
 
@@ -65,7 +57,7 @@ public class GroupDaoImpl implements GroupDao {
             jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.create"), group.getGroupName(), group.isGroupInactive());
         } catch (DataIntegrityViolationException e) {
             logger.error("Creating was not successful. Group can not be created. Some field is null", e);
-            throw new DaoException(String.format("Group can not be created. Some field is null"), e);
+            throw new DaoException("Group can not be created. Some field is null", e);
         }
         logger.debug("Creating was successful");
     }
@@ -76,11 +68,11 @@ public class GroupDaoImpl implements GroupDao {
             getById(group.getGroupId());
             jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.update"), group.getGroupName(), group.isGroupInactive(), group.getGroupId());
         } catch (DaoException e) {
-            logger.error("Updating was not successful. Group with such id %d can not be updated", e);
+            logger.error("Updating was not successful. Group with such id = {} can not be updated", group.getGroupId(), e);
             throw new DaoException(String.format("Group with such id %d can not be updated", group.getGroupId()), e);
         } catch (DataIntegrityViolationException e) {
             logger.error("Updating was not successful. Group can not be updated. Some new field is null", e);
-            throw new DaoException(String.format("Group can not be updated. Some new field is null"), e);
+            throw new DaoException("Group can not be updated. Some new field is null", e);
         }
         logger.debug("Updating was successful");
     } 
