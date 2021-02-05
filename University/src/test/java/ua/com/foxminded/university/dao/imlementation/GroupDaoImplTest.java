@@ -15,7 +15,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.SpringConfigTest;
-import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.DatabaseInitialization;
 import ua.com.foxminded.university.dao.implementation.GroupDaoImpl;
 import ua.com.foxminded.university.dao.implementation.LessonDaoImpl;
@@ -27,6 +26,7 @@ import ua.com.foxminded.university.dao.interfaces.LessonDao;
 import ua.com.foxminded.university.dao.interfaces.RoomDao;
 import ua.com.foxminded.university.dao.interfaces.StudentDao;
 import ua.com.foxminded.university.dao.interfaces.TeacherDao;
+import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lesson;
 import ua.com.foxminded.university.model.Room;
@@ -53,7 +53,7 @@ class GroupDaoImplTest {
         groupDao = new GroupDaoImpl(jdbcTemplate, propertyReader);
         teacherDao = new TeacherDaoImpl(jdbcTemplate, propertyReader);
         studentDao = new StudentDaoImpl(jdbcTemplate, propertyReader, groupDao);
-        lessonDao = new LessonDaoImpl(jdbcTemplate, propertyReader, groupDao, teacherDao, roomDao);
+        lessonDao = new LessonDaoImpl(jdbcTemplate, propertyReader, groupDao, teacherDao, roomDao, studentDao);
         dbInit.initialization();
     }
 
@@ -184,9 +184,18 @@ class GroupDaoImplTest {
         DaoException thrown = assertThrows(DaoException.class, () -> {
             groupDao.getById(1);
         });
-        assertTrue(thrown.getMessage().contains("Group with such id does not exist"));
+        assertTrue(thrown.getMessage().contains("Group with such id 1 does not exist"));
     }
     
+    @Test
+    void whenGetGroupByLessontGetNonexistentDataShouldThrowsDaoException() {
+        createLesson();
+        groupDao.removeGroupFromAllLessons(1);
+        DaoException thrown = assertThrows(DaoException.class, () -> {
+            groupDao.getGroupByLesson(1);
+        });
+        assertTrue(thrown.getMessage().contains("Such lesson (id = 1) does not have any group"));
+    }
     @Test
     void whenGetGroupByStudentGetNonexistentDataShouldThrowsDaoException() {
         createStudent();
@@ -194,8 +203,52 @@ class GroupDaoImplTest {
         DaoException thrown = assertThrows(DaoException.class, () -> {
             groupDao.getGroupByStudent(1);
         });
-        assertTrue(thrown.getMessage().contains("Group with such id does not exist"));
+        assertTrue(thrown.getMessage().contains("Such student (id = 1) does not have any group"));
     }
+    
+    @Test 
+    void whenUpdateNonexistentGroupShouldThrowsDaoException() {
+        DaoException thrown = assertThrows(DaoException.class, () -> {
+            groupDao.update(new Group(1, "any name", false));
+        });
+        assertTrue(thrown.getMessage().contains("Group with such id 1 can not be updated"));
+    }
+    
+    @Test 
+    void whenDeactivateNonexistentGroupShouldThrowsDaoException() {
+        DaoException thrown = assertThrows(DaoException.class, () -> {
+            groupDao.deactivate(1);
+        });
+        assertTrue(thrown.getMessage().contains("Group with such id 1 can not be deactivated"));
+    }
+    
+    @Test 
+    void whenActivateNonexistentGroupShouldThrowsDaoException() {
+        DaoException thrown = assertThrows(DaoException.class, () -> {
+            groupDao.activate(1);
+        });
+        assertTrue(thrown.getMessage().contains("Group with such id 1 can not be activated"));
+    }
+    
+    @Test
+    void whenCreateGroupWithNullShouldThrowsDaoException() {
+        DaoException thrown = assertThrows(DaoException.class, () -> {
+            groupDao.create(new Group());
+        });
+        assertTrue(thrown.getMessage().contains("Group can not be created. Some field is null"));
+    }
+    
+    @Test
+    void whenUpdateGroupWithNullShouldThrowsDaoException() {
+        DaoException thrown = assertThrows(DaoException.class, () -> {
+            Group groupBeforeUpdating = new Group(1, "one", false);
+            Group groupAfterUpdating = new Group(1, null, false);
+            groupDao.create(groupBeforeUpdating);
+            groupDao.update(groupAfterUpdating);
+        });
+        assertTrue(thrown.getMessage().contains("Group can not be updated. Some new field is null"));
+    }
+    
     
     private Student createStudent() {
         Group group = new Group(1, "any name", false);

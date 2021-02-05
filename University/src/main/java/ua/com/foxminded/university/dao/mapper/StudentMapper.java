@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.implementation.GroupDaoImpl;
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
+import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.model.Student;
 
 @Component

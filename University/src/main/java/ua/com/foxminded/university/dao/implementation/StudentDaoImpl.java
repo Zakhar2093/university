@@ -1,20 +1,25 @@
 package ua.com.foxminded.university.dao.implementation;
 
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.PropertyReader;
-import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.dao.interfaces.StudentDao;
 import ua.com.foxminded.university.dao.mapper.StudentMapper;
+import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.model.Student;
 
 @Component    
 public class StudentDaoImpl implements StudentDao {
 
+    private static final Logger logger = LoggerFactory.getLogger(StudentDaoImpl.class);
     private final static String PROPERTY_NAME = "src/main/resources/SqlQueries.properties";
     private final JdbcTemplate jdbcTemplate;
     private final PropertyReader propertyReader;
@@ -29,20 +34,29 @@ public class StudentDaoImpl implements StudentDao {
     }
     
     public void create(Student student) {
-        jdbcTemplate.update(
-                propertyReader.read(PROPERTY_NAME, "student.create"), 
-                student.getFirstName(), 
-                student.getLastName(), 
-                student.getGroup().getGroupId(),
-                student.isStudentInactive()
-                );
+        logger.debug("Creating student with name {} {}", student.getFirstName(), student.getLastName());
+        try {
+            jdbcTemplate.update(
+                    propertyReader.read(PROPERTY_NAME, "student.create"), 
+                    student.getFirstName(), 
+                    student.getLastName(), 
+                    student.getGroup().getGroupId(),
+                    student.isStudentInactive()
+                    );
+        } catch (DataIntegrityViolationException e) {
+            logger.error("Creating was not successful. Student can not be created. Some field is null", e);
+            throw new DaoException("Student can not be created. Some field is null", e);
+        }
+        logger.debug("Creating was successful");
     }
 
     public List<Student> getAll() {
+        logger.debug("Getting all students");
         return jdbcTemplate.query(propertyReader.read(PROPERTY_NAME, "student.getAll"), new StudentMapper(groupDaoImpl));
     }
 
     public Student getById(Integer studentId) {
+        logger.debug("Getting student by id = {}", studentId);
         return jdbcTemplate
                 .query(
                         propertyReader.read(PROPERTY_NAME, "student.getById"), 
@@ -51,33 +65,77 @@ public class StudentDaoImpl implements StudentDao {
                         )
                 .stream()
                 .findAny()
-                .orElseThrow(() -> new DaoException("Student with such id does not exist"));
+                .orElseThrow(() -> new DaoException(String.format("Student with such id %d does not exist", studentId)));
     }
     
     public void update(Student student) {
-        jdbcTemplate.update(
-                propertyReader.read(PROPERTY_NAME, "student.update"), 
-                student.getGroup().getGroupId(),
-                student.getFirstName(), 
-                student.getLastName(),
-                student.isStudentInactive(),
-                student.getStudentId()
-                );
+        logger.debug("Updating student with id {}", student.getStudentId());
+        try {
+            getById(student.getStudentId());
+            jdbcTemplate.update(
+                    propertyReader.read(PROPERTY_NAME, "student.update"), 
+                    student.getGroup().getGroupId(),
+                    student.getFirstName(), 
+                    student.getLastName(),
+                    student.isStudentInactive(),
+                    student.getStudentId()
+                    );
+        } catch (DaoException e) {
+            logger.error("Updating was not successful. Student with such id = {} can not be updated", student.getStudentId(), e);
+            throw new DaoException(String.format("Student with such id %d can not be updated", student.getStudentId()), e);
+        } catch (DataIntegrityViolationException e) {
+            logger.error("Updating was not successful. Student can not be updated. Some new field is null", e);
+            throw new DaoException("Student can not be updated. Some new field is null", e);
+        }
+        logger.debug("Updating was successful");
     }
     
     public void deactivate(Integer studentId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.deactivate"), studentId);
+        logger.debug("Deactivating student with id = {}", studentId);
+        try {
+            getById(studentId);
+            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.deactivate"), studentId);
+        } catch (DaoException e) {
+            logger.error("Deactivating was not successful", e);
+            throw new DaoException(String.format("Student with such id %d can not be deactivated", studentId), e);
+        }
+        logger.debug("Deactivating was successful", studentId);
     }
     
     public void activate(Integer studentId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.activate"), studentId);
+        logger.debug("Activating student with id = {}", studentId);
+        try {
+            getById(studentId);
+            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.activate"), studentId);
+        } catch (DaoException e) {
+            logger.error("Activating was not successful", e);
+            throw new DaoException(String.format("Student with such id %d can not be activated", studentId), e);
+        }
+        logger.debug("Activating was successful", studentId);
     }
     
     public void removeStudentFromGroup(Integer studentId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.removeStudentFromGroup"), studentId);
+        logger.debug("Removing student id = {} from group", studentId);
+        try {
+            getById(studentId);
+            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.removeStudentFromGroup"), studentId);
+        } catch (DaoException e) {
+            logger.error("Removing was not successful. Student does not exist", e);
+            throw new DaoException(String.format("Student can not be removed from Group id = %d. Student does not exist", studentId), e);
+        }
+        logger.debug("Adding was successful");
     }
     
     public void addStudentToGroup(Integer groupId, Integer studentId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.addStudentToGroup"), groupId, studentId);
+        logger.debug("Adding student id = {} to group id = {}", studentId, groupId);
+        try {
+            getById(studentId);
+            groupDaoImpl.getById(groupId);
+            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.addStudentToGroup"), groupId, studentId);
+        } catch (DaoException e) {
+            logger.error("Adding was not successful. Student or group does not exist", e);
+            throw new DaoException(String.format("Student %d can not be added to group %d. Student or Group does not exist", studentId, groupId), e);
+        }
+        logger.debug("Adding was successful");
     } 
 }

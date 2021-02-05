@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.dao.interfaces.RoomDao;
+import ua.com.foxminded.university.exception.DaoException;
+import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Room;
 
 @Component
@@ -21,32 +23,60 @@ public class RoomService {
     }
     
     public void create(Room room) {
-        roomDao.create(room);
+        try {
+            roomDao.create(room);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
     
     public List<Room> getAll(){
-        return roomDao.getAll();
+        try {
+            return roomDao.getAll();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
     public Room getById(Integer roomId) {
-        return roomDao.getById(roomId);
+        try {
+            return roomDao.getById(roomId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
     public void update(Room room) {
-        roomDao.update(room);
+        try {
+            roomDao.update(room);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Transactional
     public void deactivate(Integer roomId) {
-        roomDao.removeRoomFromAllLessons(roomId);
-        roomDao.deactivate(roomId);
+        try {
+            roomDao.removeRoomFromAllLessons(roomId);
+            roomDao.deactivate(roomId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
     
     public void activate(Integer roomId) {
-        roomDao.activate(roomId);
+        try {
+            roomDao.activate(roomId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
     
     public void getRoomByLesson(Integer lessonId) {
-        roomDao.getRoomByLesson(lessonId);
+        try {
+            roomDao.getRoomByLesson(lessonId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 }

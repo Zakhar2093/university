@@ -3,6 +3,7 @@ package ua.com.foxminded.university.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -12,15 +13,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import ua.com.foxminded.university.dao.DatabaseInitialization;
 import ua.com.foxminded.university.dao.interfaces.TeacherDao;
-import ua.com.foxminded.university.dao.interfaces.TeacherDao;
+import ua.com.foxminded.university.exception.DaoException;
+import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Teacher;
 
 class TeacherServiceTest {
 
-    private DatabaseInitialization dbInit = new DatabaseInitialization();
-
+    private static final String EMPTY_STRING = "";
     private TeacherService teacherService;
     @Mock
     private TeacherDao teacherDao;
@@ -30,7 +30,6 @@ class TeacherServiceTest {
     public void initMocks() {
         MockitoAnnotations.initMocks(this);
         teacherService = new TeacherService(teacherDao);
-        dbInit.initialization();
     }
 
     @Test
@@ -74,5 +73,61 @@ class TeacherServiceTest {
     void getTeacherByLessonShouldInvokeOnlyOnce() {
         teacherService.getTeacherByLesson(1);
         verify(teacherDao, only()).getTeacherByLesson(anyInt());
+    }
+    
+    @Test
+    void whenCreateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(teacherDao).create(any(Teacher.class));
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            teacherService.create(new Teacher());
+        });
+    }
+    
+    @Test
+    void whenGetAllCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(teacherDao).getAll();
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            teacherService.getAll();
+        });    
+    }
+    
+    @Test
+    void whenGetByIdCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(teacherDao).getById(anyInt());
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            teacherService.getById(1);
+        });
+    }
+    
+    @Test
+    void whenUpdateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(teacherDao).update(any(Teacher.class));
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            teacherService.update(new Teacher());
+        });
+    }
+    
+    @Test
+    void whenDeactivateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(teacherDao).deactivate(anyInt());
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            teacherService.deactivate(1);
+        });
+    }
+    
+    @Test
+    void whenActivateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(teacherDao).activate(anyInt());
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            teacherService.activate(1);
+        });
+    }
+    
+    @Test
+    void whenGetTeacherByLessonCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(teacherDao).getTeacherByLesson(anyInt());
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            teacherService.getTeacherByLesson(1);
+        });
     }
 }

@@ -6,10 +6,10 @@ import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.dao.interfaces.RoomDao;
 import ua.com.foxminded.university.dao.interfaces.TeacherDao;
+import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.model.Lesson;
 
 @Component

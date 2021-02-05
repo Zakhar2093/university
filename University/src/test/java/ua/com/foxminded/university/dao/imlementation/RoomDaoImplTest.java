@@ -15,16 +15,18 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.SpringConfigTest;
-import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.DatabaseInitialization;
 import ua.com.foxminded.university.dao.implementation.GroupDaoImpl;
 import ua.com.foxminded.university.dao.implementation.LessonDaoImpl;
 import ua.com.foxminded.university.dao.implementation.RoomDaoImpl;
+import ua.com.foxminded.university.dao.implementation.StudentDaoImpl;
 import ua.com.foxminded.university.dao.implementation.TeacherDaoImpl;
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.dao.interfaces.LessonDao;
 import ua.com.foxminded.university.dao.interfaces.RoomDao;
+import ua.com.foxminded.university.dao.interfaces.StudentDao;
 import ua.com.foxminded.university.dao.interfaces.TeacherDao;
+import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lesson;
 import ua.com.foxminded.university.model.Room;
@@ -39,6 +41,7 @@ class RoomDaoImplTest {
     private GroupDao groupDao;
     private TeacherDao teacherDao;
     private RoomDao roomDao;
+    private StudentDao studentDao;
 
     @BeforeEach
     void createBean() {
@@ -48,7 +51,8 @@ class RoomDaoImplTest {
         roomDao = new RoomDaoImpl(jdbcTemplate, propertyReader);
         groupDao = new GroupDaoImpl(jdbcTemplate, propertyReader);
         teacherDao = new TeacherDaoImpl(jdbcTemplate, propertyReader);
-        lessonDao = new LessonDaoImpl(jdbcTemplate, propertyReader, groupDao, teacherDao, roomDao);
+        studentDao = new StudentDaoImpl(jdbcTemplate, propertyReader, groupDao);
+        lessonDao = new LessonDaoImpl(jdbcTemplate, propertyReader, groupDao, teacherDao, roomDao, studentDao);
         dbInit.initialization();;
     }
 
@@ -147,7 +151,7 @@ class RoomDaoImplTest {
         DaoException thrown = assertThrows(DaoException.class, () -> {
             roomDao.getById(1);
         });
-        assertTrue(thrown.getMessage().contains("Room with such id does not exist"));
+        assertTrue(thrown.getMessage().contains("Room with such id 1 does not exist"));
     }
     
     @Test
@@ -157,9 +161,33 @@ class RoomDaoImplTest {
         DaoException thrown = assertThrows(DaoException.class, () -> {
             roomDao.getRoomByLesson(1);
         });
-        assertTrue(thrown.getMessage().contains("Room with such id does not exist"));
+        assertTrue(thrown.getMessage().contains("Such lesson (id = 1) does not have any room"));
     }
     
+    @Test 
+    void whenUpdateNonexistentRoomShouldThrowsDaoException() {
+        DaoException thrown = assertThrows(DaoException.class, () -> {
+            roomDao.update(new Room(1, 101));
+        });
+        assertTrue(thrown.getMessage().contains("Room with such id 1 can not be updated"));
+    }
+    
+    @Test 
+    void whenDeactivateNonexistentRoomShouldThrowsDaoException() {
+        DaoException thrown = assertThrows(DaoException.class, () -> {
+            roomDao.deactivate(1);
+        });
+        assertTrue(thrown.getMessage().contains("Room with such id 1 can not be deactivated"));
+    }
+    
+    @Test 
+    void whenActivateNonexistentRoomShouldThrowsDaoException() {
+        DaoException thrown = assertThrows(DaoException.class, () -> {
+            roomDao.activate(1);
+        });
+        assertTrue(thrown.getMessage().contains("Room with such id 1 can not be activated"));
+    }
+        
     private Lesson createLesson() {
         Group group = new Group(1, "any name", false);
         groupDao.create(group);

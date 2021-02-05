@@ -7,10 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.dao.interfaces.LessonDao;
-import ua.com.foxminded.university.dao.interfaces.RoomDao;
-import ua.com.foxminded.university.dao.interfaces.TeacherDao;
+import ua.com.foxminded.university.exception.DaoException;
+import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Lesson;
 import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.model.Teacher;
@@ -19,77 +18,141 @@ import ua.com.foxminded.university.model.Teacher;
 public class LessonService {
 
     private LessonDao lessonDao;
-    
+
     @Autowired
     public LessonService(LessonDao lessonDao) {
         this.lessonDao = lessonDao;
     }
-    
+
     public void create(Lesson lesson) {
-        lessonDao.create(lesson);
+        try {
+            lessonDao.create(lesson);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
-    
-    public List<Lesson> getAll(){
-        return lessonDao.getAll();
+
+    public List<Lesson> getAll() {
+        try {
+            return lessonDao.getAll();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
     public Lesson getById(Integer lessonId) {
-        return lessonDao.getById(lessonId);
+        try {
+            return lessonDao.getById(lessonId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
-    public void update(Lesson lesson) { 
-        lessonDao.update(lesson);
+    public void update(Lesson lesson) {
+        try {
+            lessonDao.update(lesson);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
-    
+
     @Transactional
     public void deactivate(Integer lessonId) {
-        lessonDao.removeGroupFromLesson(lessonId);
-        lessonDao.removeRoomFromLesson(lessonId);
-        lessonDao.removeTeacherFromLesson(lessonId);
-        lessonDao.deactivate(lessonId);
+        try {
+            lessonDao.removeGroupFromLesson(lessonId);
+            lessonDao.removeRoomFromLesson(lessonId);
+            lessonDao.removeTeacherFromLesson(lessonId);
+            lessonDao.deactivate(lessonId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
-    
+
     public void activate(Integer lessonId) {
-        lessonDao.activate(lessonId);
+        try {
+            lessonDao.activate(lessonId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
-    
+
     public void addGroupToLesson(Integer groupId, Integer lessonId) {
-        lessonDao.addGroupToLesson(groupId, lessonId);
-    }    
-    
+        try {
+            lessonDao.addGroupToLesson(groupId, lessonId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
     public void removeGroupFromLesson(Integer lessonId) {
-        lessonDao.removeGroupFromLesson(lessonId);
+        try {
+            lessonDao.removeGroupFromLesson(lessonId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
-    
+
     public void addRoomToLesson(Integer roomId, Integer lessonId) {
-        lessonDao.addRoomToLesson(roomId, lessonId);
+        try {
+            lessonDao.addRoomToLesson(roomId, lessonId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
-    
+
     public void removeRoomFromLesson(Integer lessonId) {
-        lessonDao.removeRoomFromLesson(lessonId);
+        try {
+            lessonDao.removeRoomFromLesson(lessonId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
-    
+
     public void addTeacherToLesson(Integer teacherId, Integer lessonId) {
-        lessonDao.addTeacherToLesson(teacherId, lessonId);
+        try {
+            lessonDao.addTeacherToLesson(teacherId, lessonId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
-    
+
     public void removeTeacherFromLesson(Integer lessonId) {
-        lessonDao.removeTeacherFromLesson(lessonId);
-    }
-    
-    public List<Lesson> getLessonByTeacherForDay(Teacher teacher, LocalDateTime date){
-        return lessonDao.getLessonByTeacherForDay(teacher, date);
-    }
-
-    public List<Lesson> getLessonByTeacherForMonth(Teacher teacher, LocalDateTime date){
-        return lessonDao.getLessonByTeacherForMonth(teacher, date);
+        try {
+            lessonDao.removeTeacherFromLesson(lessonId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
-    public List<Lesson> getLessonByStudentForDay(Student student, LocalDateTime date){
-        return lessonDao.getLessonByStudentForDay(student, date);
+    public List<Lesson> getLessonByTeacherForDay(Teacher teacher, LocalDateTime date) {
+        try {
+            return lessonDao.getLessonByTeacherForDay(teacher, date);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
-    public List<Lesson> getLessonByStudentForMonth(Student student, LocalDateTime date){
-        return lessonDao.getLessonByStudentForMonth(student, date);
+    public List<Lesson> getLessonByTeacherForMonth(Teacher teacher, LocalDateTime date) {
+        try {
+            return lessonDao.getLessonByTeacherForMonth(teacher, date);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public List<Lesson> getLessonByStudentForDay(Student student, LocalDateTime date) {
+        try {
+            return lessonDao.getLessonByStudentForDay(student, date);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public List<Lesson> getLessonByStudentForMonth(Student student, LocalDateTime date) {
+        try {
+            return lessonDao.getLessonByStudentForMonth(student, date);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 }

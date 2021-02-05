@@ -15,16 +15,18 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.SpringConfigTest;
-import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.DatabaseInitialization;
 import ua.com.foxminded.university.dao.implementation.GroupDaoImpl;
 import ua.com.foxminded.university.dao.implementation.LessonDaoImpl;
 import ua.com.foxminded.university.dao.implementation.RoomDaoImpl;
+import ua.com.foxminded.university.dao.implementation.StudentDaoImpl;
 import ua.com.foxminded.university.dao.implementation.TeacherDaoImpl;
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.dao.interfaces.LessonDao;
 import ua.com.foxminded.university.dao.interfaces.RoomDao;
+import ua.com.foxminded.university.dao.interfaces.StudentDao;
 import ua.com.foxminded.university.dao.interfaces.TeacherDao;
+import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lesson;
 import ua.com.foxminded.university.model.Room;
@@ -39,6 +41,7 @@ class TeacherDaoImplTest {
     private GroupDao groupDao;
     private TeacherDao teacherDao;
     private RoomDao roomDao;
+    private StudentDao studentDao;
 
     @BeforeEach
     void createBean() {
@@ -48,7 +51,8 @@ class TeacherDaoImplTest {
         roomDao = new RoomDaoImpl(jdbcTemplate, propertyReader);
         groupDao = new GroupDaoImpl(jdbcTemplate, propertyReader);
         teacherDao = new TeacherDaoImpl(jdbcTemplate, propertyReader);
-        lessonDao = new LessonDaoImpl(jdbcTemplate, propertyReader, groupDao, teacherDao, roomDao);
+        studentDao = new StudentDaoImpl(jdbcTemplate, propertyReader, groupDao);
+        lessonDao = new LessonDaoImpl(jdbcTemplate, propertyReader, groupDao, teacherDao, roomDao, studentDao);
         dbInit.initialization();
     }
 
@@ -147,7 +151,7 @@ class TeacherDaoImplTest {
         DaoException thrown = assertThrows(DaoException.class, () -> {
             teacherDao.getById(1);
         });
-        assertTrue(thrown.getMessage().contains("Teacher with such id does not exist"));
+        assertTrue(thrown.getMessage().contains("Teacher with such id 1 does not exist"));
     }
     
     @Test
@@ -157,7 +161,50 @@ class TeacherDaoImplTest {
         DaoException thrown = assertThrows(DaoException.class, () -> {
             teacherDao.getTeacherByLesson(1);
         });
-        assertTrue(thrown.getMessage().contains("Teacher with such id does not exist"));
+        assertTrue(thrown.getMessage().contains("Such lesson (id = 1) does not have any teacher"));
+    }
+    
+    @Test 
+    void whenUpdateNonexistentTeacherShouldThrowsDaoException() {
+        DaoException thrown = assertThrows(DaoException.class, () -> {
+            teacherDao.update(new Teacher(1, "any", "any", false));
+        });
+        assertTrue(thrown.getMessage().contains("Teacher with such id 1 can not be updated"));
+    }
+    
+    @Test 
+    void whenDeactivateNonexistentTeacherShouldThrowsDaoException() {
+        DaoException thrown = assertThrows(DaoException.class, () -> {
+            teacherDao.deactivate(1);
+        });
+        assertTrue(thrown.getMessage().contains("Teacher with such id 1 can not be deactivated"));
+    }
+    
+    @Test 
+    void whenActivateNonexistentTeacherShouldThrowsDaoException() {
+        DaoException thrown = assertThrows(DaoException.class, () -> {
+            teacherDao.activate(1);
+        });
+        assertTrue(thrown.getMessage().contains("Teacher with such id 1 can not be activated"));
+    }
+    
+    @Test
+    void whenCreateTeacherWithNullShouldThrowsDaoException() {
+        DaoException thrown = assertThrows(DaoException.class, () -> {
+            teacherDao.create(new Teacher());
+        });
+        assertTrue(thrown.getMessage().contains("Teacher can not be created. Some field is null"));
+    }
+    
+    @Test
+    void whenUpdateTeacherWithNullShouldThrowsDaoException() {
+        DaoException thrown = assertThrows(DaoException.class, () -> {
+            Teacher groupBeforeUpdating = new Teacher(1, "one", "one", false);
+            Teacher groupAfterUpdating = new Teacher(1, null, null, false);
+            teacherDao.create(groupBeforeUpdating);
+            teacherDao.update(groupAfterUpdating);
+        });
+        assertTrue(thrown.getMessage().contains("Teacher can not be updated. Some new field is null"));
     }
     
     private Lesson createLesson() {
