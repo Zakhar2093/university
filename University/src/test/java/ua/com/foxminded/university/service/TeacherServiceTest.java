@@ -20,6 +20,7 @@ import ua.com.foxminded.university.model.Teacher;
 
 class TeacherServiceTest {
 
+    private static final String EMPTY_STRING = "";
     private TeacherService teacherService;
     @Mock
     private TeacherDao teacherDao;
@@ -75,56 +76,56 @@ class TeacherServiceTest {
     }
     
     @Test
-    void WhenCreateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(teacherDao).create(any(Teacher.class));
+    void whenCreateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(teacherDao).create(any(Teacher.class));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             teacherService.create(new Teacher());
         });
     }
     
     @Test
-    void WhenGetAllCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(teacherDao).getAll();
+    void whenGetAllCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(teacherDao).getAll();
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             teacherService.getAll();
         });    
     }
     
     @Test
-    void WhenGetByIdCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(teacherDao).getById(anyInt());
+    void whenGetByIdCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(teacherDao).getById(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             teacherService.getById(1);
         });
     }
     
     @Test
-    void WhenUpdateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(teacherDao).update(any(Teacher.class));
+    void whenUpdateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(teacherDao).update(any(Teacher.class));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             teacherService.update(new Teacher());
         });
     }
     
     @Test
-    void WhenDeactivateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(teacherDao).deactivate(anyInt());
+    void whenDeactivateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(teacherDao).deactivate(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             teacherService.deactivate(1);
         });
     }
     
     @Test
-    void WhenActivateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(teacherDao).activate(anyInt());
+    void whenActivateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(teacherDao).activate(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             teacherService.activate(1);
         });
     }
     
     @Test
-    void WhenGetTeacherByLessonCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(teacherDao).getTeacherByLesson(anyInt());
+    void whenGetTeacherByLessonCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(teacherDao).getTeacherByLesson(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             teacherService.getTeacherByLesson(1);
         });

@@ -15,6 +15,7 @@ import ua.com.foxminded.university.model.Room;
 
 class RoomServiceTest {
     
+    private static final String EMPTY_STRING = "";
     private RoomService roomService;
     @Mock
     private RoomDao roomDao;
@@ -70,56 +71,56 @@ class RoomServiceTest {
     }
     
     @Test
-    void WhenCreateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(roomDao).create(any(Room.class));
+    void whenCreateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(roomDao).create(any(Room.class));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             roomService.create(new Room());
         });
     }
     
     @Test
-    void WhenGetAllCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(roomDao).getAll();
+    void whenGetAllCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(roomDao).getAll();
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             roomService.getAll();
         });    
     }
     
     @Test
-    void WhenGetByIdCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(roomDao).getById(anyInt());
+    void whenGetByIdCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(roomDao).getById(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             roomService.getById(1);
         });
     }
     
     @Test
-    void WhenUpdateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(roomDao).update(any(Room.class));
+    void whenUpdateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(roomDao).update(any(Room.class));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             roomService.update(new Room());
         });
     }
     
     @Test
-    void WhenDeactivateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(roomDao).deactivate(anyInt());
+    void whenDeactivateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(roomDao).deactivate(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             roomService.deactivate(1);
         });
     }
     
     @Test
-    void WhenActivateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(roomDao).activate(anyInt());
+    void whenActivateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(roomDao).activate(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             roomService.activate(1);
         });
     }
     
     @Test
-    void WhenGetRoomByLessonCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(roomDao).getRoomByLesson(anyInt());
+    void whenGetRoomByLessonCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(roomDao).getRoomByLesson(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             roomService.getRoomByLesson(1);
         });

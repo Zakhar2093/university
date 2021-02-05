@@ -20,6 +20,7 @@ import ua.com.foxminded.university.model.Student;
 
 class StudentServiceTest {
 
+    private static final String EMPTY_STRING = "";
     private StudentService studentService;
     
     @Mock
@@ -82,64 +83,64 @@ class StudentServiceTest {
     }
     
     @Test
-    void WhenCreateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(studentDao).create(any(Student.class));
+    void whenCreateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(studentDao).create(any(Student.class));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             studentService.create(new Student());
         });
     }
     
     @Test
-    void WhenGetAllCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(studentDao).getAll();
+    void whenGetAllCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(studentDao).getAll();
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             studentService.getAll();
         });    
     }
     
     @Test
-    void WhenGetByIdCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(studentDao).getById(anyInt());
+    void whenGetByIdCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(studentDao).getById(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             studentService.getById(1);
         });
     }
     
     @Test
-    void WhenUpdateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(studentDao).update(any(Student.class));
+    void whenUpdateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(studentDao).update(any(Student.class));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             studentService.update(new Student());
         });
     }
     
     @Test
-    void WhenDeactivateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(studentDao).deactivate(anyInt());
+    void whenDeactivateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(studentDao).deactivate(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             studentService.deactivate(1);
         });
     }
     
     @Test
-    void WhenActivateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(studentDao).activate(anyInt());
+    void whenActivateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(studentDao).activate(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             studentService.activate(1);
         });
     }
     
     @Test
-    void WhenAddStudentToGroupCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(studentDao).addStudentToGroup(anyInt(), anyInt());
+    void whenAddStudentToGroupCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(studentDao).addStudentToGroup(anyInt(), anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             studentService.addStudentToGroup(1, 1);
         });
     }
     
     @Test
-    void WhenRemoveStudentFromGroupCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(studentDao).removeStudentFromGroup(anyInt());
+    void whenRemoveStudentFromGroupCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(studentDao).removeStudentFromGroup(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             studentService.removeStudentFromGroup(1);
         });

@@ -24,6 +24,7 @@ import ua.com.foxminded.university.model.Teacher;
 
 class LessonServiceTest {
 
+    private static final String EMPTY_STRING = "";
     private static final LocalDateTime TIME = LocalDateTime.now();
     private LessonService lessonService;
     @Mock
@@ -136,128 +137,128 @@ class LessonServiceTest {
     }
 
     @Test
-    void WhenCreateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(lessonDao).create(any(Lesson.class));
+    void whenCreateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).create(any(Lesson.class));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             lessonService.create(new Lesson());
         });
     }
     
     @Test
-    void WhenGetAllCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(lessonDao).getAll();
+    void whenGetAllCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).getAll();
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             lessonService.getAll();
         });    
     }
     
     @Test
-    void WhenGetByIdCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(lessonDao).getById(anyInt());
+    void whenGetByIdCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).getById(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             lessonService.getById(1);
         });
     }
     
     @Test
-    void WhenUpdateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(lessonDao).update(any(Lesson.class));
+    void whenUpdateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).update(any(Lesson.class));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             lessonService.update(new Lesson());
         });
     }
     
     @Test
-    void WhenDeactivateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(lessonDao).deactivate(anyInt());
+    void whenDeactivateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).deactivate(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             lessonService.deactivate(1);
         });
     }
     
     @Test
-    void WhenActivateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(lessonDao).activate(anyInt());
+    void whenActivateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).activate(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             lessonService.activate(1);
         });
     }
     
     @Test
-    void WhenAddGroupToLessonCatchDaoExceptionShouldThrowServiceException(){
-        doThrow(new DaoException("")).when(lessonDao).addGroupToLesson(anyInt(), anyInt());
+    void whenAddGroupToLessonCatchDaoExceptionShouldThrowServiceException(){
+        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).addGroupToLesson(anyInt(), anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             lessonService.addGroupToLesson(1, 1);
         });
     }     
     
     @Test
-    void WhenRemoveGroupFromLessonCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(lessonDao).removeGroupFromLesson(anyInt());
+    void whenRemoveGroupFromLessonCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).removeGroupFromLesson(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             lessonService.removeGroupFromLesson(1);;
         });
     }
     
     @Test
-    void WhenAddRoomToLessonCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(lessonDao).addRoomToLesson(anyInt(), anyInt());
+    void whenAddRoomToLessonCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).addRoomToLesson(anyInt(), anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             lessonService.addRoomToLesson(1, 1);
         });
     }
     
     @Test
-    void WhenRemoveRoomFromLessonCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(lessonDao).removeRoomFromLesson(anyInt());
+    void whenRemoveRoomFromLessonCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).removeRoomFromLesson(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             lessonService.removeRoomFromLesson(1);;
         });
     }
     
     @Test
-    void WhenAddTeacherToLessonCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(lessonDao).addTeacherToLesson(anyInt(), anyInt());
+    void whenAddTeacherToLessonCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).addTeacherToLesson(anyInt(), anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             lessonService.addTeacherToLesson(1, 1);
         });
     }
     
     @Test
-    void WhenRemoveTeacherFromLessonCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(lessonDao).removeTeacherFromLesson(anyInt());
+    void whenRemoveTeacherFromLessonCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).removeTeacherFromLesson(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             lessonService.removeTeacherFromLesson(1);;
         });
     }
     
     @Test
-    void WhenGetLessonByTeacherForDayCatchDaoExceptionShouldThrowServiceException(){
-        doThrow(new DaoException("")).when(lessonDao).getLessonByTeacherForDay(any(Teacher.class), eq(TIME));
+    void whenGetLessonByTeacherForDayCatchDaoExceptionShouldThrowServiceException(){
+        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).getLessonByTeacherForDay(any(Teacher.class), eq(TIME));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             lessonService.getLessonByTeacherForDay(new Teacher(), TIME);
         });
     }
 
     @Test
-    void WhenGetLessonByTeacherForMonthCatchDaoExceptionShouldThrowServiceException(){
-        doThrow(new DaoException("")).when(lessonDao).getLessonByTeacherForMonth(any(Teacher.class), eq(TIME));
+    void whenGetLessonByTeacherForMonthCatchDaoExceptionShouldThrowServiceException(){
+        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).getLessonByTeacherForMonth(any(Teacher.class), eq(TIME));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             lessonService.getLessonByTeacherForMonth(new Teacher(), TIME);
         });
     }
 
     @Test
-    void WhenGetLessonByStudentForDayCatchDaoExceptionShouldThrowServiceException(){
-        doThrow(new DaoException("")).when(lessonDao).getLessonByStudentForDay(any(Student.class), eq(TIME));
+    void whenGetLessonByStudentForDayCatchDaoExceptionShouldThrowServiceException(){
+        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).getLessonByStudentForDay(any(Student.class), eq(TIME));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             lessonService.getLessonByStudentForDay(new Student(), TIME);
         });
     }
 
     @Test
-    void WhenGetLessonByStudentForMonthCatchDaoExceptionShouldThrowServiceException(){
-        doThrow(new DaoException("")).when(lessonDao).getLessonByStudentForMonth(any(Student.class), eq(TIME));
+    void whenGetLessonByStudentForMonthCatchDaoExceptionShouldThrowServiceException(){
+        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).getLessonByStudentForMonth(any(Student.class), eq(TIME));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             lessonService.getLessonByStudentForMonth(new Student(), TIME);
         });

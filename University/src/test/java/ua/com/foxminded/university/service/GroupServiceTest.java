@@ -18,7 +18,8 @@ import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Group;
 
 class GroupServiceTest {
-
+    
+    private static final String EMPTY_STRING = "";
     private GroupService groupService;
     @Mock
     private GroupDao groupDao;
@@ -80,64 +81,64 @@ class GroupServiceTest {
     }
     
     @Test
-    void WhenCreateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(groupDao).create(any(Group.class));
+    void whenCreateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(groupDao).create(any(Group.class));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             groupService.create(new Group());
         });
     }
     
     @Test
-    void WhenGetAllCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(groupDao).getAll();
+    void whenGetAllCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(groupDao).getAll();
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             groupService.getAll();
         });    
     }
     
     @Test
-    void WhenGetByIdCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(groupDao).getById(anyInt());
+    void whenGetByIdCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(groupDao).getById(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             groupService.getById(1);
         });
     }
     
     @Test
-    void WhenUpdateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(groupDao).update(any(Group.class));
+    void whenUpdateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(groupDao).update(any(Group.class));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             groupService.update(new Group());
         });
     }
     
     @Test
-    void WhenDeactivateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(groupDao).deactivate(anyInt());
+    void whenDeactivateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(groupDao).deactivate(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             groupService.deactivate(1);
         });
     }
     
     @Test
-    void WhenActivateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(groupDao).activate(anyInt());
+    void whenActivateCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(groupDao).activate(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             groupService.activate(1);
         });
     }
     
     @Test
-    void WhenGetGroupByLessonCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(groupDao).getGroupByLesson(anyInt());
+    void whenGetGroupByLessonCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(groupDao).getGroupByLesson(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             groupService.getGroupByLesson(1);;
         });
     }
     
     @Test
-    void WhenGetGroupByStudentCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException("")).when(groupDao).getGroupByStudent(anyInt());
+    void whenGetGroupByStudentCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(groupDao).getGroupByStudent(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             groupService.getGroupByStudent(1);;
         });

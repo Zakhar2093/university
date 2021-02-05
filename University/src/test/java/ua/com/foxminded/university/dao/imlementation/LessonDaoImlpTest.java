@@ -445,15 +445,7 @@ class LessonDaoImlpTest {
             lessonDao.addGroupToLesson(1, 1);
         });
         assertTrue(thrown.getMessage().contains("Group 1 can not be added to lesson id = 1. Group or lesson does not exist"));
-    }
-    
-    @Test
-    void whenAddRoomToNonexistentLessonShouldThrowsDaoException() {
-        DaoException thrown = assertThrows(DaoException.class, () -> {
-            lessonDao.addRoomToLesson(1, 1);
-        });
-        assertTrue(thrown.getMessage().contains("Room 1 can not be added to lesson id = 1. Room or lesson does not exist"));
-    }
+    }    
     
     @Test
     void whenAddTeacherToNonexistentLessonShouldThrowsDaoException() {
