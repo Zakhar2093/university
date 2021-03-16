@@ -1,7 +1,5 @@
 package ua.com.foxminded.university.dao.implementation;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,13 +7,12 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
 import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.dao.interfaces.RoomDao;
 import ua.com.foxminded.university.exception.DaoException;
-import ua.com.foxminded.university.model.Lesson;
 import ua.com.foxminded.university.model.Room;
+
+import java.util.List;
 
 @Component
 public class RoomDaoImpl implements RoomDao {
@@ -34,8 +31,10 @@ public class RoomDaoImpl implements RoomDao {
 
     public List<Room> getAll() {
         logger.debug("Getting all room");
+//        String ss = propertyReader.read(PROPERTY_NAME, "room.getAll");
+        String ss = "SELECT * FROM university.rooms";
         return jdbcTemplate.query(
-                propertyReader.read(PROPERTY_NAME, "room.getAll"), 
+                ss,
                 new BeanPropertyRowMapper<>(Room.class)
                 );
     }
@@ -57,7 +56,8 @@ public class RoomDaoImpl implements RoomDao {
     public void create(Room room) {
         logger.debug("Creating room with number {}", room.getRoomNumber());
         try {
-            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "room.create"), room.getRoomNumber(), room.isRoomInactive());
+            String ss = "INSERT INTO university.rooms (room_number, room_inactive) VALUES (?, ?)";
+            jdbcTemplate.update(ss, room.getRoomNumber(), room.isRoomInactive());
         } catch (DataIntegrityViolationException e) {
             logger.error("Creating was not successful. Room can not be created. Some field is null", e);
             throw new DaoException("Room can not be created. Some field is null", e);

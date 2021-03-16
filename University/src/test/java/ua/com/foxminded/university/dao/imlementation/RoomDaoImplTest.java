@@ -1,42 +1,48 @@
 package ua.com.foxminded.university.dao.imlementation;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.SpringConfigTest;
 import ua.com.foxminded.university.dao.DatabaseInitialization;
-import ua.com.foxminded.university.dao.implementation.GroupDaoImpl;
-import ua.com.foxminded.university.dao.implementation.LessonDaoImpl;
-import ua.com.foxminded.university.dao.implementation.RoomDaoImpl;
-import ua.com.foxminded.university.dao.implementation.StudentDaoImpl;
-import ua.com.foxminded.university.dao.implementation.TeacherDaoImpl;
-import ua.com.foxminded.university.dao.interfaces.GroupDao;
-import ua.com.foxminded.university.dao.interfaces.LessonDao;
-import ua.com.foxminded.university.dao.interfaces.RoomDao;
-import ua.com.foxminded.university.dao.interfaces.StudentDao;
-import ua.com.foxminded.university.dao.interfaces.TeacherDao;
+import ua.com.foxminded.university.dao.implementation.*;
+import ua.com.foxminded.university.dao.interfaces.*;
 import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lesson;
 import ua.com.foxminded.university.model.Room;
 import ua.com.foxminded.university.model.Teacher;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = SpringConfigTest.class)
 class RoomDaoImplTest {
-    private DatabaseInitialization dbInit = new DatabaseInitialization();
-    private AnnotationConfigApplicationContext context;
-    private JdbcTemplate jdbcTemplate;
+//    private AnnotationConfigApplicationContext context;
+
+    @Autowired
     private PropertyReader propertyReader;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+//    @Autowired
+//    public RoomDaoImplTest(JdbcTemplate jdbcTemplate, PropertyReader propertyReader) {
+//        this.jdbcTemplate = jdbcTemplate;
+//        this.propertyReader = propertyReader;
+//    }
+
+    private DatabaseInitialization dbInit = new DatabaseInitialization();
     private LessonDao lessonDao;
     private GroupDao groupDao;
     private TeacherDao teacherDao;
@@ -45,9 +51,9 @@ class RoomDaoImplTest {
 
     @BeforeEach
     void createBean() {
-        context = new AnnotationConfigApplicationContext(SpringConfigTest.class);
-        jdbcTemplate = context.getBean("jdbcTemplate", JdbcTemplate.class);
-        propertyReader = context.getBean("propertyReader", PropertyReader.class);
+//        context = new AnnotationConfigApplicationContext(SpringConfigTest.class);
+//        jdbcTemplate = context.getBean("jdbcTemplate", JdbcTemplate.class);
+//        propertyReader = context.getBean("propertyReader", PropertyReader.class);
         roomDao = new RoomDaoImpl(jdbcTemplate, propertyReader);
         groupDao = new GroupDaoImpl(jdbcTemplate, propertyReader);
         teacherDao = new TeacherDaoImpl(jdbcTemplate, propertyReader);
@@ -200,8 +206,8 @@ class RoomDaoImplTest {
         return lesson;
     }
 
-    @AfterEach
-    void closeConext() {
-        context.close();
-    }
+//    @AfterEach
+//    void closeConext() {
+//        context.close();
+//    }
 }
