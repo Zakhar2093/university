@@ -40,8 +40,9 @@ public class LessonMapper implements RowMapper<Lesson>{
         if (rs.getInt("room_id") != 0) {
             lesson.setRoom(roomDao.getRoomByLesson(rs.getInt("lesson_id")));
         }
-        
-        lesson.setDate(rs.getTimestamp("lesson_date").toLocalDateTime());
+        if (rs.getTimestamp("lesson_date") != null) {
+            lesson.setDate(rs.getTimestamp("lesson_date").toLocalDateTime());
+        }
         lesson.setLessonInactive(rs.getBoolean("lesson_inactive"));
         return lesson;
     }

@@ -45,12 +45,30 @@ public class LessonDaoImpl implements LessonDao{
     public void create(Lesson lesson) {
         logger.debug("Creating lesson with name {}", lesson.getLessonName());
         try {
+            Integer groupId;
+            Integer roomId;
+            Integer teacherId;
+            if (lesson.getGroup() == null) {
+                groupId = null;
+            } else {
+                groupId = lesson.getGroup().getGroupId();
+            }
+            if (lesson.getGroup() == null) {
+                roomId = null;
+            } else {
+                roomId = lesson.getRoom().getRoomId();
+            }
+            if (lesson.getGroup() == null) {
+                teacherId = null;
+            } else {
+                teacherId = lesson.getTeacher().getTeacherId();
+            }
             jdbcTemplate.update(
                     env.getProperty("lesson.create"),
-                    lesson.getLessonName(), 
-                    lesson.getTeacher().getTeacherId(), 
-                    lesson.getGroup().getGroupId(),
-                    lesson.getRoom().getRoomId(),
+                    lesson.getLessonName(),
+                    teacherId,
+                    groupId,
+                    roomId,
                     lesson.getDate(),           
                     lesson.isLessonInactive()
                     );
@@ -83,12 +101,30 @@ public class LessonDaoImpl implements LessonDao{
         logger.debug("Updating lesson with name {}", lesson.getLessonName());
         try {
             getById(lesson.getLessonId());
+            Integer groupId;
+            Integer roomId;
+            Integer teacherId;
+            if (lesson.getGroup() == null) {
+                groupId = null;
+            } else {
+                groupId = lesson.getGroup().getGroupId();
+            }
+            if (lesson.getGroup() == null) {
+                roomId = null;
+            } else {
+                roomId = lesson.getRoom().getRoomId();
+            }
+            if (lesson.getGroup() == null) {
+                teacherId = null;
+            } else {
+                teacherId = lesson.getTeacher().getTeacherId();
+            }
             jdbcTemplate.update(
                     env.getProperty("lesson.update"),
-                    lesson.getLessonName(), 
-                    lesson.getTeacher().getTeacherId(), 
-                    lesson.getGroup().getGroupId(),
-                    lesson.getRoom().getRoomId(),
+                    lesson.getLessonName(),
+                    teacherId,
+                    groupId,
+                    roomId,
                     lesson.getDate(),
                     lesson.isLessonInactive(),
                     lesson.getLessonId()
