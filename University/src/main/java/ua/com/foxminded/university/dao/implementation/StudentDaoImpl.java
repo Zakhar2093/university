@@ -1,20 +1,19 @@
 package ua.com.foxminded.university.dao.implementation;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-
-import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.dao.interfaces.StudentDao;
 import ua.com.foxminded.university.dao.mapper.StudentMapper;
 import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.model.Student;
+
+import java.util.List;
 
 @Component    
 public class StudentDaoImpl implements StudentDao {
@@ -22,14 +21,14 @@ public class StudentDaoImpl implements StudentDao {
     private static final Logger logger = LoggerFactory.getLogger(StudentDaoImpl.class);
     private final static String PROPERTY_NAME = "src/main/resources/SqlQueries.properties";
     private final JdbcTemplate jdbcTemplate;
-    private final PropertyReader propertyReader;
+    private Environment env;
     private GroupDao groupDaoImpl;
 
     @Autowired
-    public StudentDaoImpl(JdbcTemplate jdbcTemplate, PropertyReader propertyReader , GroupDao groupDaoImpl) {
+    public StudentDaoImpl(JdbcTemplate jdbcTemplate, Environment env, GroupDao groupDaoImpl) {
         super();
         this.jdbcTemplate = jdbcTemplate;
-        this.propertyReader = propertyReader;
+        this.env = env;
         this.groupDaoImpl = groupDaoImpl;
     }
     
@@ -37,7 +36,7 @@ public class StudentDaoImpl implements StudentDao {
         logger.debug("Creating student with name {} {}", student.getFirstName(), student.getLastName());
         try {
             jdbcTemplate.update(
-                    propertyReader.read(PROPERTY_NAME, "student.create"), 
+                    env.getProperty("student.create"),
                     student.getFirstName(), 
                     student.getLastName(), 
                     student.getGroup().getGroupId(),
@@ -52,14 +51,14 @@ public class StudentDaoImpl implements StudentDao {
 
     public List<Student> getAll() {
         logger.debug("Getting all students");
-        return jdbcTemplate.query(propertyReader.read(PROPERTY_NAME, "student.getAll"), new StudentMapper(groupDaoImpl));
+        return jdbcTemplate.query(env.getProperty("student.getAll"), new StudentMapper(groupDaoImpl));
     }
 
     public Student getById(Integer studentId) {
         logger.debug("Getting student by id = {}", studentId);
         return jdbcTemplate
                 .query(
-                        propertyReader.read(PROPERTY_NAME, "student.getById"), 
+                        env.getProperty("student.getById"),
                         new Object[]{studentId}, 
                         new StudentMapper(groupDaoImpl)
                         )
@@ -73,7 +72,7 @@ public class StudentDaoImpl implements StudentDao {
         try {
             getById(student.getStudentId());
             jdbcTemplate.update(
-                    propertyReader.read(PROPERTY_NAME, "student.update"), 
+                    env.getProperty("student.update"),
                     student.getGroup().getGroupId(),
                     student.getFirstName(), 
                     student.getLastName(),
@@ -94,7 +93,7 @@ public class StudentDaoImpl implements StudentDao {
         logger.debug("Deactivating student with id = {}", studentId);
         try {
             getById(studentId);
-            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.deactivate"), studentId);
+            jdbcTemplate.update(env.getProperty("student.deactivate"), studentId);
         } catch (DaoException e) {
             logger.error("Deactivating was not successful", e);
             throw new DaoException(String.format("Student with such id %d can not be deactivated", studentId), e);
@@ -106,7 +105,7 @@ public class StudentDaoImpl implements StudentDao {
         logger.debug("Activating student with id = {}", studentId);
         try {
             getById(studentId);
-            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.activate"), studentId);
+            jdbcTemplate.update(env.getProperty("student.activate"), studentId);
         } catch (DaoException e) {
             logger.error("Activating was not successful", e);
             throw new DaoException(String.format("Student with such id %d can not be activated", studentId), e);
@@ -118,7 +117,7 @@ public class StudentDaoImpl implements StudentDao {
         logger.debug("Removing student id = {} from group", studentId);
         try {
             getById(studentId);
-            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.removeStudentFromGroup"), studentId);
+            jdbcTemplate.update(env.getProperty("student.removeStudentFromGroup"), studentId);
         } catch (DaoException e) {
             logger.error("Removing was not successful. Student does not exist", e);
             throw new DaoException(String.format("Student can not be removed from Group id = %d. Student does not exist", studentId), e);
@@ -131,7 +130,7 @@ public class StudentDaoImpl implements StudentDao {
         try {
             getById(studentId);
             groupDaoImpl.getById(groupId);
-            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "student.addStudentToGroup"), groupId, studentId);
+            jdbcTemplate.update(env.getProperty("student.addStudentToGroup"), groupId, studentId);
         } catch (DaoException e) {
             logger.error("Adding was not successful. Student or group does not exist", e);
             throw new DaoException(String.format("Student %d can not be added to group %d. Student or Group does not exist", studentId, groupId), e);

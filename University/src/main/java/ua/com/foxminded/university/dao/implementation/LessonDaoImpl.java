@@ -1,35 +1,29 @@
 
 package ua.com.foxminded.university.dao.implementation;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-
-import ua.com.foxminded.university.PropertyReader;
-import ua.com.foxminded.university.dao.interfaces.GroupDao;
-import ua.com.foxminded.university.dao.interfaces.LessonDao;
-import ua.com.foxminded.university.dao.interfaces.RoomDao;
-import ua.com.foxminded.university.dao.interfaces.StudentDao;
-import ua.com.foxminded.university.dao.interfaces.TeacherDao;
+import ua.com.foxminded.university.dao.interfaces.*;
 import ua.com.foxminded.university.dao.mapper.LessonMapper;
 import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.model.Lesson;
 import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.model.Teacher;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Component
 public class LessonDaoImpl implements LessonDao{
 
     private static final Logger logger = LoggerFactory.getLogger(LessonDaoImpl.class);
-    private final static String PROPERTY_NAME = "src/main/resources/SqlQueries.properties";
     private final JdbcTemplate jdbcTemplate;
-    private final PropertyReader propertyReader;
+    private Environment env;
     
     private GroupDao groupDao;
     private TeacherDao teacherDao;
@@ -37,11 +31,11 @@ public class LessonDaoImpl implements LessonDao{
     private StudentDao studentDao;
 
     @Autowired 
-    public LessonDaoImpl(JdbcTemplate jdbcTemplate, PropertyReader propertyReader, GroupDao groupDao,
+    public LessonDaoImpl(JdbcTemplate jdbcTemplate, Environment env, GroupDao groupDao,
             TeacherDao teacherDao, RoomDao roomDao, StudentDao studentDao) {
         super();
         this.jdbcTemplate = jdbcTemplate;
-        this.propertyReader = propertyReader;
+        this.env = env;
         this.groupDao = groupDao;
         this.teacherDao = teacherDao;
         this.roomDao = roomDao;
@@ -52,7 +46,7 @@ public class LessonDaoImpl implements LessonDao{
         logger.debug("Creating lesson with name {}", lesson.getLessonName());
         try {
             jdbcTemplate.update(
-                    propertyReader.read(PROPERTY_NAME, "lesson.create"), 
+                    env.getProperty("lesson.create"),
                     lesson.getLessonName(), 
                     lesson.getTeacher().getTeacherId(), 
                     lesson.getGroup().getGroupId(),
@@ -69,14 +63,14 @@ public class LessonDaoImpl implements LessonDao{
 
     public List<Lesson> getAll() {
         logger.debug("Getting all lessons");
-        return jdbcTemplate.query(propertyReader.read(PROPERTY_NAME, "lesson.getAll"), new LessonMapper(groupDao, teacherDao, roomDao));
+        return jdbcTemplate.query(env.getProperty("lesson.getAll"), new LessonMapper(groupDao, teacherDao, roomDao));
     }
 
     public Lesson getById(Integer lessonId) {
         logger.debug("Getting lesson by id = {}", lessonId);
         return jdbcTemplate
                 .query(
-                        propertyReader.read(PROPERTY_NAME, "lesson.getById"), 
+                        env.getProperty("lesson.getById"),
                         new Object[] { lessonId },
                         new LessonMapper(groupDao, teacherDao, roomDao)
                         )
@@ -90,7 +84,7 @@ public class LessonDaoImpl implements LessonDao{
         try {
             getById(lesson.getLessonId());
             jdbcTemplate.update(
-                    propertyReader.read(PROPERTY_NAME, "lesson.update"), 
+                    env.getProperty("lesson.update"),
                     lesson.getLessonName(), 
                     lesson.getTeacher().getTeacherId(), 
                     lesson.getGroup().getGroupId(),
@@ -118,7 +112,7 @@ public class LessonDaoImpl implements LessonDao{
         logger.debug("getting Lesson by Teacher id = {} for day = {}", teacher.getTeacherId(), dateFormat);
         checkIfTeacherExsist(teacher);
         return jdbcTemplate.query(
-                propertyReader.read(PROPERTY_NAME, "lesson.getLessonByTeacherForDay"), 
+                env.getProperty("lesson.getLessonByTeacherForDay"),
                 new Object[] { teacherId, year, mounth, day }, 
                 new LessonMapper(groupDao, teacherDao, roomDao)
                 );
@@ -132,7 +126,7 @@ public class LessonDaoImpl implements LessonDao{
         logger.debug("getting Lesson by Teacher id = {} for day = {}", teacher.getTeacherId(), dateFormat);
         checkIfTeacherExsist(teacher);
         return jdbcTemplate.query(
-                propertyReader.read(PROPERTY_NAME, "lesson.getLessonByTeacherForMonth"), 
+                env.getProperty("lesson.getLessonByTeacherForMonth"),
                 new Object[] { teacherId, year, mounth}, 
                 new LessonMapper(groupDao, teacherDao, roomDao)
                 );
@@ -157,7 +151,7 @@ public class LessonDaoImpl implements LessonDao{
         logger.debug("getting Lesson by Student id = {} for day = {}", student.getStudentId(), dateFormat);
         checkIfStudentExsist(student);
         return jdbcTemplate.query(
-                propertyReader.read(PROPERTY_NAME, "lesson.getLessonByStudentForDay"), 
+                env.getProperty("lesson.getLessonByStudentForDay"),
                 new Object[] { studentId, year, mounth, day}, 
                 new LessonMapper(groupDao, teacherDao, roomDao)
                 );
@@ -171,7 +165,7 @@ public class LessonDaoImpl implements LessonDao{
         logger.debug("getting Lesson by Student id = {} for day = {}", student.getStudentId(), dateFormat);
         checkIfStudentExsist(student);
         return jdbcTemplate.query(
-                propertyReader.read(PROPERTY_NAME, "lesson.getLessonByStudentForMonth"), 
+                env.getProperty("lesson.getLessonByStudentForMonth"),
                 new Object[] { studentId, year, mounth}, 
                 new LessonMapper(groupDao, teacherDao, roomDao)
                 );
@@ -191,7 +185,7 @@ public class LessonDaoImpl implements LessonDao{
         logger.debug("Deactivating lesson with id = {}", lessonId);
         try {
             getById(lessonId);
-            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.deactivate"), lessonId);
+            jdbcTemplate.update(env.getProperty("lesson.deactivate"), lessonId);
         } catch (DaoException e) {
             logger.error("Deactivating was not successful", e);
             throw new DaoException(String.format("Lesson with such id %d can not be deactivated", lessonId), e);
@@ -203,7 +197,7 @@ public class LessonDaoImpl implements LessonDao{
         logger.debug("Activating lesson with id = {}", lessonId);
         try {
             getById(lessonId);
-            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.activate"), lessonId);
+            jdbcTemplate.update(env.getProperty("lesson.activate"), lessonId);
         } catch (DaoException e) {
             logger.error("Activating was not successful", e);
             throw new DaoException(String.format("Lesson with such id %d can not be activated", lessonId), e);
@@ -216,7 +210,7 @@ public class LessonDaoImpl implements LessonDao{
         try {
             getById(lessonId);
             groupDao.getById(groupId);
-            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.addGroupToLesson"), groupId, lessonId);
+            jdbcTemplate.update(env.getProperty("lesson.addGroupToLesson"), groupId, lessonId);
         } catch (DaoException e) {
             logger.error("Adding was not successful. Group or lesson does not exist", e);
             throw new DaoException(String.format("Group %d can not be added to lesson id = %d. Group or lesson does not exist", lessonId, groupId), e);
@@ -228,7 +222,7 @@ public class LessonDaoImpl implements LessonDao{
         logger.debug("Removing Group from Lesson id = {}", lessonId);
         try {
             getById(lessonId);
-            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.removeGroupFromLesson"), lessonId); 
+            jdbcTemplate.update(env.getProperty("lesson.removeGroupFromLesson"), lessonId);
         } catch (DaoException e) {
             logger.error("Removing was not successful. Lesson does not exist", e);
             throw new DaoException(String.format("Group can not be removed from lesson id = %d. Lesson does not exist", lessonId), e);
@@ -241,7 +235,7 @@ public class LessonDaoImpl implements LessonDao{
         try {
             getById(lessonId);
             roomDao.getById(roomId);
-            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.addRoomToLesson"), roomId, lessonId);
+            jdbcTemplate.update(env.getProperty("lesson.addRoomToLesson"), roomId, lessonId);
         } catch (DaoException e) {
             logger.error("Adding was not successful. Room or lesson does not exist", e);
             throw new DaoException(String.format("Room id = %d can not be added to lesson id = %d. Room or lesson does not exist", lessonId, roomId), e);
@@ -253,7 +247,7 @@ public class LessonDaoImpl implements LessonDao{
         logger.debug("Removing Room from Lesson id = {}", lessonId);
         try {
             getById(lessonId);
-            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.removeRoomFromLesson"), lessonId);
+            jdbcTemplate.update(env.getProperty("lesson.removeRoomFromLesson"), lessonId);
         } catch (DaoException e) {
             logger.error("Removing was not successful. Lesson does not exist", e);
             throw new DaoException(String.format("Room can not be removed from lesson id = %d. Lesson does not exist", lessonId), e);
@@ -265,7 +259,7 @@ public class LessonDaoImpl implements LessonDao{
         try {
             getById(lessonId);
             teacherDao.getById(teacherId);
-            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.addTeacherToLesson"), teacherId, lessonId);
+            jdbcTemplate.update(env.getProperty("lesson.addTeacherToLesson"), teacherId, lessonId);
         } catch (DaoException e) {
             logger.error("Adding was not successful. Teacher or lesson does not exist", e);
             throw new DaoException(String.format("Teacher %d can not be added to lesson id = %d. Teacher or lesson does not exist", lessonId, teacherId), e);
@@ -277,7 +271,7 @@ public class LessonDaoImpl implements LessonDao{
         logger.debug("Removing Teacher from Lesson id = {}", lessonId);
         try {
             getById(lessonId);
-            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "lesson.removeTeacherFromLesson"), lessonId);
+            jdbcTemplate.update(env.getProperty("lesson.removeTeacherFromLesson"), lessonId);
         } catch (DaoException e) {
             logger.error("Removing was not successful. Lesson does not exist", e);
             throw new DaoException(String.format("Teacher can not be removed from lesson id = %d. Lesson does not exist", lessonId), e);

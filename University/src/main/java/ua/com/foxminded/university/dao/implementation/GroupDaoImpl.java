@@ -1,38 +1,37 @@
 package ua.com.foxminded.university.dao.implementation;
 
-import java.util.List;
-
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import org.slf4j.Logger;
-import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.model.Group;
+
+import java.util.List;
 
 @Component
 public class GroupDaoImpl implements GroupDao {
 
     private static final Logger logger = LoggerFactory.getLogger(GroupDaoImpl.class);
-    private static final String PROPERTY_NAME = "src/main/resources/SqlQueries.properties";
     private final JdbcTemplate jdbcTemplate;
-    private final PropertyReader propertyReader;
+    private Environment env;
 
     @Autowired
-    public GroupDaoImpl(JdbcTemplate jdbcTemplate, PropertyReader propertyReader) {
+    public GroupDaoImpl(JdbcTemplate jdbcTemplate, Environment env) {
         super();
         this.jdbcTemplate = jdbcTemplate;
-        this.propertyReader = propertyReader;
+        this.env = env;
     }
 
     public List<Group> getAll() {
         logger.debug("Getting all groups");
         return jdbcTemplate.query(
-                propertyReader.read(PROPERTY_NAME, "group.getAll"), 
+                env.getProperty("group.getAll"),
                 new BeanPropertyRowMapper<>(Group.class)
                 );
     }
@@ -41,7 +40,7 @@ public class GroupDaoImpl implements GroupDao {
         logger.debug("Getting group by id = {}", groupId);
         return jdbcTemplate
                 .query(
-                        propertyReader.read(PROPERTY_NAME, "group.getById"), 
+                        env.getProperty("group.getById"),
                         new Object[] { groupId }, 
                         new BeanPropertyRowMapper<>(Group.class)
                         )
@@ -54,7 +53,7 @@ public class GroupDaoImpl implements GroupDao {
     public void create(Group group) {
         logger.debug("Creating group with name {}", group.getGroupName());
         try {
-            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.create"), group.getGroupName(), group.isGroupInactive());
+            jdbcTemplate.update(env.getProperty("group.create"), group.getGroupName(), group.isGroupInactive());
         } catch (DataIntegrityViolationException e) {
             logger.error("Creating was not successful. Group can not be created. Some field is null", e);
             throw new DaoException("Group can not be created. Some field is null", e);
@@ -66,7 +65,7 @@ public class GroupDaoImpl implements GroupDao {
         logger.debug("Updating group with name {}", group.getGroupName());
         try {
             getById(group.getGroupId());
-            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.update"), group.getGroupName(), group.isGroupInactive(), group.getGroupId());
+            jdbcTemplate.update(env.getProperty("group.update"), group.getGroupName(), group.isGroupInactive(), group.getGroupId());
         } catch (DaoException e) {
             logger.error("Updating was not successful. Group with such id = {} can not be updated", group.getGroupId(), e);
             throw new DaoException(String.format("Group with such id %d can not be updated", group.getGroupId()), e);
@@ -78,12 +77,12 @@ public class GroupDaoImpl implements GroupDao {
     } 
     
     public void removeGroupFromAllStudents(Integer groupId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.removeGroupFromAllStudents"), groupId);
+        jdbcTemplate.update(env.getProperty("group.removeGroupFromAllStudents"), groupId);
         logger.debug("removed Group with id = {} from all Students", groupId);
     }
 
     public void removeGroupFromAllLessons(Integer groupId) {
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.removeGroupFromAllLessons"), groupId);
+        jdbcTemplate.update(env.getProperty("group.removeGroupFromAllLessons"), groupId);
         logger.debug("removed Group with id = {} from all Lessons", groupId);
     }
     
@@ -91,7 +90,7 @@ public class GroupDaoImpl implements GroupDao {
         logger.debug("Deactivating group with id = {}", groupId);
         try {
             getById(groupId);
-            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.deactivate"), groupId);
+            jdbcTemplate.update(env.getProperty("group.deactivate"), groupId);
         } catch (DaoException e) {
             logger.error("Deactivating was not successful", e);
             throw new DaoException(String.format("Group with such id %d can not be deactivated", groupId), e);
@@ -103,7 +102,7 @@ public class GroupDaoImpl implements GroupDao {
         logger.debug("Activating group with id = {}", groupId);
         try {
             getById(groupId);
-            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "group.activate"), groupId);
+            jdbcTemplate.update(env.getProperty("group.activate"), groupId);
         } catch (DaoException e) {
             logger.error("Activating was not successful", e);
             throw new DaoException(String.format("Group with such id %d can not be activated", groupId), e);
@@ -115,7 +114,7 @@ public class GroupDaoImpl implements GroupDao {
         logger.debug("Getting Group By Lesson id = {}", lessonId);
         return jdbcTemplate
             .query(
-                    propertyReader.read(PROPERTY_NAME, "group.getRoomByLesson"), 
+                    env.getProperty("group.getRoomByLesson"),
                     new Object[] { lessonId },
                     new BeanPropertyRowMapper<>(Group.class)
                 )
@@ -129,7 +128,7 @@ public class GroupDaoImpl implements GroupDao {
         logger.debug("Getting Group By Student id = {}", studentId);
         return jdbcTemplate
             .query(
-                    propertyReader.read(PROPERTY_NAME, "group.getRoomByStudent"), 
+                    env.getProperty("group.getRoomByStudent"),
                     new Object[] { studentId },
                     new BeanPropertyRowMapper<>(Group.class)
                 )

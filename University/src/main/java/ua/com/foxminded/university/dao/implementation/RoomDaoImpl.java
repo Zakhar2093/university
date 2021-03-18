@@ -30,9 +30,8 @@ public class RoomDaoImpl implements RoomDao {
 
     public List<Room> getAll() {
         logger.debug("Getting all room");
-        String sql = env.getProperty("room.getAll");
         return jdbcTemplate.query(
-                sql,
+                env.getProperty("room.getAll"),
                 new BeanPropertyRowMapper<>(Room.class)
                 );
     }

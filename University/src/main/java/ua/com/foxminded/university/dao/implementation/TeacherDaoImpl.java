@@ -1,38 +1,37 @@
 package ua.com.foxminded.university.dao.implementation;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import ua.com.foxminded.university.PropertyReader;
 import ua.com.foxminded.university.dao.interfaces.TeacherDao;
 import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.model.Teacher;
+
+import java.util.List;
 
 @Component
 public class TeacherDaoImpl implements TeacherDao{
     
     private static final Logger logger = LoggerFactory.getLogger(TeacherDaoImpl.class);
-    private final static String PROPERTY_NAME = "src/main/resources/SqlQueries.properties";
     private final JdbcTemplate jdbcTemplate;
-    private final PropertyReader propertyReader;
+    private Environment env;
 
     @Autowired
-    public TeacherDaoImpl(JdbcTemplate jdbcTemplate, PropertyReader propertyReader) {
+    public TeacherDaoImpl(JdbcTemplate jdbcTemplate, Environment env) {
         super();
         this.jdbcTemplate = jdbcTemplate;
-        this.propertyReader = propertyReader;
+        this.env = env;
     }
     
     public void create(Teacher teacher) {
         logger.debug("Creating teacher with name {} {}", teacher.getFirstName(), teacher.getLastName());
         try {
-            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "teacher.create"), 
+            jdbcTemplate.update(env.getProperty("teacher.create"),
                     teacher.getFirstName(),
                     teacher.getLastName(),
                     teacher.isTeacherInactive()
@@ -46,13 +45,13 @@ public class TeacherDaoImpl implements TeacherDao{
 
     public void removeTeacherFromAllLessons(Integer teacherId) {
         logger.debug("removed Teacher with id = {} from all Lessons", teacherId);
-        jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "teacher.removeTeacherFromAllLessons"), teacherId);
+        jdbcTemplate.update(env.getProperty("teacher.removeTeacherFromAllLessons"), teacherId);
     }
 
     public List<Teacher> getAll() {
         logger.debug("Getting all Teachers");
         return jdbcTemplate.query(
-                propertyReader.read(PROPERTY_NAME, "teacher.getAll"),
+                env.getProperty("teacher.getAll"),
                 new BeanPropertyRowMapper<>(Teacher.class)
                 );
     }
@@ -61,7 +60,7 @@ public class TeacherDaoImpl implements TeacherDao{
         logger.debug("Getting teacher by id = {}", teacherId);
         return jdbcTemplate
                 .query(
-                        propertyReader.read(PROPERTY_NAME, "teacher.getById"), 
+                        env.getProperty("teacher.getById"),
                         new Object[]{teacherId}, 
                         new BeanPropertyRowMapper<>(Teacher.class)
                         )
@@ -76,7 +75,7 @@ public class TeacherDaoImpl implements TeacherDao{
         try {
             getById(teacher.getTeacherId());
             jdbcTemplate.update(
-                    propertyReader.read(PROPERTY_NAME, "teacher.update"), 
+                    env.getProperty("teacher.update"),
                     teacher.getFirstName(), 
                     teacher.getLastName(),
                     teacher.isTeacherInactive(),
@@ -96,7 +95,7 @@ public class TeacherDaoImpl implements TeacherDao{
         logger.debug("Deactivating teacher with id = {}", teacherId);
         try {
             getById(teacherId);
-            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "teacher.deactivate"), teacherId);
+            jdbcTemplate.update(env.getProperty("teacher.deactivate"), teacherId);
         } catch (DaoException e) {
             logger.error("Deactivating was not successful", e);
             throw new DaoException(String.format("Teacher with such id %d can not be deactivated", teacherId), e);
@@ -108,7 +107,7 @@ public class TeacherDaoImpl implements TeacherDao{
         logger.debug("Activating teacher with id = {}", teacherId);
         try {
             getById(teacherId);
-            jdbcTemplate.update(propertyReader.read(PROPERTY_NAME, "teacher.activate"), teacherId);
+            jdbcTemplate.update(env.getProperty("teacher.activate"), teacherId);
         } catch (DaoException e) {
             logger.error("Activating was not successful", e);
             throw new DaoException(String.format("Teacher with such id %d can not be activated", teacherId), e);
@@ -120,7 +119,7 @@ public class TeacherDaoImpl implements TeacherDao{
         logger.debug("Getting teacher By lesson id = {}", lessonId);
         return jdbcTemplate
             .query(
-                    propertyReader.read(PROPERTY_NAME, "teacher.getTeacherByLesson"), 
+                    env.getProperty("teacher.getTeacherByLesson"),
                     new Object[] { lessonId },
                     new BeanPropertyRowMapper<>(Teacher.class)
                 )
