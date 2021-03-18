@@ -14,7 +14,7 @@ public class DispatcherSerlvetIntitializer extends AbstractAnnotationConfigDispa
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[] {MVCConfig.class};
+        return new Class[] {MVCConfig.class, SpringConfig.class};
     }
 
     @Override
