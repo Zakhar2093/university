@@ -1,7 +1,6 @@
 package ua.com.foxminded.university.model;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class Lesson {
     private int lessonId;

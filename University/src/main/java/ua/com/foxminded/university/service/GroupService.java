@@ -1,15 +1,14 @@
 package ua.com.foxminded.university.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Group;
+
+import java.util.List;
 
 @Component
 public class GroupService {
