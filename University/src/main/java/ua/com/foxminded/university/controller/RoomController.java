@@ -24,12 +24,6 @@ public class RoomController {
     public String getAll(@ModelAttribute("room") Room room, Model model) {
         List<Room> rooms = roomService.getAll();
         rooms.removeIf(p -> (p.isRoomInactive()));
-//        List<Room> Rooms = new ArrayList<>();
-//        for (Room aRoom : allRooms) {
-//            if (aRoom.isRoomInactive() == false){
-//                Rooms.add(aRoom);
-//            }
-//        }
         model.addAttribute("rooms", rooms);
         model.addAttribute("roomNumber", room.getRoomNumber());
         return "rooms/index";
