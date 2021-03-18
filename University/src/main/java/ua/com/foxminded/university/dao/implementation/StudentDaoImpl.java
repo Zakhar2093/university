@@ -35,11 +35,17 @@ public class StudentDaoImpl implements StudentDao {
     public void create(Student student) {
         logger.debug("Creating student with name {} {}", student.getFirstName(), student.getLastName());
         try {
+            Integer groupId;
+            if (student.getGroup() == null) {
+                groupId = null;
+            } else {
+                groupId = student.getGroup().getGroupId();
+            }
             jdbcTemplate.update(
                     env.getProperty("student.create"),
                     student.getFirstName(), 
-                    student.getLastName(), 
-                    student.getGroup().getGroupId(),
+                    student.getLastName(),
+                    groupId,
                     student.isStudentInactive()
                     );
         } catch (DataIntegrityViolationException e) {
@@ -71,9 +77,15 @@ public class StudentDaoImpl implements StudentDao {
         logger.debug("Updating student with id {}", student.getStudentId());
         try {
             getById(student.getStudentId());
+            Integer groupId;
+            if (student.getGroup() == null) {
+                groupId = null;
+            } else {
+                groupId = student.getGroup().getGroupId();
+            }
             jdbcTemplate.update(
                     env.getProperty("student.update"),
-                    student.getGroup().getGroupId(),
+                    groupId,
                     student.getFirstName(), 
                     student.getLastName(),
                     student.isStudentInactive(),
