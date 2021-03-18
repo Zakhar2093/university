@@ -1,60 +1,48 @@
 package ua.com.foxminded.university.dao.imlementation;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.web.WebAppConfiguration;
+import ua.com.foxminded.university.SpringConfigTest;
+import ua.com.foxminded.university.dao.DatabaseInitialization;
+import ua.com.foxminded.university.dao.interfaces.*;
+import ua.com.foxminded.university.exception.DaoException;
+import ua.com.foxminded.university.model.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.jdbc.core.JdbcTemplate;
+import static org.junit.jupiter.api.Assertions.*;
 
-import ua.com.foxminded.university.PropertyReader;
-import ua.com.foxminded.university.SpringConfigTest;
-import ua.com.foxminded.university.dao.DatabaseInitialization;
-import ua.com.foxminded.university.dao.implementation.GroupDaoImpl;
-import ua.com.foxminded.university.dao.implementation.LessonDaoImpl;
-import ua.com.foxminded.university.dao.implementation.RoomDaoImpl;
-import ua.com.foxminded.university.dao.implementation.StudentDaoImpl;
-import ua.com.foxminded.university.dao.implementation.TeacherDaoImpl;
-import ua.com.foxminded.university.dao.interfaces.GroupDao;
-import ua.com.foxminded.university.dao.interfaces.LessonDao;
-import ua.com.foxminded.university.dao.interfaces.RoomDao;
-import ua.com.foxminded.university.dao.interfaces.StudentDao;
-import ua.com.foxminded.university.dao.interfaces.TeacherDao;
-import ua.com.foxminded.university.exception.DaoException;
-import ua.com.foxminded.university.model.Group;
-import ua.com.foxminded.university.model.Lesson;
-import ua.com.foxminded.university.model.Room;
-import ua.com.foxminded.university.model.Student;
-import ua.com.foxminded.university.model.Teacher;
-
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = SpringConfigTest.class)
+@WebAppConfiguration
 class GroupDaoImplTest {
-    private DatabaseInitialization dbInit = new DatabaseInitialization();
-    private AnnotationConfigApplicationContext context;
+    @Autowired
     private JdbcTemplate jdbcTemplate;
-    private PropertyReader propertyReader;
+    @Autowired
     private LessonDao lessonDao;
+    @Autowired
     private GroupDao groupDao;
+    @Autowired
     private TeacherDao teacherDao;
+    @Autowired
     private RoomDao roomDao;
+    @Autowired
     private StudentDao studentDao;
+    @Autowired
+    private DatabaseInitialization dbInit;
 
     @BeforeEach
     void createBean() {
-        context = new AnnotationConfigApplicationContext(SpringConfigTest.class);
-        jdbcTemplate = context.getBean("jdbcTemplate", JdbcTemplate.class);
-        propertyReader = context.getBean("propertyReader", PropertyReader.class);
-        roomDao = new RoomDaoImpl(jdbcTemplate, propertyReader);
-        groupDao = new GroupDaoImpl(jdbcTemplate, propertyReader);
-        teacherDao = new TeacherDaoImpl(jdbcTemplate, propertyReader);
-        studentDao = new StudentDaoImpl(jdbcTemplate, propertyReader, groupDao);
-        lessonDao = new LessonDaoImpl(jdbcTemplate, propertyReader, groupDao, teacherDao, roomDao, studentDao);
-        dbInit.initialization();
+        dbInit.initialization();;
     }
 
     @Test
@@ -276,10 +264,5 @@ class GroupDaoImplTest {
         groups.add(new Group(2, "two", false));
         groups.add(new Group(3, "three", false));
         return groups;
-    }
-    
-    @AfterEach
-    void closeConext() {
-        context.close();
     }
 }

@@ -1,14 +1,15 @@
 package ua.com.foxminded.university.dao.imlementation;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import ua.com.foxminded.university.PropertyReader;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.web.WebAppConfiguration;
 import ua.com.foxminded.university.SpringConfigTest;
 import ua.com.foxminded.university.dao.DatabaseInitialization;
-import ua.com.foxminded.university.dao.implementation.*;
 import ua.com.foxminded.university.dao.interfaces.*;
 import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.model.*;
@@ -20,30 +21,31 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = SpringConfigTest.class)
+@WebAppConfiguration
 class LessonDaoImlpTest {
     private static final String FORMAT = "yyyy.MM.dd-HH.mm.ss";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(FORMAT);
-    private DatabaseInitialization dbInit = new DatabaseInitialization();
-    private AnnotationConfigApplicationContext context;
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
-    private PropertyReader propertyReader;
+    @Autowired
     private LessonDao lessonDao;
+    @Autowired
     private GroupDao groupDao;
+    @Autowired
     private TeacherDao teacherDao;
+    @Autowired
     private RoomDao roomDao;
+    @Autowired
     private StudentDao studentDao;
+    @Autowired
+    private DatabaseInitialization dbInit;
 
     @BeforeEach
     void createBean() {
-        context = new AnnotationConfigApplicationContext(SpringConfigTest.class);
-        jdbcTemplate = context.getBean("jdbcTemplate", JdbcTemplate.class);
-        propertyReader = context.getBean("propertyReader", PropertyReader.class);
-        roomDao = new RoomDaoImpl(jdbcTemplate, propertyReader);
-        groupDao = new GroupDaoImpl(jdbcTemplate, propertyReader);
-        teacherDao = new TeacherDaoImpl(jdbcTemplate, propertyReader);
-        studentDao = new StudentDaoImpl(jdbcTemplate, propertyReader, groupDao);
-        lessonDao = new LessonDaoImpl(jdbcTemplate, propertyReader, groupDao, teacherDao, roomDao, studentDao);
-        dbInit.initialization();
+        dbInit.initialization();;
     }
 
     @Test
@@ -477,10 +479,5 @@ class LessonDaoImlpTest {
         Lesson lesson = new Lesson(1, "Math", teacher, group, room, date, false);
         lessonDao.create(lesson);
         return lesson;
-    }
-    
-    @AfterEach
-    void closeConext() {
-        context.close();
     }
 }
