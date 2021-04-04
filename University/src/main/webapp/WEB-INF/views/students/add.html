@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <title></title>
+</head>
+<body>
+<div class="container-sm">
+    <h1 class="text-primary text-center">Creating student</h1>
+    <br/>
+    <div class="container">
+        <a class="btn btn-outline-primary" th:href="@{/students}">Come back to list of students</a>
+    </div>
+    <br/>
+    <form class="form-group"
+          th:method="POST"
+          th:action="@{/students}"
+          th:object="${studentDto}">
+        <label for="FirstNameUpdate">Enter student first name : </label>
+        <input type="text" class="form-control" th:field="*{firstName}" id="FirstNameUpdate"/>
+        <br/>
+        <label for="LastNameUpdate">Enter student last name : </label>
+        <input type="text" class="form-control" th:field="*{lastName}" id="LastNameUpdate"/>
+        <br/>
+        <label for="LastNameUpdate">Select group : </label>
+        <input type="text" class="form-control" list="groups" th:field="*{groupId}">
+        <datalist id="groups" th:each="group: ${groups}">
+            <option th:each="group: ${groups}"
+                    th:text="${group.getGroupName()}"
+                    th:value="${group.getGroupId()}">
+            </option>
+        </datalist>
+        <br/>
+        <input type="submit" class="btn btn-primary" value="Create!"/>
+    </form>
+</div>
+</body>
+</html>

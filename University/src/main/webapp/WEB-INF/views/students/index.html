@@ -33,9 +33,12 @@
 <div style="margin-top: 55px"  class="container-sm">
     <h1 class="text-primary text-center">List of students</h1>
     <div class="container">
-        <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#AddStudent">
+        <a class="btn btn-outline-primary" th:href="@{/students/add}">
             Add new student
-        </button>
+        </a>
+<!--        <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#AddStudent">-->
+<!--            Add new student-->
+<!--        </button>-->
     </div>
     <br/>
 
@@ -54,7 +57,15 @@
                 <td th:text="${student.getStudentId()}">id</td>
                 <td th:text="${student.getFirstName()}">First name</td>
                 <td th:text="${student.getLastName()}">Last name</td>
-                <td th:text="${student.getGroup().getGroupName()">Group link will be here</td>
+                <td>
+<!--                     TODO make <a> insted <p>-->
+                    <p  th:if="${student.getGroup()}"
+                        th:text="${student.getGroup().getGroupName()}">
+                    </p>
+                    <p th:unless="${student.getGroup()}">
+                        Without group
+                    </p>
+                </td>
                 <td>
                     <div style="display:  flex;">
                         <a class="btn btn-outline-primary" th:href="@{/students/{id}/edit(id=${student.getStudentId()})}">Update student</a>
@@ -66,54 +77,6 @@
             </tr>
         </tbody>
     </table>
-
-    <div class="modal" id="AddStudent">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Adding new student</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <form class="form-group" th:method="POST" th:action="@{/students}" th:object="${student}">
-                        <label for="FirstNameUpdate">Enter student first name : </label>
-                        <input type="text" class="form-control" th:field="*{FirstName}" id="FirstNameUpdate"/>
-                        <br/>
-                        <label for="LastNameUpdate">Enter student last name : </label>
-                        <input type="text" class="form-control" th:field="*{LastName}" id="LastNameUpdate"/>
-                        <br/>
-                        <input type="submit" class="btn btn-primary" value="Create!"/>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-<!--    <div class="modal" id="UpdateStudent" th:attrappend="id=${Id}">-->
-<!--        <div class="modal-dialog">-->
-<!--            <div class="modal-content">-->
-<!--                <div class="modal-header">-->
-<!--                    <h4 class="modal-title">Updating student</h4>-->
-<!--                    <button type="button" class="close" data-dismiss="modal">&times;</button>-->
-<!--                </div>-->
-<!--                <div class="modal-body">-->
-<!--                    <form th:method="PATCH" th:action="@{/students/{id}(id=${student.getStudentId()})}" th:object="${student}">-->
-<!--                        <label for="FirstName">Enter name: </label>-->
-<!--                        <input type="text" th:field="*{FirstName}" id="FirstName"/>-->
-<!--                        <br/>-->
-<!--                        <input type="submit" value="Update!"/>-->
-<!--                    </form>-->
-<!--                </div>-->
-<!--                <div class="modal-footer">-->
-<!--                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-
 </div>
 </body>
 </html>

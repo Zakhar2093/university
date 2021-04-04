@@ -25,6 +25,15 @@
             <label for="lastName">Enter last name: </label>
             <input class="form-control" type="text" th:field="*{lastName}" id="lastName"/>
             <br/>
+            <label>Select group : </label>
+            <input type="text" class="form-control" list="groups" th:field="*{groupId}">
+            <datalist id="groups" th:each="group: ${groups}">
+                <option th:each="group: ${groups}"
+                        th:text="${group.getGroupName()}"
+                        th:value="${group.getGroupId()}">
+                </option>
+            </datalist>
+            <br/>
             <input class="btn btn-primary" type="submit" value="Update!"/>
         </div>
     </form>

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.dao.interfaces.StudentDao;
 import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.exception.ServiceException;
@@ -18,15 +19,18 @@ class StudentServiceTest {
 
     private static final String EMPTY_STRING = "";
     private StudentService studentService;
+    private GroupDao groupDao;
     
     @Mock
     private StudentDao studentDao;
 
 
+
+
     @BeforeEach
     public void initMocks() {
         MockitoAnnotations.initMocks(this);
-        studentService = new StudentService(studentDao);
+        studentService = new StudentService(studentDao, groupDao);
     }
 
     @Test
