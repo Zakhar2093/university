@@ -39,6 +39,12 @@ class RoomServiceTest {
         roomService.getAll();
         verify(roomDao, only()).getAll();
     }
+
+    @Test
+    void getAllActivatedShouldInvokeOnlyOnce() {
+        roomService.getAllActivated();
+        verify(roomDao, only()).getAll();
+    }
     
     @Test
     void getByIdShouldInvokeOnlyOnce() {

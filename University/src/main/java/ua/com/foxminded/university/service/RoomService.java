@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.university.dao.interfaces.RoomDao;
 import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.exception.ServiceException;
+import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Room;
 
 import java.util.List;
@@ -32,6 +33,16 @@ public class RoomService {
     public List<Room> getAll(){
         try {
             return roomDao.getAll();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public List<Room> getAllActivated() {
+        try {
+            List<Room> rooms = roomDao.getAll();
+            rooms.removeIf(p -> (p.isRoomInactive()));
+            return rooms;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

@@ -39,6 +39,12 @@ class TeacherServiceTest {
         teacherService.getAll();
         verify(teacherDao, only()).getAll();
     }
+
+    @Test
+    void getAllActivatedShouldInvokeOnlyOnce() {
+        teacherService.getAllActivated();
+        verify(teacherDao, only()).getAll();
+    }
     
     @Test
     void getByIdShouldInvokeOnlyOnce() {

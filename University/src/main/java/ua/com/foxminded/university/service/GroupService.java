@@ -7,6 +7,7 @@ import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Group;
+import ua.com.foxminded.university.model.Lesson;
 
 import java.util.List;
 
@@ -32,6 +33,16 @@ public class GroupService {
     public List<Group> getAll() {
         try {
             return groupDao.getAll();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public List<Group> getAllActivated() {
+        try {
+            List<Group> groups = groupDao.getAll();
+            groups.removeIf(p -> (p.isGroupInactive()));
+            return groups;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

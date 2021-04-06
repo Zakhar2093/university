@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.university.dao.interfaces.TeacherDao;
 import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.exception.ServiceException;
+import ua.com.foxminded.university.model.Room;
 import ua.com.foxminded.university.model.Teacher;
 
 import java.util.List;
@@ -32,6 +33,16 @@ public class TeacherService {
     public List<Teacher> getAll() {
         try {
             return teacherDao.getAll();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public List<Teacher> getAllActivated() {
+        try {
+            List<Teacher> teachers = teacherDao.getAll();
+            teachers.removeIf(p -> (p.isTeacherInactive()));
+            return teachers;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

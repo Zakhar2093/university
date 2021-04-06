@@ -39,6 +39,12 @@ class GroupServiceTest {
         groupService.getAll();
         verify(groupDao, only()).getAll();
     }
+
+    @Test
+    void getAllActivatedShouldInvokeOnlyOnce() {
+        groupService.getAllActivated();
+        verify(groupDao, only()).getAll();
+    }
     
     @Test
     void getByIdShouldInvokeOnlyOnce() {
