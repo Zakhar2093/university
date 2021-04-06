@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import ua.com.foxminded.university.controller.model_dto.StudentDto;
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.dao.interfaces.StudentDao;
 import ua.com.foxminded.university.exception.DaoException;
@@ -24,9 +25,6 @@ class StudentServiceTest {
     @Mock
     private StudentDao studentDao;
 
-
-
-
     @BeforeEach
     public void initMocks() {
         MockitoAnnotations.initMocks(this);
@@ -34,14 +32,26 @@ class StudentServiceTest {
     }
 
     @Test
-    void createShouldInvokeOnlyOnce() {
+    void createShouldInvokeOnlyOnceWhenTakesStudent() {
         studentService.create(new Student());
         verify(studentDao, only()).create(any(Student.class));
     }
-    
+
+    @Test
+    void createShouldInvokeOnlyOnceWhenTakesStudentDto() {
+        studentService.create(new StudentDto());
+        verify(studentDao, only()).create(any(Student.class));
+    }
+
     @Test
     void getAllShouldInvokeOnlyOnce() {
         studentService.getAll();
+        verify(studentDao, only()).getAll();
+    }
+
+    @Test
+    void getAllActivatedShouldInvokeOnlyOnce() {
+        studentService.getAllActivated();
         verify(studentDao, only()).getAll();
     }
     
@@ -50,10 +60,22 @@ class StudentServiceTest {
         studentService.getById(1);
         verify(studentDao, only()).getById(anyInt());
     }
+
+    @Test
+    void getDtoByIdShouldInvokeOnlyOnce() {
+        studentService.getDtoById(1);
+        verify(studentDao, only()).getById(anyInt());
+    }
     
     @Test
-    void updateShouldInvokeOnlyOnce() {
+    void updateShouldInvokeOnlyOnceWhenTakesStudent() {
         studentService.update(new Student());
+        verify(studentDao, only()).update(any(Student.class));
+    }
+
+    @Test
+    void updateShouldInvokeOnlyOnceWhenTakesStudentDto() {
+        studentService.update(new StudentDto());
         verify(studentDao, only()).update(any(Student.class));
     }
     
