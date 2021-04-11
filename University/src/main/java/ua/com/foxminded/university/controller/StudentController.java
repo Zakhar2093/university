@@ -5,12 +5,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.com.foxminded.university.model.model_dto.StudentDto;
-import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.StudentService;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/students")

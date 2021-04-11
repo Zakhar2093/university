@@ -4,19 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lesson;
-import ua.com.foxminded.university.model.Room;
-import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.model_dto.LessonDto;
-import ua.com.foxminded.university.model.model_dto.StudentDto;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.LessonService;
 import ua.com.foxminded.university.service.RoomService;
 import ua.com.foxminded.university.service.TeacherService;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Controller
 @RequestMapping("/lessons")

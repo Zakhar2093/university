@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
-public class LessonService {
+public class LessonService implements GenericService<Lesson, Integer>{
 
     private LessonDao lessonDao;
     private GroupDao groupDao;
@@ -30,10 +30,6 @@ public class LessonService {
         this.teacherDao = teacherDao;
         this.roomDao = roomDao;
     }
-
-
-
-
 
     public void create(Lesson lesson) {
         try {

@@ -12,7 +12,7 @@ import ua.com.foxminded.university.model.Teacher;
 import java.util.List;
 
 @Component
-public class TeacherService {
+public class TeacherService implements GenericService<Teacher, Integer>{
 
     private TeacherDao teacherDao;
 

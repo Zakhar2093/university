@@ -8,11 +8,12 @@ import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lesson;
+import ua.com.foxminded.university.model.Teacher;
 
 import java.util.List;
 
 @Component
-public class GroupService {
+public class GroupService implements GenericService<Group, Integer>{
 
     private GroupDao groupDao;
 

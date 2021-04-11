@@ -8,11 +8,12 @@ import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Room;
+import ua.com.foxminded.university.model.Teacher;
 
 import java.util.List;
 
 @Component
-public class RoomService {
+public class RoomService implements GenericService<Room, Integer>{
 
     private RoomDao roomDao;
 
