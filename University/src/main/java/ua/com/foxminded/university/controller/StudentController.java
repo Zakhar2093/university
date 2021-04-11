@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ua.com.foxminded.university.controller.model_dto.StudentDto;
+import ua.com.foxminded.university.model.model_dto.StudentDto;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.service.GroupService;
@@ -27,21 +27,14 @@ public class StudentController {
     @GetMapping
     public String getAll(@ModelAttribute("student") Student student,
                          Model model) {
-        List<Student> students = studentService.getAllActivated();
-
-        List<Group> groups = groupService.getAll();
-        groups.removeIf(p -> (p.isGroupInactive()));
-
-        model.addAttribute("students", students);
-        model.addAttribute("groups", groups);
+        model.addAttribute("students", studentService.getAllActivated());
+        model.addAttribute("groups", groupService.getAllActivated());
         return "students/index";
     }
 
     @GetMapping("/add")
     public String create(@ModelAttribute("studentDto") StudentDto studentDto, Model model){
-        List<Group> groups = groupService.getAll();
-        groups.removeIf(p -> (p.isGroupInactive()));
-        model.addAttribute("groups", groups);
+        model.addAttribute("groups", groupService.getAllActivated());
         return "students/add";
     }
 
@@ -51,17 +44,15 @@ public class StudentController {
         return "redirect:/students";
     }
 
-    @GetMapping("/{id}/edit")
+    @GetMapping("/{id}/update")
     public String update(Model model, @PathVariable("id") int id) {
-        List<Group> groups = groupService.getAll();
-        groups.removeIf(p -> (p.isGroupInactive()));
-        model.addAttribute("groups", groups);
-        model.addAttribute("student", studentService.getDtoById(id));
+        model.addAttribute("groups", groupService.getAllActivated());
+        model.addAttribute("studentDto", studentService.getDtoById(id));
         return "students/update";
     }
 
     @PatchMapping("/{id}")
-    public String updateCreate(@ModelAttribute("studentDto") StudentDto studentDto, @PathVariable("id") int id) {
+    public String submitUpdate(@ModelAttribute("studentDto") StudentDto studentDto, @PathVariable("id") int id) {
         studentDto.setStudentId(id);
         studentService.update(studentDto);
         return "redirect:/students";

@@ -17,7 +17,9 @@
         <a class="btn btn-outline-primary" th:href="@{/students}">Come back to list of students</a>
     </div>
     <br/>
-    <form th:method="PATCH" th:action="@{/students/{id}(id=${student.getStudentId()})}" th:object="${student}">
+    <form th:method="PATCH"
+          th:action="@{/students/{id}(id=${studentDto.getStudentId()})}"
+          th:object="${studentDto}">
         <div class="form-group">
             <label for="firstName">Enter first name: </label>
             <input class="form-control" type="text" th:field="*{firstName}" id="firstName"/>

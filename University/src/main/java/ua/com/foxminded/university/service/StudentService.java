@@ -3,7 +3,7 @@ package ua.com.foxminded.university.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import ua.com.foxminded.university.controller.model_dto.StudentDto;
+import ua.com.foxminded.university.model.model_dto.StudentDto;
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.dao.interfaces.StudentDao;
 import ua.com.foxminded.university.exception.DaoException;

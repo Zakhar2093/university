@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.controller.model_dto;
+package ua.com.foxminded.university.model.model_dto;
 
 public class StudentDto {
     private int studentId;

@@ -1,0 +1,85 @@
+package ua.com.foxminded.university.model.model_dto;
+
+import java.time.LocalDateTime;
+
+public class LessonDto {
+    private int lessonId;
+    private String lessonName;
+    private Integer teacherId;
+    private Integer groupId;
+    private Integer roomId;
+    private LocalDateTime date;
+    private boolean lessonInactive;
+
+    public LessonDto() {
+    }
+
+    public LessonDto(int lessonId, String lessonName, int teacherId, int groupId, int roomId, LocalDateTime date, boolean lessonInactive) {
+        this.lessonId = lessonId;
+        this.lessonName = lessonName;
+        this.teacherId = teacherId;
+        this.groupId = groupId;
+        this.roomId = roomId;
+        this.date = date;
+        this.lessonInactive = lessonInactive;
+    }
+
+    public int getLessonId() {
+        return lessonId;
+    }
+
+    public void setLessonId(int lessonId) {
+        this.lessonId = lessonId;
+    }
+
+    public String getLessonName() {
+        return lessonName;
+    }
+
+    public void setLessonName(String lessonName) {
+        this.lessonName = lessonName;
+    }
+
+    public Integer getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
+    }
+
+    public Integer getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Integer groupId) {
+        this.groupId = groupId;
+    }
+
+    public Integer getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(Integer roomId) {
+        this.roomId = roomId;
+    }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
+
+    public boolean isLessonInactive() {
+        return lessonInactive;
+    }
+
+    public void setLessonInactive(boolean lessonInactive) {
+        this.lessonInactive = lessonInactive;
+    }
+
+}
+
+

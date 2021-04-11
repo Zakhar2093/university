@@ -47,7 +47,7 @@ public class LessonDaoImpl implements LessonDao{
         try {
             Integer groupId = lesson.getGroup() == null ? null : lesson.getGroup().getGroupId();
             Integer roomId = lesson.getRoom() == null ? null : lesson.getRoom().getRoomId();
-            Integer teacherId = lesson.getGroup() == null ? null : lesson.getTeacher().getTeacherId();
+            Integer teacherId = lesson.getTeacher() == null ? null : lesson.getTeacher().getTeacherId();
             jdbcTemplate.update(
                     env.getProperty("lesson.create"),
                     lesson.getLessonName(),

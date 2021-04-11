@@ -11,14 +11,14 @@
 </head>
 <body>
 <div class="container-sm">
-    <h1 class="text-primary text-center">Updating lesson</h1>
+    <h1 class="text-primary text-center">Creating lesson</h1>
     <br/>
     <div class="container">
         <a class="btn btn-outline-primary" th:href="@{/lessons}">Come back to list of lessons</a>
     </div>
     <br/>
-    <form th:method="PATCH"
-          th:action="@{/lessons/{id}(id=${lessonDto.getLessonId()})}"
+    <form th:method="POST"
+          th:action="@{/lessons}"
           th:object="${lessonDto}">
         <div class="form-group">
             <label for="lessonName">Enter lesson name: </label>

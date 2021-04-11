@@ -4,8 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lesson;
+import ua.com.foxminded.university.model.Room;
+import ua.com.foxminded.university.model.Teacher;
+import ua.com.foxminded.university.model.model_dto.LessonDto;
+import ua.com.foxminded.university.model.model_dto.StudentDto;
+import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.LessonService;
+import ua.com.foxminded.university.service.RoomService;
+import ua.com.foxminded.university.service.TeacherService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,40 +22,58 @@ import java.util.List;
 @RequestMapping("/lessons")
 public class LessonController {
     private LessonService lessonService;
+    private GroupService groupService;
+    private RoomService roomService;
+    private TeacherService teacherService;
 
     @Autowired
-    public LessonController(LessonService lessonService) {
+    public LessonController(LessonService lessonService, GroupService groupService, RoomService roomService, TeacherService teacherService) {
         this.lessonService = lessonService;
+        this.groupService = groupService;
+        this.roomService = roomService;
+        this.teacherService = teacherService;
     }
 
     @GetMapping
     public String getAll(@ModelAttribute("lesson") Lesson lesson, Model model) {
-        List<Lesson> lessons = lessonService.getAll();
-        lessons.removeIf(p -> (p.isLessonInactive()));
-        model.addAttribute("lessons", lessons);
+        model.addAttribute("lessons", lessonService.getAllActivated());
+        model.addAttribute("groups", groupService.getAllActivated());
+        model.addAttribute("rooms", roomService.getAllActivated());
+        model.addAttribute("teachers", teacherService.getAllActivated());
         return "lessons/index";
     }
 
+    @GetMapping("/add")
+    public String create(@ModelAttribute("lessonDto") LessonDto lessonDto, Model model){
+        model.addAttribute("groups", groupService.getAllActivated());
+        model.addAttribute("rooms", roomService.getAllActivated());
+        model.addAttribute("teachers", teacherService.getAllActivated());
+        return "lessons/add";
+    }
+
     @PostMapping
-    public String create(@ModelAttribute("lesson") Lesson lesson) {
+    public String submitCreate(@ModelAttribute("lessonDto") LessonDto lessonDto) {
         //todo change .now
-        lesson.setDate(LocalDateTime.now());
-        lessonService.create(lesson);
+        lessonDto.setDate(LocalDateTime.now());
+        lessonService.create(lessonDto);
         return "redirect:/lessons";
     }
 
     @GetMapping("/{id}/edit")
-    public String edit(Model model, @PathVariable("id") int id) {
-        model.addAttribute("lesson", lessonService.getById(id));
+    public String update(Model model, @PathVariable("id") int id) {
+        model.addAttribute("groups", groupService.getAllActivated());
+        model.addAttribute("rooms", roomService.getAllActivated());
+        model.addAttribute("teachers", teacherService.getAllActivated());
+        model.addAttribute("lessonDto", lessonService.getDtoById(id));
         return "lessons/update";
     }
 
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("lesson") Lesson lesson, @PathVariable("id") int id) {
-        lesson.setLessonId(id);
+    public String submitUpdate(@ModelAttribute("lessonDto") LessonDto lessonDto, @PathVariable("id") int id) {
+        lessonDto.setLessonId(id);
         //todo change .now
-        lesson.setDate(LocalDateTime.now());
-        lessonService.update(lesson);
+        lessonDto.setDate(LocalDateTime.now());
+        lessonService.update(lessonDto);
         return "redirect:/lessons";
     }
 

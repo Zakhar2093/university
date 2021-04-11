@@ -36,9 +36,6 @@
         <a class="btn btn-outline-primary" th:href="@{/students/add}">
             Add new student
         </a>
-<!--        <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#AddStudent">-->
-<!--            Add new student-->
-<!--        </button>-->
     </div>
     <br/>
 
@@ -68,7 +65,7 @@
                 </td>
                 <td>
                     <div style="display:  flex;">
-                        <a class="btn btn-outline-primary" th:href="@{/students/{id}/edit(id=${student.getStudentId()})}">Update student</a>
+                        <a class="btn btn-outline-primary" th:href="@{/students/{id}/update(id=${student.getStudentId()})}">Update student</a>
                         <form style="margin-left: .75rem;" th:method="DELETE" th:action="@{/students/{id}(id=${student.getStudentId()})}">
                             <input class="btn btn-outline-primary" type="submit" value="Delete"/>
                         </form>

@@ -4,12 +4,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.dao.interfaces.LessonDao;
+import ua.com.foxminded.university.dao.interfaces.RoomDao;
+import ua.com.foxminded.university.dao.interfaces.TeacherDao;
 import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Lesson;
 import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.model.Teacher;
+import ua.com.foxminded.university.model.model_dto.LessonDto;
 
 import java.time.LocalDateTime;
 
@@ -23,6 +27,10 @@ class LessonServiceTest {
     private static final String EMPTY_STRING = "";
     private static final LocalDateTime TIME = LocalDateTime.now();
     private LessonService lessonService;
+    private GroupDao groupDao;
+    private TeacherDao teacherDao;
+    private RoomDao roomDao;
+
     @Mock
     private LessonDao lessonDao;
 
@@ -30,12 +38,18 @@ class LessonServiceTest {
     @BeforeEach
     void initMocks() {
         MockitoAnnotations.initMocks(this);
-        lessonService = new LessonService(lessonDao);
+        lessonService = new LessonService(lessonDao, groupDao, teacherDao, roomDao);
     }
 
     @Test
-    void createShouldInvokeOnlyOnce() {
+    void createShouldInvokeOnlyOnceWhenTakesLesson() {
         lessonService.create(new Lesson());
+        verify(lessonDao, only()).create(any(Lesson.class));
+    }
+
+    @Test
+    void createShouldInvokeOnlyOnceWhenTakesLessonDto() {
+        lessonService.create(new LessonDto());
         verify(lessonDao, only()).create(any(Lesson.class));
     }
     
@@ -44,16 +58,34 @@ class LessonServiceTest {
         lessonService.getAll();
         verify(lessonDao, only()).getAll();
     }
+
+    @Test
+    void getAllActivatedShouldInvokeOnlyOnce() {
+        lessonService.getAllActivated();
+        verify(lessonDao, only()).getAll();
+    }
     
     @Test
     void getByIdShouldInvokeOnlyOnce() {
         lessonService.getById(1);
         verify(lessonDao, only()).getById(anyInt());
     }
+
+    @Test
+    void getDtoByIdShouldInvokeOnlyOnce() {
+        lessonService.getDtoById(1);
+        verify(lessonDao, only()).getById(anyInt());
+    }
     
     @Test
-    void updateShouldInvokeOnlyOnce() {
+    void updateShouldInvokeOnlyOnceWhenTakesLesson() {
         lessonService.update(new Lesson());
+        verify(lessonDao, only()).update(any(Lesson.class));
+    }
+
+    @Test
+    void updateShouldInvokeOnlyOnceWhenTakesLessonDto() {
+        lessonService.update(new LessonDto());
         verify(lessonDao, only()).update(any(Lesson.class));
     }
     

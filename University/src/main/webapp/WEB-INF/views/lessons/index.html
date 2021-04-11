@@ -33,9 +33,9 @@
 <div style="margin-top: 55px"  class="container-sm">
     <h1 class="text-primary text-center">List of lessons</h1>
     <div class="container">
-        <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#AddLesson">
+        <a class="btn btn-outline-primary" th:href="@{/lessons/add}">
             Add new lesson
-        </button>
+        </a>
     </div>
     <br/>
 
@@ -55,10 +55,42 @@
             <tr th:each="lesson: ${lessons}">
                 <td th:text="${lesson.getLessonId()}">id</td>
                 <td th:text="${lesson.getLessonName()}">First name</td>
-                <td >Room link will be here</td>
-                <td >Group link will be here</td>
-                <td >Teacher link will be here</td>
-                <td >Date link will be here</td>
+                <td>
+                    <!--                     TODO make <a> insted <p>-->
+                    <p  th:if="${lesson.getRoom()}"
+                        th:text="${lesson.getRoom().getRoomNumber()}">
+                    </p>
+                    <p th:unless="${lesson.getRoom()}">
+                        Without room
+                    </p>
+                </td>
+                <td>
+                    <!--                     TODO make <a> insted <p>-->
+                    <p  th:if="${lesson.getGroup()}"
+                        th:text="${lesson.getGroup().getGroupName()}">
+                    </p>
+                    <p th:unless="${lesson.getGroup()}">
+                        Without group
+                    </p>
+                </td>
+                <td>
+                    <!--                     TODO make <a> insted <p>-->
+                    <p  th:if="${lesson.getTeacher()}"
+                        th:text="${lesson.getTeacher().getFirstName()} + ' ' + ${lesson.getTeacher().getLastName()}">
+                    </p>
+                    <p th:unless="${lesson.getTeacher()}">
+                        Without teacher
+                    </p>
+                </td>
+                <td>
+                    <!--                     TODO make <a> insted <p>-->
+                    <p  th:if="${lesson.getDate()}"
+                        th:text="${lesson.getDate()}">
+                    </p>
+                    <p th:unless="${lesson.getDate()}">
+                        Without date
+                    </p>
+                </td>
                 <td>
                     <div style="display:  flex;">
                         <a class="btn btn-outline-primary" th:href="@{/lessons/{id}/edit(id=${lesson.getLessonId()})}">Update lesson</a>
@@ -70,51 +102,6 @@
             </tr>
         </tbody>
     </table>
-
-    <div class="modal" id="AddLesson">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Adding new lesson</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <form class="form-group" th:method="POST" th:action="@{/lessons}" th:object="${lesson}">
-                        <label for="lessonName">Enter lesson  name : </label>
-                        <input type="text" class="form-control" th:field="*{lessonName}" id="lessonName"/>
-                        <br/>
-                        <input type="submit" class="btn btn-primary" value="Create!"/>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-<!--    <div class="modal" id="UpdateLesson" th:attrappend="id=${Id}">-->
-<!--        <div class="modal-dialog">-->
-<!--            <div class="modal-content">-->
-<!--                <div class="modal-header">-->
-<!--                    <h4 class="modal-title">Updating lesson</h4>-->
-<!--                    <button type="button" class="close" data-dismiss="modal">&times;</button>-->
-<!--                </div>-->
-<!--                <div class="modal-body">-->
-<!--                    <form th:method="PATCH" th:action="@{/lessons/{id}(id=${lesson.getLessonId()})}" th:object="${lesson}">-->
-<!--                        <label for="FirstName">Enter name: </label>-->
-<!--                        <input type="text" th:field="*{FirstName}" id="FirstName"/>-->
-<!--                        <br/>-->
-<!--                        <input type="submit" value="Update!"/>-->
-<!--                    </form>-->
-<!--                </div>-->
-<!--                <div class="modal-footer">-->
-<!--                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-
 </div>
 </body>
 </html>

@@ -3,12 +3,14 @@ package ua.com.foxminded.university.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.dao.interfaces.LessonDao;
+import ua.com.foxminded.university.dao.interfaces.RoomDao;
+import ua.com.foxminded.university.dao.interfaces.TeacherDao;
 import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.Lesson;
-import ua.com.foxminded.university.model.Student;
-import ua.com.foxminded.university.model.Teacher;
+import ua.com.foxminded.university.model.*;
+import ua.com.foxminded.university.model.model_dto.LessonDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,14 +19,33 @@ import java.util.List;
 public class LessonService {
 
     private LessonDao lessonDao;
+    private GroupDao groupDao;
+    private TeacherDao teacherDao;
+    private RoomDao roomDao;
 
     @Autowired
-    public LessonService(LessonDao lessonDao) {
+    public LessonService(LessonDao lessonDao, GroupDao groupDao, TeacherDao teacherDao, RoomDao roomDao) {
         this.lessonDao = lessonDao;
+        this.groupDao = groupDao;
+        this.teacherDao = teacherDao;
+        this.roomDao = roomDao;
     }
+
+
+
+
 
     public void create(Lesson lesson) {
         try {
+            lessonDao.create(lesson);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public void create(LessonDto lessonDto) {
+        try {
+            Lesson lesson = mapDtoToLesson(lessonDto);
             lessonDao.create(lesson);
         } catch (DaoException e) {
             throw new ServiceException(e);
@@ -39,6 +60,16 @@ public class LessonService {
         }
     }
 
+    public List<Lesson> getAllActivated(){
+        try {
+            List<Lesson> lessons = lessonDao.getAll();
+            lessons.removeIf(p -> (p.isLessonInactive()));
+            return lessons;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
     public Lesson getById(Integer lessonId) {
         try {
             return lessonDao.getById(lessonId);
@@ -47,8 +78,25 @@ public class LessonService {
         }
     }
 
+    public LessonDto getDtoById(Integer lessonId) {
+        try {
+            return mapLessonToDto(lessonDao.getById(lessonId));
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
     public void update(Lesson lesson) {
         try {
+            lessonDao.update(lesson);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public void update(LessonDto lessonDto) {
+        try {
+            Lesson lesson = mapDtoToLesson(lessonDto);
             lessonDao.update(lesson);
         } catch (DaoException e) {
             throw new ServiceException(e);
@@ -153,5 +201,32 @@ public class LessonService {
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
+    }
+
+    private Lesson mapDtoToLesson(LessonDto dto){
+        Lesson lesson = new Lesson();
+        lesson.setLessonId(dto.getLessonId());
+        lesson.setLessonName(dto.getLessonName());
+        Group group = groupDao.getById(dto.getGroupId());
+        lesson.setGroup(group);
+        Teacher teacher = teacherDao.getById(dto.getTeacherId());
+        lesson.setTeacher(teacher);
+        Room room = roomDao.getById(dto.getRoomId());
+        lesson.setRoom(room);
+        lesson.setLessonInactive(dto.isLessonInactive());
+        lesson.setDate(dto.getDate());
+        return lesson;
+    }
+
+    private LessonDto mapLessonToDto(Lesson lesson){
+        LessonDto dto = new LessonDto();
+        dto.setLessonId(lesson.getLessonId());
+        dto.setLessonName(lesson.getLessonName());
+        dto.setLessonInactive(lesson.isLessonInactive());
+        dto.setGroupId(lesson.getGroup() == null ? null : lesson.getGroup().getGroupId());
+        dto.setRoomId(lesson.getRoom() == null ? null : lesson.getRoom().getRoomId());
+        dto.setTeacherId(lesson.getTeacher() == null ? null : lesson.getTeacher().getTeacherId());
+        dto.setDate(lesson.getDate());
+        return dto;
     }
 }
