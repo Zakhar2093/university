@@ -49,7 +49,7 @@ public class LessonController {
     @PostMapping
     public String submitCreate(@ModelAttribute("lessonDto") LessonDto lessonDto) {
         //todo change .now
-        lessonDto.setDate(LocalDateTime.now());
+//        lessonDto.setDate(LocalDateTime.now());
         lessonService.create(lessonDto);
         return "redirect:/lessons";
     }
@@ -67,7 +67,7 @@ public class LessonController {
     public String submitUpdate(@ModelAttribute("lessonDto") LessonDto lessonDto, @PathVariable("id") int id) {
         lessonDto.setLessonId(id);
         //todo change .now
-        lessonDto.setDate(LocalDateTime.now());
+//        lessonDto.setDate(LocalDateTime.now());
         lessonService.update(lessonDto);
         return "redirect:/lessons";
     }

@@ -13,6 +13,7 @@ import ua.com.foxminded.university.model.*;
 import ua.com.foxminded.university.model.model_dto.LessonDto;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Component
@@ -199,6 +200,9 @@ public class LessonService implements GenericService<Lesson, Integer>{
         }
     }
 
+    private static final String FORMAT = "dd MM yyyy hh:mm a";
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(FORMAT);
+
     private Lesson mapDtoToLesson(LessonDto dto){
         Lesson lesson = new Lesson();
         lesson.setLessonId(dto.getLessonId());
@@ -210,7 +214,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
         Room room = roomDao.getById(dto.getRoomId());
         lesson.setRoom(room);
         lesson.setLessonInactive(dto.isLessonInactive());
-        lesson.setDate(dto.getDate());
+        lesson.setDate(LocalDateTime.parse(dto.getDate(), FORMATTER));
         return lesson;
     }
 
@@ -222,7 +226,8 @@ public class LessonService implements GenericService<Lesson, Integer>{
         dto.setGroupId(lesson.getGroup() == null ? null : lesson.getGroup().getGroupId());
         dto.setRoomId(lesson.getRoom() == null ? null : lesson.getRoom().getRoomId());
         dto.setTeacherId(lesson.getTeacher() == null ? null : lesson.getTeacher().getTeacherId());
-        dto.setDate(lesson.getDate());
+        // todo
+        dto.setDate(lesson.getDate().toString());
         return dto;
     }
 }

@@ -7,4 +7,8 @@
     $button.addEventListener('click', (e) => {
       simplepicker.open();
     });
-  
+
+    simplepicker.on('submit', (date, readableDate) => {
+      $button.value = readableDate;
+    });
+

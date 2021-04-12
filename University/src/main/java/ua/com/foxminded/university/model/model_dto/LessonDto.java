@@ -8,13 +8,13 @@ public class LessonDto {
     private Integer teacherId;
     private Integer groupId;
     private Integer roomId;
-    private LocalDateTime date;
+    private String date;
     private boolean lessonInactive;
 
     public LessonDto() {
     }
 
-    public LessonDto(int lessonId, String lessonName, int teacherId, int groupId, int roomId, LocalDateTime date, boolean lessonInactive) {
+    public LessonDto(int lessonId, String lessonName, int teacherId, int groupId, int roomId, String date, boolean lessonInactive) {
         this.lessonId = lessonId;
         this.lessonName = lessonName;
         this.teacherId = teacherId;
@@ -64,11 +64,11 @@ public class LessonDto {
         this.roomId = roomId;
     }
 
-    public LocalDateTime getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
