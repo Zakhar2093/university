@@ -19,6 +19,9 @@ import java.util.List;
 @Component
 public class LessonService implements GenericService<Lesson, Integer>{
 
+    private static final String FORMAT = "dd MM yyyy hh:mm a";
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(FORMAT);
+
     private LessonDao lessonDao;
     private GroupDao groupDao;
     private TeacherDao teacherDao;
@@ -200,9 +203,6 @@ public class LessonService implements GenericService<Lesson, Integer>{
         }
     }
 
-    private static final String FORMAT = "dd MM yyyy hh:mm a";
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(FORMAT);
-
     private Lesson mapDtoToLesson(LessonDto dto){
         Lesson lesson = new Lesson();
         lesson.setLessonId(dto.getLessonId());
@@ -227,7 +227,24 @@ public class LessonService implements GenericService<Lesson, Integer>{
         dto.setRoomId(lesson.getRoom() == null ? null : lesson.getRoom().getRoomId());
         dto.setTeacherId(lesson.getTeacher() == null ? null : lesson.getTeacher().getTeacherId());
         // todo
-        dto.setDate(lesson.getDate().toString());
+        dto.setDate(convertDateToString(lesson.getDate()));
         return dto;
+    }
+
+    private static final String SPACE = " ";
+    private static final String COLON = ":";
+
+    private String convertDateToString(LocalDateTime date){
+        int hour;
+        String AMorPM;
+        if (date.getHour() > 12) {
+            hour = date.getHour() - 12;
+            AMorPM = "PM";
+        } else {
+            hour = date.getHour();
+            AMorPM = "AM";
+        }
+        return date.getDayOfMonth() + SPACE + date.getMonthValue() + SPACE + date.getYear() + SPACE +
+                hour + COLON + date.getMinute() + SPACE + AMorPM;
     }
 }

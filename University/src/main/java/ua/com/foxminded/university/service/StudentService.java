@@ -129,6 +129,15 @@ public class StudentService implements GenericService<Student, Integer>{
         }
     }
 
+    // todo test
+    public List<Student> getStudentsByGroupId(Integer groupId) {
+        try {
+            return studentDao.getStudentsByGroupId(groupId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
     private Student mapDtoToStudent(StudentDto dto){
         Student student = new Student();
         student.setStudentId(dto.getStudentId());

@@ -126,7 +126,7 @@ public class StudentDaoImpl implements StudentDao {
         }
         logger.debug("Adding was successful");
     }
-    
+
     public void addStudentToGroup(Integer groupId, Integer studentId) {
         logger.debug("Adding student id = {} to group id = {}", studentId, groupId);
         try {
@@ -138,5 +138,19 @@ public class StudentDaoImpl implements StudentDao {
             throw new DaoException(String.format("Student %d can not be added to group %d. Student or Group does not exist", studentId, groupId), e);
         }
         logger.debug("Adding was successful");
-    } 
+    }
+
+    // todo test
+    public List<Student> getStudentsByGroupId(Integer groupId) {
+        logger.debug("Getting students with group id = {}",  groupId);
+        List<Student> students;
+        try {
+            students = jdbcTemplate.query(env.getProperty("student.getStudentsByGroupId"), new StudentMapper(groupDaoImpl), groupId);
+        } catch (DaoException e) {
+            logger.error("Getting was not successful. Group does not exist", e);
+            throw new DaoException(String.format("Can not to get students by group id. Group does not exist", groupId), e);
+        }
+        logger.debug("Getting was successful");
+        return students;
+    }
 }

@@ -55,10 +55,10 @@
                 <td th:text="${student.getFirstName()}">First name</td>
                 <td th:text="${student.getLastName()}">Last name</td>
                 <td>
-<!--                     TODO make <a> insted <p>-->
-                    <p  th:if="${student.getGroup()}"
-                        th:text="${student.getGroup().getGroupName()}">
-                    </p>
+                    <a  th:if="${student.getGroup()}"
+                        th:text="${student.getGroup().getGroupName()}"
+                        th:href="@{/groups/{id}(id=${student.getGroup().getGroupId()})}">
+                    </a>
                     <p th:unless="${student.getGroup()}">
                         Without group
                     </p>

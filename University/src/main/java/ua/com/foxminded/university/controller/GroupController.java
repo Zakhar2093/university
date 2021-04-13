@@ -43,6 +43,13 @@ public class GroupController {
         return "groups/update";
     }
 
+    @GetMapping("/{id}")
+    public String showStudentsInGroup(Model model, @PathVariable("id") int id) {
+        model.addAttribute("group", groupService.getById(id));
+        model.addAttribute("students", studentService.getStudentsByGroupId(id));
+        return "groups/showStudentsInGroup";
+    }
+
     @PatchMapping("/{id}")
     public String update(@ModelAttribute("group") Group group, @PathVariable("id") int id) {
         group.setGroupId(id);
