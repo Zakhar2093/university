@@ -3,7 +3,7 @@
       zIndex: 10
     });
 
-    const $button = document.getElementById("date")
+    const $button = document.getElementById("datePicker")
     $button.addEventListener('click', (e) => {
       simplepicker.open();
     });

@@ -84,7 +84,8 @@
                 </td>
                 <td>
                     <!--                     TODO make <a> insted <p>-->
-                    <p  th:if="${lesson.getDate()}"
+                    <p class="date"
+                        th:if="${lesson.getDate()}"
                         th:text="${lesson.getDate()}">
                     </p>
                     <p th:unless="${lesson.getDate()}">
@@ -103,5 +104,6 @@
         </tbody>
     </table>
 </div>
+<script th:src="@{/resources/js/convertDateFormat.js}"></script>
 </body>
 </html>

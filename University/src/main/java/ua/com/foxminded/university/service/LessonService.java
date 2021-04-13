@@ -227,24 +227,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
         dto.setRoomId(lesson.getRoom() == null ? null : lesson.getRoom().getRoomId());
         dto.setTeacherId(lesson.getTeacher() == null ? null : lesson.getTeacher().getTeacherId());
         // todo
-        dto.setDate(convertDateToString(lesson.getDate()));
+        dto.setDate(lesson.getDate().toString());
         return dto;
-    }
-
-    private static final String SPACE = " ";
-    private static final String COLON = ":";
-
-    private String convertDateToString(LocalDateTime date){
-        int hour;
-        String AMorPM;
-        if (date.getHour() > 12) {
-            hour = date.getHour() - 12;
-            AMorPM = "PM";
-        } else {
-            hour = date.getHour();
-            AMorPM = "AM";
-        }
-        return date.getDayOfMonth() + SPACE + date.getMonthValue() + SPACE + date.getYear() + SPACE +
-                hour + COLON + date.getMinute() + SPACE + AMorPM;
     }
 }

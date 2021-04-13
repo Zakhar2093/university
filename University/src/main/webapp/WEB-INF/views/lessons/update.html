@@ -57,7 +57,7 @@
             <br/>
 
             <label>Select Date and Time: </label>
-            <input type="datetime" class="form-control" id="date"  th:field="*{date}">
+            <input type="datetime" class="form-control date" id="datePicker"  th:field="*{date}">
 
             <br/>
             <input class="btn btn-primary" type="submit" value="Update!"/>
@@ -65,6 +65,7 @@
     </form>
 </div>
 <script th:src="@{/resources/js/simplepicker.js}"></script>
+<script th:src="@{/resources/js/convertDateFormat.js}"></script>
 <script th:src="@{/resources/js/selectDate.js}"></script>
 </body>
 </html>
