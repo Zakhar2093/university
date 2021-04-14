@@ -13,7 +13,6 @@ import ua.com.foxminded.university.dao.mapper.LessonMapper;
 import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.model.Lesson;
 import ua.com.foxminded.university.model.Student;
-import ua.com.foxminded.university.model.Teacher;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -109,53 +108,50 @@ public class LessonDaoImpl implements LessonDao{
         logger.debug("Updating was successful");
     }
     
-    public List<Lesson> getLessonByTeacherForDay(Teacher teacher, LocalDateTime date){
-        int teacherId = teacher.getTeacherId();
+    public List<Lesson> getLessonByTeacherIdForDay(int teacherId, LocalDateTime date){
         int year = date.getYear();
-        int mounth = date.getMonthValue();
+        int month = date.getMonthValue();
         int day = date.getDayOfMonth();
-        String dateFormat = year + "." + mounth + "." + day;
-        logger.debug("getting Lesson by Teacher id = {} for day = {}", teacher.getTeacherId(), dateFormat);
-        checkIfTeacherExsist(teacher);
+        String dateFormat = year + "." + month + "." + day;
+        logger.debug("getting Lesson by Teacher id = {} for day = {}", teacherId, dateFormat);
+        checkIfTeacherExist(teacherId);
         return jdbcTemplate.query(
                 env.getProperty("lesson.getLessonByTeacherForDay"),
-                new Object[] { teacherId, year, mounth, day }, 
+                new Object[] { teacherId, year, month, day },
                 new LessonMapper(groupDao, teacherDao, roomDao)
                 );
     }
     
-    public List<Lesson> getLessonByTeacherForMonth(Teacher teacher, LocalDateTime date){
-        int teacherId = teacher.getTeacherId();
+    public List<Lesson> getLessonByTeacherIdForMonth(int teacherId, LocalDateTime date){
         int year = date.getYear();
-        int mounth = date.getMonthValue();
-        String dateFormat = year + "." + mounth;
-        logger.debug("getting Lesson by Teacher id = {} for day = {}", teacher.getTeacherId(), dateFormat);
-        checkIfTeacherExsist(teacher);
+        int month = date.getMonthValue();
+        String dateFormat = year + "." + month;
+        logger.debug("getting Lesson by Teacher id = {} for day = {}", teacherId, dateFormat);
+        checkIfTeacherExist(teacherId);
         return jdbcTemplate.query(
                 env.getProperty("lesson.getLessonByTeacherForMonth"),
-                new Object[] { teacherId, year, mounth}, 
+                new Object[] { teacherId, year, month},
                 new LessonMapper(groupDao, teacherDao, roomDao)
                 );
     }
-    
-    private void checkIfTeacherExsist(Teacher teacher) {
-        logger.debug("checking if Teacher exsist");
+
+    private void checkIfTeacherExist(int teacherId) {
+        logger.debug("checking if Teacher exist");
         try {
-            teacherDao.getById(teacher.getTeacherId());
+            teacherDao.getById(teacherId);
         } catch (DaoException e) {
-            logger.error("Teacher id = {} does not exist", teacher.getTeacherId(), e);
-            throw new DaoException(String.format("Can not get lessons by Teacher id = %d. Teacher does not exist", teacher.getTeacherId()), e);
+            logger.error("Teacher id = {} does not exist", teacherId, e);
+            throw new DaoException(String.format("Can not get lessons by Teacher id = %d. Teacher does not exist", teacherId), e);
         }
     }
     
-    public List<Lesson> getLessonByStudentForDay(Student student, LocalDateTime date){
-        int studentId = student.getStudentId();
+    public List<Lesson> getLessonByStudentIdForDay(int studentId, LocalDateTime date){
         int year = date.getYear();
         int mounth = date.getMonthValue();
         int day = date.getDayOfMonth();
         String dateFormat = year + "." + mounth + "." + day;
-        logger.debug("getting Lesson by Student id = {} for day = {}", student.getStudentId(), dateFormat);
-        checkIfStudentExsist(student);
+        logger.debug("getting Lesson by Student id = {} for day = {}", studentId, dateFormat);
+        checkIfStudentExist(studentId);
         return jdbcTemplate.query(
                 env.getProperty("lesson.getLessonByStudentForDay"),
                 new Object[] { studentId, year, mounth, day}, 
@@ -163,27 +159,26 @@ public class LessonDaoImpl implements LessonDao{
                 );
     }
     
-    public List<Lesson> getLessonByStudentForMonth(Student student, LocalDateTime date){
-        int studentId = student.getStudentId();
+    public List<Lesson> getLessonByStudentIdForMonth(int studentId, LocalDateTime date){
         int year = date.getYear();
-        int mounth = date.getMonthValue();
-        String dateFormat = year + "." + mounth;
-        logger.debug("getting Lesson by Student id = {} for day = {}", student.getStudentId(), dateFormat);
-        checkIfStudentExsist(student);
+        int month = date.getMonthValue();
+        String dateFormat = year + "." + month;
+        logger.debug("getting Lesson by Student id = {} for day = {}", studentId, dateFormat);
+        checkIfStudentExist(studentId);
         return jdbcTemplate.query(
                 env.getProperty("lesson.getLessonByStudentForMonth"),
-                new Object[] { studentId, year, mounth}, 
+                new Object[] { studentId, year, month},
                 new LessonMapper(groupDao, teacherDao, roomDao)
                 );
     }
     
-    private void checkIfStudentExsist(Student student) {
-        logger.debug("checking if Student exsist");
+    private void checkIfStudentExist(int studentId) {
+        logger.debug("checking if Student exist");
         try {
-            studentDao.getById(student.getStudentId());
+            studentDao.getById(studentId);
         } catch (DaoException e) {
-            logger.error("Student id = {} does not exist", student.getStudentId(), e);
-            throw new DaoException(String.format("Can not get lessons by Student id = %d. Student does not exist", student.getStudentId()), e);
+            logger.error("Student id = {} does not exist", studentId, e);
+            throw new DaoException(String.format("Can not get lessons by Student id = %d. Student does not exist", studentId), e);
         }
     }
     

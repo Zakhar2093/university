@@ -126,7 +126,7 @@ class LessonDaoImlpTest {
         lessonDao.create(lesson4);
         lessonDao.create(lesson5);
         
-        List<Lesson> actual = lessonDao.getLessonByTeacherForDay(teacher, date2);
+        List<Lesson> actual = lessonDao.getLessonByTeacherIdForDay(teacher.getTeacherId(), date2);
         List<Lesson> expected = new ArrayList<>();
         expected.add(lesson2);
         expected.add(lesson4);
@@ -162,7 +162,7 @@ class LessonDaoImlpTest {
         lessonDao.create(lesson4);
         lessonDao.create(lesson5);
         
-        List<Lesson> actual = lessonDao.getLessonByTeacherForMonth(teacher, date2);
+        List<Lesson> actual = lessonDao.getLessonByTeacherIdForMonth(teacher.getTeacherId(), date2);
         List<Lesson> expected = new ArrayList<>();
         expected.add(lesson1);
         expected.add(lesson2);
@@ -201,7 +201,7 @@ class LessonDaoImlpTest {
         lessonDao.create(lesson3);
         lessonDao.create(lesson4);
         
-        List<Lesson> actual = lessonDao.getLessonByStudentForDay(student1, date2);
+        List<Lesson> actual = lessonDao.getLessonByStudentIdForDay(student1.getStudentId(), date2);
         List<Lesson> expected = new ArrayList<>();
         expected.add(lesson2);
         expected.add(lesson3);
@@ -239,7 +239,7 @@ class LessonDaoImlpTest {
         lessonDao.create(lesson3);
         lessonDao.create(lesson4);
         
-        List<Lesson> actual = lessonDao.getLessonByStudentForMonth(student1, date2);
+        List<Lesson> actual = lessonDao.getLessonByStudentIdForMonth(student1.getStudentId(), date2);
         List<Lesson> expected = new ArrayList<>();
         expected.add(lesson1);
         expected.add(lesson2);
@@ -395,7 +395,7 @@ class LessonDaoImlpTest {
     void whenGetLessonByNonexistentTeacherForDayShouldThrowsDaoException() {
         DaoException thrown = assertThrows(DaoException.class, () -> {
             Teacher teacher = new Teacher(1, "one", "one", false);
-            lessonDao.getLessonByTeacherForDay(teacher, LocalDateTime.now());
+            lessonDao.getLessonByTeacherIdForDay(teacher.getTeacherId(), LocalDateTime.now());
         });
         assertTrue(thrown.getMessage().contains("Can not get lessons by Teacher id = 1. Teacher does not exist"));
     }
@@ -404,7 +404,7 @@ class LessonDaoImlpTest {
     void whenGetLessonByNonexistentTeacherForMonceShouldThrowsDaoException() {
         DaoException thrown = assertThrows(DaoException.class, () -> {
             Teacher teacher = new Teacher(1, "one", "one", false);
-            lessonDao.getLessonByTeacherForMonth(teacher, LocalDateTime.now());
+            lessonDao.getLessonByTeacherIdForMonth(teacher.getTeacherId(), LocalDateTime.now());
         });
         assertTrue(thrown.getMessage().contains("Can not get lessons by Teacher id = 1. Teacher does not exist"));
     }
@@ -413,7 +413,7 @@ class LessonDaoImlpTest {
     void whenGetLessonByNonexistentStudentForDayShouldThrowsDaoException() {
         DaoException thrown = assertThrows(DaoException.class, () -> {
             Student student = new Student(1, "any", "any", null, false);
-            lessonDao.getLessonByStudentForDay(student, LocalDateTime.now());
+            lessonDao.getLessonByStudentIdForDay(student.getStudentId(), LocalDateTime.now());
         });
         assertTrue(thrown.getMessage().contains("Can not get lessons by Student id = 1. Student does not exist"));
     }
@@ -422,7 +422,7 @@ class LessonDaoImlpTest {
     void whenGetLessonByNonexistentStudentForMonceShouldThrowsDaoException() {
         DaoException thrown = assertThrows(DaoException.class, () -> {
             Student student = new Student(1, "any", "any", null, false);
-            lessonDao.getLessonByStudentForMonth(student, LocalDateTime.now());
+            lessonDao.getLessonByStudentIdForMonth(student.getStudentId(), LocalDateTime.now());
         });
         assertTrue(thrown.getMessage().contains("Can not get lessons by Student id = 1. Student does not exist"));
     }

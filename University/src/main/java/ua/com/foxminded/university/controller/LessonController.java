@@ -12,10 +12,16 @@ import ua.com.foxminded.university.service.RoomService;
 import ua.com.foxminded.university.service.TeacherService;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Controller
 @RequestMapping("/lessons")
 public class LessonController {
+
+    private static final String FORMAT = "dd MM yyyy hh:mm a";
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(FORMAT);
+
     private LessonService lessonService;
     private GroupService groupService;
     private RoomService roomService;
@@ -66,8 +72,6 @@ public class LessonController {
     @PatchMapping("/{id}")
     public String submitUpdate(@ModelAttribute("lessonDto") LessonDto lessonDto, @PathVariable("id") int id) {
         lessonDto.setLessonId(id);
-        //todo change .now
-//        lessonDto.setDate(LocalDateTime.now());
         lessonService.update(lessonDto);
         return "redirect:/lessons";
     }
@@ -76,5 +80,26 @@ public class LessonController {
     public String delete(@PathVariable("id") int id) {
         lessonService.deactivate(id);
         return "redirect:/lessons";
+    }
+
+    @GetMapping("/getSchedule")
+    public String getSchedule(Model model,
+                              @RequestParam("entity") String entity,
+                              @RequestParam("duration") String duration,
+                              @RequestParam("id") int id,
+                              @RequestParam("date") String date){
+        LocalDateTime localDateTime = LocalDateTime.parse(date, FORMATTER);
+        List<Lesson> lessons = null;
+        if (entity.equals("Student") && duration.equals("Day")){
+            lessons = lessonService.getLessonByStudentIdForDay(id, localDateTime);
+        } else if (entity.equals("Student") && duration.equals("Month")){
+            lessons = lessonService.getLessonByStudentIdForMonth(id, localDateTime);
+        } else if (entity.equals("Teacher") && duration.equals("Day")){
+            lessons = lessonService.getLessonByTeacherIdForDay(id, localDateTime);
+        } else if (entity.equals("Teacher") && duration.equals("Month")){
+            lessons = lessonService.getLessonByTeacherIdForMonth(id, localDateTime);
+        }
+        model.addAttribute("lessons", lessons);
+        return "lessons/index";
     }
 }

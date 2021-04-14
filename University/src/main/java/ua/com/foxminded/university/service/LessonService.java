@@ -171,33 +171,33 @@ public class LessonService implements GenericService<Lesson, Integer>{
         }
     }
 
-    public List<Lesson> getLessonByTeacherForDay(Teacher teacher, LocalDateTime date) {
+    public List<Lesson> getLessonByTeacherIdForDay(int teacherId, LocalDateTime date) {
         try {
-            return lessonDao.getLessonByTeacherForDay(teacher, date);
+            return lessonDao.getLessonByTeacherIdForDay(teacherId, date);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
 
-    public List<Lesson> getLessonByTeacherForMonth(Teacher teacher, LocalDateTime date) {
+    public List<Lesson> getLessonByTeacherIdForMonth(int teacherId, LocalDateTime date) {
         try {
-            return lessonDao.getLessonByTeacherForMonth(teacher, date);
+            return lessonDao.getLessonByTeacherIdForMonth(teacherId, date);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
 
-    public List<Lesson> getLessonByStudentForDay(Student student, LocalDateTime date) {
+    public List<Lesson> getLessonByStudentIdForDay(int studentId, LocalDateTime date) {
         try {
-            return lessonDao.getLessonByStudentForDay(student, date);
+            return lessonDao.getLessonByStudentIdForDay(studentId, date);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
 
-    public List<Lesson> getLessonByStudentForMonth(Student student, LocalDateTime date) {
+    public List<Lesson> getLessonByStudentIdForMonth(int studentId, LocalDateTime date) {
         try {
-            return lessonDao.getLessonByStudentForMonth(student, date);
+            return lessonDao.getLessonByStudentIdForMonth(studentId, date);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
