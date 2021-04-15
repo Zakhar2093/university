@@ -129,7 +129,6 @@ public class StudentService implements GenericService<Student, Integer>{
         }
     }
 
-    // todo test
     public List<Student> getStudentsByGroupId(Integer groupId) {
         try {
             return studentDao.getStudentsByGroupId(groupId);

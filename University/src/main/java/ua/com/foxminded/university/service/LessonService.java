@@ -203,7 +203,6 @@ public class LessonService implements GenericService<Lesson, Integer>{
         }
     }
 
-    // todo test
     public List<Lesson> getLessonsByGroupId(Integer groupId) {
         try {
             return lessonDao.getLessonsByGroupId(groupId);
@@ -212,7 +211,6 @@ public class LessonService implements GenericService<Lesson, Integer>{
         }
     }
 
-    // todo test
     public List<Lesson> getLessonsByTeacherId(Integer teacherId) {
         try {
             return lessonDao.getLessonsByTeacherId(teacherId);
@@ -221,7 +219,6 @@ public class LessonService implements GenericService<Lesson, Integer>{
         }
     }
 
-    // todo test
     public List<Lesson> getLessonsByRoomId(Integer roomId) {
         try {
             return lessonDao.getLessonsByRoomId(roomId);

@@ -140,16 +140,9 @@ public class StudentDaoImpl implements StudentDao {
         logger.debug("Adding was successful");
     }
 
-    // todo test
     public List<Student> getStudentsByGroupId(Integer groupId) {
         logger.debug("Getting students with group id = {}",  groupId);
-        List<Student> students;
-        try {
-            students = jdbcTemplate.query(env.getProperty("student.getStudentsByGroupId"), new StudentMapper(groupDaoImpl), groupId);
-        } catch (DaoException e) {
-            logger.error("Getting was not successful. Group does not exist", e);
-            throw new DaoException(String.format("Can not to get students by group id. Group does not exist", groupId), e);
-        }
+        List<Student> students = jdbcTemplate.query(env.getProperty("student.getStudentsByGroupId"), new StudentMapper(groupDaoImpl), groupId);
         logger.debug("Getting was successful");
         return students;
     }

@@ -317,7 +317,67 @@ class LessonDaoImlpTest {
         lessonDao.activate(1);
         assertFalse(lessonDao.getById(1).isLessonInactive());
     }
-    
+
+    @Test
+    void getLessonsByGroupIdShouldReturnCorrectData() {
+        List<Lesson> lessons = createTestData();
+        List<Lesson> expected = new ArrayList<>();
+        expected.add(lessons.get(1));
+        expected.add(lessons.get(3));
+        List<Lesson> actual = lessonDao.getLessonsByGroupId(1);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void getLessonsByRoomIdShouldReturnCorrectData() {
+        List<Lesson> lessons = createTestData();
+        List<Lesson> expected = new ArrayList<>();
+        expected.add(lessons.get(2));
+        expected.add(lessons.get(3));
+        expected.add(lessons.get(4));
+        List<Lesson> actual = lessonDao.getLessonsByRoomId(1);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void getLessonsByTeacherIdShouldReturnCorrectData() {
+        List<Lesson> lessons = createTestData();
+        List<Lesson> expected = new ArrayList<>();
+        expected.add(lessons.get(0));
+        expected.add(lessons.get(1));
+        expected.add(lessons.get(2));
+        List<Lesson> actual = lessonDao.getLessonsByTeacherId(1);
+        assertEquals(expected, actual);
+    }
+
+    private List<Lesson> createTestData(){
+        Group group1 = new Group(1, "Java", false);
+        Group group2 = new Group(2, "C++", false);
+        groupDao.create(group1);
+        groupDao.create(group2);
+        Teacher teacher1 = new Teacher(1, "one", "one", false);
+        Teacher teacher2 = new Teacher(2, "two", "two", false);
+        teacherDao.create(teacher1);
+        teacherDao.create(teacher2);
+        Room room1 = new Room(1, 101);
+        Room room2 = new Room(2, 102);
+        roomDao.create(room1);
+        roomDao.create(room2);
+
+        List<Lesson> lessons = new ArrayList<>();
+        lessons.add(new Lesson(1, "Math", teacher1, group2, room2, LocalDateTime.now(), false));
+        lessons.add(new Lesson(2, "History", teacher1, group1, room2, LocalDateTime.now(), false));
+        lessons.add(new Lesson(3, "English", teacher1, group2, room1, LocalDateTime.now(), false));
+        lessons.add(new Lesson(4, "Math", teacher2, group1, room1, LocalDateTime.now(), false));
+        lessons.add(new Lesson(5, "Bio", teacher2, group2, room1, LocalDateTime.now(), false));
+        lessonDao.create(lessons.get(0));
+        lessonDao.create(lessons.get(1));
+        lessonDao.create(lessons.get(2));
+        lessonDao.create(lessons.get(3));
+        lessonDao.create(lessons.get(4));
+        return lessons;
+    }
+
     @Test
     void whenGetByIdGetNonexistentDataShouldThrowsDaoException() {
         DaoException thrown = assertThrows(DaoException.class, () -> {

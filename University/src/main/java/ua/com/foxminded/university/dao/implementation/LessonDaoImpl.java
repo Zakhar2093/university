@@ -281,45 +281,26 @@ public class LessonDaoImpl implements LessonDao{
         logger.debug("Adding was successful");
     }
 
-    // todo test
     @Override
     public List<Lesson> getLessonsByGroupId(Integer groupId) {
         logger.debug("Getting lessons with group id = {}",  groupId);
-        List<Lesson> lessons;
-        try {
-            lessons = jdbcTemplate.query(env.getProperty("lesson.getLessonsByGroupId"), new LessonMapper(groupDao, teacherDao, roomDao), groupId);
-        } catch (DaoException e) {
-            logger.error("Getting was not successful. Group does not exist", e);
-            throw new DaoException(String.format("Can not to get lessons by group id. Group does not exist", groupId), e);
-        }
+        List<Lesson> lessons = jdbcTemplate.query(env.getProperty("lesson.getLessonsByGroupId"), new LessonMapper(groupDao, teacherDao, roomDao), groupId);
         logger.debug("Getting was successful");
         return lessons;
     }
-    // todo test
+
     @Override
     public List<Lesson> getLessonsByRoomId(Integer roomId) {
         logger.debug("Getting lessons with room id = {}",  roomId);
-        List<Lesson> lessons;
-        try {
-            lessons = jdbcTemplate.query(env.getProperty("lesson.getLessonsByRoomId"), new LessonMapper(groupDao, teacherDao, roomDao), roomId);
-        } catch (DaoException e) {
-            logger.error("Getting was not successful. Room does not exist", e);
-            throw new DaoException(String.format("Can not to get lessons by room id. Room does not exist", roomId), e);
-        }
+        List<Lesson> lessons = jdbcTemplate.query(env.getProperty("lesson.getLessonsByRoomId"), new LessonMapper(groupDao, teacherDao, roomDao), roomId);
         logger.debug("Getting was successful");
         return lessons;
     }
-    // todo test
+
     @Override
     public List<Lesson> getLessonsByTeacherId(Integer teacherId) {
         logger.debug("Getting lessons with teacher id = {}",  teacherId);
-        List<Lesson> lessons;
-        try {
-            lessons = jdbcTemplate.query(env.getProperty("lesson.getLessonsByTeacherId"), new LessonMapper(groupDao, teacherDao, roomDao), teacherId);
-        } catch (DaoException e) {
-            logger.error("Getting was not successful. teacher does not exist", e);
-            throw new DaoException(String.format("Can not to get teacher by teacher id. teacher does not exist", teacherId), e);
-        }
+        List<Lesson> lessons = jdbcTemplate.query(env.getProperty("lesson.getLessonsByTeacherId"), new LessonMapper(groupDao, teacherDao, roomDao), teacherId);
         logger.debug("Getting was successful");
         return lessons;
     }
