@@ -52,14 +52,14 @@
                 <td th:text="${room.getRoomId()}">id</td>
                 <td th:text="${room.getRoomNumber()}">number</td>
                 <td>
-<!--                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#UpdateRoom" th:attrappend="data-target=${Id}">-->
-<!--                        Update room-->
-<!--                    </button>-->
                     <div style="display:  flex;">
                         <a class="btn btn-outline-primary" th:href="@{/rooms/{id}/edit(id=${room.getRoomId()})}">Update room</a>
                         <form style="margin-left: .75rem;" th:method="DELETE" th:action="@{/rooms/{id}(id=${room.getRoomId()})}">
                             <input class="btn btn-outline-primary" type="submit" value="Delete"/>
                         </form>
+                        <a class="btn btn-outline-primary" style="margin-left: .75rem;" th:href="@{/lessons/byRoom/{id}(id=${room.getRoomId()})}" >
+                            Show lessons in this room
+                        </a>
                     </div>
                 </td>
             </tr>
@@ -87,29 +87,6 @@
             </div>
         </div>
     </div>
-
-<!--    <div class="modal" id="UpdateRoom" th:attrappend="id=${Id}">-->
-<!--        <div class="modal-dialog">-->
-<!--            <div class="modal-content">-->
-<!--                <div class="modal-header">-->
-<!--                    <h4 class="modal-title">Updating room</h4>-->
-<!--                    <button type="button" class="close" data-dismiss="modal">&times;</button>-->
-<!--                </div>-->
-<!--                <div class="modal-body">-->
-<!--                    <form th:method="PATCH" th:action="@{/rooms/{id}(id=${room.getRoomId()})}" th:object="${room}">-->
-<!--                        <label for="roomNumber">Enter name: </label>-->
-<!--                        <input type="text" th:field="*{roomNumber}" id="roomNumber"/>-->
-<!--                        <br/>-->
-<!--                        <input type="submit" value="Update!"/>-->
-<!--                    </form>-->
-<!--                </div>-->
-<!--                <div class="modal-footer">-->
-<!--                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-
 </div>
 </body>
 </html>

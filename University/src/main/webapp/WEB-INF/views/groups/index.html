@@ -49,12 +49,7 @@
         </thead>
         <tbody>
             <tr th:each="group: ${groups}">
-                <td>
-                    <a th:href="@{/groups/{id}(id=${group.getGroupId()})}"
-                       th:text="${group.getGroupId()}">
-                        id
-                    </a>
-                </td>
+                <td th:text="${group.getGroupId()}">id</td>
                 <td th:text="${group.getGroupName()}">First name</td>
                 <td>
                     <div style="display:  flex;">
@@ -62,8 +57,11 @@
                         <form style="margin-left: .75rem;" th:method="DELETE" th:action="@{/groups/{id}(id=${group.getGroupId()})}">
                             <input class="btn btn-outline-primary" type="submit" value="Delete"/>
                         </form>
-                        <a class="btn btn-outline-primary" style="margin-left: .75rem;" th:href="@{/groups/{id}(id=${group.getGroupId()})}" >
-                            Show students
+                        <a class="btn btn-outline-primary" style="margin-left: .75rem;" th:href="@{/students/byGroup/{id}/byStudents(id=${group.getGroupId()})}" >
+                            Show students in this group
+                        </a>
+                        <a class="btn btn-outline-primary" style="margin-left: .75rem;" th:href="@{/lessons/byGroup/{id}/byLessons(id=${group.getGroupId()})}" >
+                            Show lessons by group
                         </a>
                     </div>
                 </td>

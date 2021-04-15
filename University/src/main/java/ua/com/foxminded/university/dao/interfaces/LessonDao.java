@@ -27,5 +27,10 @@ public interface LessonDao extends GenericDao<Lesson, Integer> {
     void addTeacherToLesson(Integer teacherId, Integer lessonId);
     
     void removeTeacherFromLesson(Integer lessonId);
-    
+
+    List<Lesson> getLessonsByGroupId(Integer groupId);
+
+    List<Lesson> getLessonsByRoomId(Integer groupId);
+
+    List<Lesson> getLessonsByTeacherId(Integer groupId);
 }

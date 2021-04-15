@@ -60,4 +60,11 @@ public class StudentController {
         studentService.deactivate(id);
         return "redirect:/students";
     }
+
+    @GetMapping("/byGroup/{id}")
+    public String showStudentsInGroup(Model model, @PathVariable("id") int id) {
+        model.addAttribute("group", groupService.getById(id));
+        model.addAttribute("students", studentService.getStudentsByGroupId(id));
+        return "students/index";
+    }
 }

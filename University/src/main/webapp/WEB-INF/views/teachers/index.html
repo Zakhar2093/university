@@ -59,6 +59,9 @@
                         <form style="margin-left: .75rem;" th:method="DELETE" th:action="@{/teachers/{id}(id=${teacher.getTeacherId()})}">
                             <input class="btn btn-outline-primary" type="submit" value="Delete"/>
                         </form>
+                        <a class="btn btn-outline-primary" style="margin-left: .75rem;" th:href="@{/lessons/byTeacher/{id}(id=${teacher.getTeacherId()})}" >
+                            Show lessons by teacher
+                        </a>
                     </div>
                 </td>
             </tr>
@@ -89,29 +92,6 @@
             </div>
         </div>
     </div>
-
-<!--    <div class="modal" id="UpdateTeacher" th:attrappend="id=${Id}">-->
-<!--        <div class="modal-dialog">-->
-<!--            <div class="modal-content">-->
-<!--                <div class="modal-header">-->
-<!--                    <h4 class="modal-title">Updating teacher</h4>-->
-<!--                    <button type="button" class="close" data-dismiss="modal">&times;</button>-->
-<!--                </div>-->
-<!--                <div class="modal-body">-->
-<!--                    <form th:method="PATCH" th:action="@{/teachers/{id}(id=${teacher.getTeacherId()})}" th:object="${teacher}">-->
-<!--                        <label for="FirstName">Enter name: </label>-->
-<!--                        <input type="text" th:field="*{FirstName}" id="FirstName"/>-->
-<!--                        <br/>-->
-<!--                        <input type="submit" value="Update!"/>-->
-<!--                    </form>-->
-<!--                </div>-->
-<!--                <div class="modal-footer">-->
-<!--                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-
 </div>
 </body>
 </html>

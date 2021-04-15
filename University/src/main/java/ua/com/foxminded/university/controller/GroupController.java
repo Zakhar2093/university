@@ -5,8 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.com.foxminded.university.model.Group;
-import ua.com.foxminded.university.service.GroupService;
-import ua.com.foxminded.university.service.StudentService;
+import ua.com.foxminded.university.service.*;
 
 import java.util.List;
 
@@ -15,12 +14,10 @@ import java.util.List;
 public class GroupController {
 
     private GroupService groupService;
-    private StudentService studentService;
 
     @Autowired
-    public GroupController(GroupService groupService, StudentService studentService) {
+    public GroupController(GroupService groupService) {
         this.groupService = groupService;
-        this.studentService = studentService;
     }
 
     @GetMapping
@@ -43,13 +40,6 @@ public class GroupController {
         return "groups/update";
     }
 
-    @GetMapping("/{id}")
-    public String showStudentsInGroup(Model model, @PathVariable("id") int id) {
-        model.addAttribute("group", groupService.getById(id));
-        model.addAttribute("students", studentService.getStudentsByGroupId(id));
-        return "groups/showStudentsInGroup";
-    }
-
     @PatchMapping("/{id}")
     public String update(@ModelAttribute("group") Group group, @PathVariable("id") int id) {
         group.setGroupId(id);
@@ -63,4 +53,3 @@ public class GroupController {
         return "redirect:/groups";
     }
 }
-

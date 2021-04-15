@@ -23,8 +23,8 @@ public class LessonController {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(FORMAT);
 
     private LessonService lessonService;
-    private GroupService groupService;
     private RoomService roomService;
+    private GroupService groupService;
     private TeacherService teacherService;
 
     @Autowired
@@ -100,6 +100,33 @@ public class LessonController {
             lessons = lessonService.getLessonByTeacherIdForMonth(id, localDateTime);
         }
         model.addAttribute("lessons", lessons);
+        return "lessons/index";
+    }
+
+    @GetMapping("/byRoom/{id}")
+    public String showLessonsByRoom(Model model, @PathVariable("id") int id) {
+        model.addAttribute("room", roomService.getById(id));
+        model.addAttribute("lessons", lessonService.getLessonsByRoomId(id));
+        model.addAttribute("teachers", teacherService.getAllActivated());
+        model.addAttribute("groups", groupService.getAllActivated());
+        return "lessons/index";
+    }
+
+    @GetMapping("/byTeacher/{id}")
+    public String showLessonsByTeacher(Model model, @PathVariable("id") int id) {
+        model.addAttribute("teacher", teacherService.getById(id));
+        model.addAttribute("lessons", lessonService.getLessonsByTeacherId(id));
+        model.addAttribute("rooms", roomService.getAllActivated());
+        model.addAttribute("groups", groupService.getAllActivated());
+        return "lessons/index";
+    }
+
+    @GetMapping("/byGroup/{id}")
+    public String showLessonsByGroup(Model model, @PathVariable("id") int id) {
+        model.addAttribute("group", groupService.getById(id));
+        model.addAttribute("lessons", lessonService.getLessonsByGroupId(id));
+        model.addAttribute("rooms", roomService.getAllActivated());
+        model.addAttribute("teachers", teacherService.getAllActivated());
         return "lessons/index";
     }
 }

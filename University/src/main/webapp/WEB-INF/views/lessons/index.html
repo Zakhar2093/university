@@ -36,6 +36,9 @@
         <a class="btn btn-outline-primary" th:href="@{/lessons/add}">
             Add new lesson
         </a>
+        <a class="btn btn-outline-primary" th:href="@{/lessons}">
+            All lessons
+        </a>
     </div>
     <br/>
 
@@ -56,34 +59,33 @@
                 <td th:text="${lesson.getLessonId()}">id</td>
                 <td th:text="${lesson.getLessonName()}">First name</td>
                 <td>
-                    <!--                     TODO make <a> insted <p>-->
-                    <p  th:if="${lesson.getRoom()}"
-                        th:text="${lesson.getRoom().getRoomNumber()}">
-                    </p>
+                    <a  th:if="${lesson.getRoom()}"
+                        th:text="${lesson.getRoom().getRoomNumber()}"
+                        th:href="@{/lessons/byRoom/{id}(id=${lesson.getRoom().getRoomId()})}">>
+                    </a>
                     <p th:unless="${lesson.getRoom()}">
                         Without room
                     </p>
                 </td>
                 <td>
-                    <!--                     TODO make <a> insted <p>-->
-                    <p  th:if="${lesson.getGroup()}"
-                        th:text="${lesson.getGroup().getGroupName()}">
-                    </p>
+                    <a  th:if="${lesson.getGroup()}"
+                        th:text="${lesson.getGroup().getGroupName()}"
+                        th:href="@{/lessons/byGroup/{id}(id=${lesson.getGroup().getGroupId()})}">>
+                    </a>
                     <p th:unless="${lesson.getGroup()}">
                         Without group
                     </p>
                 </td>
                 <td>
-                    <!--                     TODO make <a> insted <p>-->
-                    <p  th:if="${lesson.getTeacher()}"
-                        th:text="${lesson.getTeacher().getFirstName()} + ' ' + ${lesson.getTeacher().getLastName()}">
-                    </p>
+                    <a  th:if="${lesson.getTeacher()}"
+                        th:text="${lesson.getTeacher().getFirstName()} + ' ' + ${lesson.getTeacher().getLastName()}"
+                        th:href="@{/lessons/byTeacher/{id}(id=${lesson.getTeacher().getTeacherId()})}">
+                    </a>
                     <p th:unless="${lesson.getTeacher()}">
                         Without teacher
                     </p>
                 </td>
                 <td>
-                    <!--                     TODO make <a> insted <p>-->
                     <p class="date"
                         th:if="${lesson.getDate()}"
                         th:text="${lesson.getDate()}">
