@@ -253,7 +253,6 @@ public class LessonService implements GenericService<Lesson, Integer>{
         dto.setGroupId(lesson.getGroup() == null ? null : lesson.getGroup().getGroupId());
         dto.setRoomId(lesson.getRoom() == null ? null : lesson.getRoom().getRoomId());
         dto.setTeacherId(lesson.getTeacher() == null ? null : lesson.getTeacher().getTeacherId());
-        // todo
         dto.setDate(lesson.getDate().toString());
         return dto;
     }

@@ -54,8 +54,6 @@ public class LessonController {
 
     @PostMapping
     public String submitCreate(@ModelAttribute("lessonDto") LessonDto lessonDto) {
-        //todo change .now
-//        lessonDto.setDate(LocalDateTime.now());
         lessonService.create(lessonDto);
         return "redirect:/lessons";
     }
