@@ -9,7 +9,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
 
-@PropertySource("classpath:SqlQueries.properties")
+@PropertySource("classpath:application.properties")
 @Configuration
 @ComponentScan("ua.com.foxminded.university")
 public class SpringConfigTest {

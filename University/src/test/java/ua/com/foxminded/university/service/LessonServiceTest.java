@@ -53,7 +53,7 @@ class LessonServiceTest {
         lessonService.create(new Lesson());
         verify(lessonDao, only()).create(any(Lesson.class));
     }
-//todo
+
     @Test
     void createShouldInvokeOnlyOnceWhenTakesLessonDto() {
         lessonService.create(mockDao());

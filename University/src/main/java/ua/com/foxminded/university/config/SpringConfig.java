@@ -1,26 +1,39 @@
 package ua.com.foxminded.university.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
 
-@PropertySource("classpath:SqlQueries.properties")
+@PropertySource("classpath:application.properties")
 @Configuration
 @ComponentScan("ua.com.foxminded.university")
 public class SpringConfig  {
 
+    @Value("${dataSource.DriverClassName}")
+    private String driver;
+    @Value("${dataSource.Url}")
+    private String url;
+    @Value("${dataSource.Username}")
+    private String user;
+    @Value("${dataSource.Password}")
+    private String password;
+
+
     @Bean
     public DataSource dataSourse() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/university");
-        dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUsername("postgres");
-        dataSource.setPassword("1234");
+        dataSource.setUrl(url);
+        dataSource.setDriverClassName(driver);
+        dataSource.setUsername(user);
+        dataSource.setPassword(password);
         return dataSource;
     }
 

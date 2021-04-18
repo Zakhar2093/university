@@ -19,7 +19,6 @@ import java.util.List;
 public class StudentDaoImpl implements StudentDao {
 
     private static final Logger logger = LoggerFactory.getLogger(StudentDaoImpl.class);
-    private final static String PROPERTY_NAME = "src/main/resources/SqlQueries.properties";
     private final JdbcTemplate jdbcTemplate;
     private Environment env;
     private GroupDao groupDaoImpl;
