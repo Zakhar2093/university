@@ -22,8 +22,7 @@ public class StudentController {
     }
 
     @GetMapping
-    public String getAll(@ModelAttribute("student") Student student,
-                         Model model) {
+    public String getAll(Model model) {
         model.addAttribute("students", studentService.getAllActivated());
         model.addAttribute("groups", groupService.getAllActivated());
         return "students/index";

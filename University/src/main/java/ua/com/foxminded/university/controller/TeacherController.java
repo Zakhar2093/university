@@ -24,10 +24,8 @@ public class TeacherController {
     }
 
     @GetMapping
-    public String getAll(@ModelAttribute("teacher") Teacher teacher, Model model) {
-        List<Teacher> teachers = teacherService.getAll();
-        teachers.removeIf(p -> (p.isTeacherInactive()));
-        model.addAttribute("teachers", teachers);
+    public String getAll(@ModelAttribute("teacher") Teacher teacher, Model model) { ;
+        model.addAttribute("teachers", teacherService.getAllActivated());
         return "teachers/index";
     }
 

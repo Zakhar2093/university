@@ -22,9 +22,7 @@ public class GroupController {
 
     @GetMapping
     public String getAll(@ModelAttribute("group") Group group, Model model) {
-        List<Group> groups = groupService.getAll();
-        groups.removeIf(p -> (p.isGroupInactive()));
-        model.addAttribute("groups", groups);
+        model.addAttribute("groups", groupService.getAllActivated());
         return "groups/index";
     }
 

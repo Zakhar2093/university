@@ -36,7 +36,7 @@ public class LessonController {
     }
 
     @GetMapping
-    public String getAll(@ModelAttribute("lesson") Lesson lesson, Model model) {
+    public String getAll(Model model) {
         model.addAttribute("lessons", lessonService.getAllActivated());
         model.addAttribute("groups", groupService.getAllActivated());
         model.addAttribute("rooms", roomService.getAllActivated());
