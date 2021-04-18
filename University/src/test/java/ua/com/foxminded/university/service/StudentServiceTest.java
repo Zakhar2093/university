@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.model_dto.StudentDto;
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.dao.interfaces.StudentDao;
@@ -20,6 +21,8 @@ class StudentServiceTest {
 
     private static final String EMPTY_STRING = "";
     private StudentService studentService;
+
+    @Mock
     private GroupDao groupDao;
     
     @Mock
@@ -37,11 +40,18 @@ class StudentServiceTest {
         verify(studentDao, only()).create(any(Student.class));
     }
 
-//    @Test
-//    void createShouldInvokeOnlyOnceWhenTakesStudentDto() {
-//        studentService.create(new StudentDto());
-//        verify(studentDao, only()).create(any(Student.class));
-//    }
+    @Test
+    void createShouldInvokeOnlyOnceWhenTakesStudentDto() {
+        studentService.create(mockGroup());
+        verify(studentDao, only()).create(any(Student.class));
+    }
+
+    private StudentDto mockGroup(){
+        StudentDto studentDto = new StudentDto();
+        Group group = new Group(1, "Math", false);
+        when(groupDao.getById(anyInt())).thenReturn(group);
+        return studentDto;
+    }
 
     @Test
     void getAllShouldInvokeOnlyOnce() {
@@ -61,11 +71,13 @@ class StudentServiceTest {
         verify(studentDao, only()).getById(anyInt());
     }
 
-//    @Test
-//    void getDtoByIdShouldInvokeOnlyOnce() {
-//        studentService.getDtoById(1);
-//        verify(studentDao, only()).getById(anyInt());
-//    }
+    @Test
+    void getDtoByIdShouldInvokeOnlyOnce() {
+        Student student = new Student(1, "one", "two", new Group(), false);
+        when(studentDao.getById(anyInt())).thenReturn(student);
+        studentService.getDtoById(1);
+        verify(studentDao, only()).getById(anyInt());
+    }
     
     @Test
     void updateShouldInvokeOnlyOnceWhenTakesStudent() {
@@ -73,11 +85,11 @@ class StudentServiceTest {
         verify(studentDao, only()).update(any(Student.class));
     }
 
-//    @Test
-//    void updateShouldInvokeOnlyOnceWhenTakesStudentDto() {
-//        studentService.update(new StudentDto());
-//        verify(studentDao, only()).update(any(Student.class));
-//    }
+    @Test
+    void updateShouldInvokeOnlyOnceWhenTakesStudentDto() {
+        studentService.update(mockGroup());
+        verify(studentDao, only()).update(any(Student.class));
+    }
     
     @Test
     void deactivateShouldInvokeOnlyOnce() {

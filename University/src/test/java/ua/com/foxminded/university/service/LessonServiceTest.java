@@ -2,6 +2,7 @@ package ua.com.foxminded.university.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
@@ -24,13 +25,21 @@ class LessonServiceTest {
 
     private static final String EMPTY_STRING = "";
     private static final LocalDateTime TIME = LocalDateTime.now();
-    private LessonService lessonService;
+
+    @Mock
     private GroupDao groupDao;
+
+    @Mock
     private TeacherDao teacherDao;
+
+    @Mock
     private RoomDao roomDao;
 
     @Mock
     private LessonDao lessonDao;
+
+    @InjectMocks
+    private LessonService lessonService;
 
 
     @BeforeEach
@@ -45,11 +54,24 @@ class LessonServiceTest {
         verify(lessonDao, only()).create(any(Lesson.class));
     }
 //todo
-//    @Test
-//    void createShouldInvokeOnlyOnceWhenTakesLessonDto() {
-//        lessonService.create(new LessonDto());
-//        verify(lessonDao, only()).create(any(Lesson.class));
-//    }
+    @Test
+    void createShouldInvokeOnlyOnceWhenTakesLessonDto() {
+        lessonService.create(mockDao());
+        verify(lessonDao, only()).create(any(Lesson.class));
+    }
+
+    private LessonDto mockDao(){
+        LessonDto lessonDto = new LessonDto();
+        lessonDto.setDate("11 04 2021 12:44 AM");
+        Group group = new Group(1, "Math", false);
+        Room room = new Room(1, 101);
+        Teacher teacher = new Teacher(1, "one", "two", false);
+        when(groupDao.getById(anyInt())).thenReturn(group);
+        when(roomDao.getById(anyInt())).thenReturn(room);
+        when(teacherDao.getById(anyInt())).thenReturn(teacher);
+        return lessonDto;
+    }
+
     
     @Test
     void getAllShouldInvokeOnlyOnce() {
@@ -68,24 +90,26 @@ class LessonServiceTest {
         lessonService.getById(1);
         verify(lessonDao, only()).getById(anyInt());
     }
-//todo
-//    @Test
-//    void getDtoByIdShouldInvokeOnlyOnce() {
-//        lessonService.getDtoById(1);
-//        verify(lessonDao, only()).getById(anyInt());
-//    }
+
+    @Test
+    void getDtoByIdShouldInvokeOnlyOnce() {
+        Lesson lesson = new Lesson(1, "Math", null, null, null, LocalDateTime.now(), false);
+        when(lessonDao.getById(anyInt())).thenReturn(lesson);
+        lessonService.getDtoById(1);
+        verify(lessonDao, only()).getById(anyInt());
+    }
     
     @Test
     void updateShouldInvokeOnlyOnceWhenTakesLesson() {
         lessonService.update(new Lesson());
         verify(lessonDao, only()).update(any(Lesson.class));
     }
-//todo
-//    @Test
-//    void updateShouldInvokeOnlyOnceWhenTakesLessonDto() {
-//        lessonService.update(new LessonDto());
-//        verify(lessonDao, only()).update(any(Lesson.class));
-//    }
+
+    @Test
+    void updateShouldInvokeOnlyOnceWhenTakesLessonDto() {
+        lessonService.update(mockDao());
+        verify(lessonDao, only()).update(any(Lesson.class));
+    }
     
     @Test
     void deactivateShouldInvokeOnlyOnce() {
