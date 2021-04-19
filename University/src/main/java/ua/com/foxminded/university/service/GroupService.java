@@ -1,18 +1,19 @@
 package ua.com.foxminded.university.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Group;
+import ua.com.foxminded.university.model.Lesson;
+import ua.com.foxminded.university.model.Teacher;
+
+import java.util.List;
 
 @Component
-public class GroupService {
+public class GroupService implements GenericService<Group, Integer>{
 
     private GroupDao groupDao;
 
@@ -33,6 +34,16 @@ public class GroupService {
     public List<Group> getAll() {
         try {
             return groupDao.getAll();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public List<Group> getAllActivated() {
+        try {
+            List<Group> groups = groupDao.getAll();
+            groups.removeIf(p -> (p.isGroupInactive()));
+            return groups;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

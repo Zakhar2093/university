@@ -1,51 +1,87 @@
 package ua.com.foxminded.university.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.only;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.eq;
-
-import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
+import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.dao.interfaces.LessonDao;
+import ua.com.foxminded.university.dao.interfaces.RoomDao;
+import ua.com.foxminded.university.dao.interfaces.TeacherDao;
 import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.Lesson;
-import ua.com.foxminded.university.model.Student;
-import ua.com.foxminded.university.model.Teacher;
+import ua.com.foxminded.university.model.*;
+import ua.com.foxminded.university.model.model_dto.LessonDto;
+
+import java.time.LocalDateTime;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.*;
 
 class LessonServiceTest {
 
     private static final String EMPTY_STRING = "";
     private static final LocalDateTime TIME = LocalDateTime.now();
-    private LessonService lessonService;
+
+    @Mock
+    private GroupDao groupDao;
+
+    @Mock
+    private TeacherDao teacherDao;
+
+    @Mock
+    private RoomDao roomDao;
+
     @Mock
     private LessonDao lessonDao;
+
+    @InjectMocks
+    private LessonService lessonService;
 
 
     @BeforeEach
     void initMocks() {
         MockitoAnnotations.initMocks(this);
-        lessonService = new LessonService(lessonDao);
+        lessonService = new LessonService(lessonDao, groupDao, teacherDao, roomDao);
     }
 
     @Test
-    void createShouldInvokeOnlyOnce() {
+    void createShouldInvokeOnlyOnceWhenTakesLesson() {
         lessonService.create(new Lesson());
         verify(lessonDao, only()).create(any(Lesson.class));
     }
+
+    @Test
+    void createShouldInvokeOnlyOnceWhenTakesLessonDto() {
+        lessonService.create(mockDao());
+        verify(lessonDao, only()).create(any(Lesson.class));
+    }
+
+    private LessonDto mockDao(){
+        LessonDto lessonDto = new LessonDto();
+        lessonDto.setDate("11 04 2021 12:44 AM");
+        Group group = new Group(1, "Math", false);
+        Room room = new Room(1, 101);
+        Teacher teacher = new Teacher(1, "one", "two", false);
+        when(groupDao.getById(anyInt())).thenReturn(group);
+        when(roomDao.getById(anyInt())).thenReturn(room);
+        when(teacherDao.getById(anyInt())).thenReturn(teacher);
+        return lessonDto;
+    }
+
     
     @Test
     void getAllShouldInvokeOnlyOnce() {
         lessonService.getAll();
+        verify(lessonDao, only()).getAll();
+    }
+
+    @Test
+    void getAllActivatedShouldInvokeOnlyOnce() {
+        lessonService.getAllActivated();
         verify(lessonDao, only()).getAll();
     }
     
@@ -54,10 +90,24 @@ class LessonServiceTest {
         lessonService.getById(1);
         verify(lessonDao, only()).getById(anyInt());
     }
+
+    @Test
+    void getDtoByIdShouldInvokeOnlyOnce() {
+        Lesson lesson = new Lesson(1, "Math", null, null, null, LocalDateTime.now(), false);
+        when(lessonDao.getById(anyInt())).thenReturn(lesson);
+        lessonService.getDtoById(1);
+        verify(lessonDao, only()).getById(anyInt());
+    }
     
     @Test
-    void updateShouldInvokeOnlyOnce() {
+    void updateShouldInvokeOnlyOnceWhenTakesLesson() {
         lessonService.update(new Lesson());
+        verify(lessonDao, only()).update(any(Lesson.class));
+    }
+
+    @Test
+    void updateShouldInvokeOnlyOnceWhenTakesLessonDto() {
+        lessonService.update(mockDao());
         verify(lessonDao, only()).update(any(Lesson.class));
     }
     
@@ -114,26 +164,68 @@ class LessonServiceTest {
     
     @Test
     void getLessonByTeacherForDayShouldInvokeOnlyOnce(){
-        lessonService.getLessonByTeacherForDay(new Teacher(), TIME);
-        verify(lessonDao, only()).getLessonByTeacherForDay(any(Teacher.class), eq(TIME));
+        lessonService.getLessonByTeacherIdForDay(1, TIME);
+        verify(lessonDao, only()).getLessonByTeacherIdForDay(anyInt(), eq(TIME));
     }
 
     @Test
     void getLessonByTeacherForMonthShouldInvokeOnlyOnce(){
-        lessonService.getLessonByTeacherForMonth(new Teacher(), TIME);
-        verify(lessonDao, only()).getLessonByTeacherForMonth(any(Teacher.class), eq(TIME));
+        lessonService.getLessonByTeacherIdForMonth(1, TIME);
+        verify(lessonDao, only()).getLessonByTeacherIdForMonth(anyInt(), eq(TIME));
     }
 
     @Test
     void getLessonByStudentForDayShouldInvokeOnlyOnce(){
-        lessonService.getLessonByStudentForDay(new Student(), TIME);
-        verify(lessonDao, only()).getLessonByStudentForDay(any(Student.class), eq(TIME));
+        lessonService.getLessonByStudentIdForDay(1, TIME);
+        verify(lessonDao, only()).getLessonByStudentIdForDay(anyInt(), eq(TIME));
     }
 
     @Test
     void getLessonByStudentForMonthShouldInvokeOnlyOnce(){
-        lessonService.getLessonByStudentForMonth(new Student(), TIME);
-        verify(lessonDao, times(1)).getLessonByStudentForMonth(any(Student.class), eq(TIME));
+        lessonService.getLessonByStudentIdForMonth(1, TIME);
+        verify(lessonDao, only()).getLessonByStudentIdForMonth(anyInt(), eq(TIME));
+    }
+
+    @Test
+    void getLessonsByGroupIdShouldInvokeOnlyOnce(){
+        lessonService.getLessonsByGroupId(1);
+        verify(lessonDao, only()).getLessonsByGroupId(anyInt());
+    }
+
+    @Test
+    void getLessonsByTeacherIdShouldInvokeOnlyOnce(){
+        lessonService.getLessonsByTeacherId(1);
+        verify(lessonDao, only()).getLessonsByTeacherId(anyInt());
+    }
+
+    @Test
+    void getLessonsByRoomIdShouldInvokeOnlyOnce(){
+        lessonService.getLessonsByRoomId(1);
+        verify(lessonDao, only()).getLessonsByRoomId(anyInt());
+    }
+
+    @Test
+    void whenGetLessonsByTeacherIdCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).getLessonsByTeacherId(anyInt());
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            lessonService.getLessonsByTeacherId(1);
+        });
+    }
+
+    @Test
+    void whenGetLessonsByGroupIdCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).getLessonsByGroupId(anyInt());
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            lessonService.getLessonsByGroupId(1);
+        });
+    }
+
+    @Test
+    void whenGetLessonsByRoomIdCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).getLessonsByRoomId(anyInt());
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            lessonService.getLessonsByRoomId(1);
+        });
     }
 
     @Test
@@ -234,33 +326,33 @@ class LessonServiceTest {
     
     @Test
     void whenGetLessonByTeacherForDayCatchDaoExceptionShouldThrowServiceException(){
-        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).getLessonByTeacherForDay(any(Teacher.class), eq(TIME));
+        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).getLessonByTeacherIdForDay(anyInt(), eq(TIME));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            lessonService.getLessonByTeacherForDay(new Teacher(), TIME);
+            lessonService.getLessonByTeacherIdForDay(1, TIME);
         });
     }
 
     @Test
     void whenGetLessonByTeacherForMonthCatchDaoExceptionShouldThrowServiceException(){
-        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).getLessonByTeacherForMonth(any(Teacher.class), eq(TIME));
+        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).getLessonByTeacherIdForMonth(anyInt(), eq(TIME));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            lessonService.getLessonByTeacherForMonth(new Teacher(), TIME);
+            lessonService.getLessonByTeacherIdForMonth(1, TIME);
         });
     }
 
     @Test
     void whenGetLessonByStudentForDayCatchDaoExceptionShouldThrowServiceException(){
-        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).getLessonByStudentForDay(any(Student.class), eq(TIME));
+        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).getLessonByStudentIdForDay(anyInt(), eq(TIME));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            lessonService.getLessonByStudentForDay(new Student(), TIME);
+            lessonService.getLessonByStudentIdForDay(1, TIME);
         });
     }
 
     @Test
     void whenGetLessonByStudentForMonthCatchDaoExceptionShouldThrowServiceException(){
-        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).getLessonByStudentForMonth(any(Student.class), eq(TIME));
+        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).getLessonByStudentIdForMonth(anyInt(), eq(TIME));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            lessonService.getLessonByStudentForMonth(new Student(), TIME);
+            lessonService.getLessonByStudentIdForMonth(1, TIME);
         });
     }
 }

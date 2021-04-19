@@ -1,47 +1,67 @@
 package ua.com.foxminded.university.service;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.only;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
+import ua.com.foxminded.university.model.Group;
+import ua.com.foxminded.university.model.model_dto.StudentDto;
+import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.dao.interfaces.StudentDao;
 import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Student;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.*;
+
 class StudentServiceTest {
 
     private static final String EMPTY_STRING = "";
     private StudentService studentService;
+
+    @Mock
+    private GroupDao groupDao;
     
     @Mock
     private StudentDao studentDao;
 
-
     @BeforeEach
     public void initMocks() {
         MockitoAnnotations.initMocks(this);
-        studentService = new StudentService(studentDao);
+        studentService = new StudentService(studentDao, groupDao);
     }
 
     @Test
-    void createShouldInvokeOnlyOnce() {
+    void createShouldInvokeOnlyOnceWhenTakesStudent() {
         studentService.create(new Student());
         verify(studentDao, only()).create(any(Student.class));
     }
-    
+
+    @Test
+    void createShouldInvokeOnlyOnceWhenTakesStudentDto() {
+        studentService.create(mockGroup());
+        verify(studentDao, only()).create(any(Student.class));
+    }
+
+    private StudentDto mockGroup(){
+        StudentDto studentDto = new StudentDto();
+        Group group = new Group(1, "Math", false);
+        when(groupDao.getById(anyInt())).thenReturn(group);
+        return studentDto;
+    }
+
     @Test
     void getAllShouldInvokeOnlyOnce() {
         studentService.getAll();
+        verify(studentDao, only()).getAll();
+    }
+
+    @Test
+    void getAllActivatedShouldInvokeOnlyOnce() {
+        studentService.getAllActivated();
         verify(studentDao, only()).getAll();
     }
     
@@ -50,10 +70,24 @@ class StudentServiceTest {
         studentService.getById(1);
         verify(studentDao, only()).getById(anyInt());
     }
+
+    @Test
+    void getDtoByIdShouldInvokeOnlyOnce() {
+        Student student = new Student(1, "one", "two", new Group(), false);
+        when(studentDao.getById(anyInt())).thenReturn(student);
+        studentService.getDtoById(1);
+        verify(studentDao, only()).getById(anyInt());
+    }
     
     @Test
-    void updateShouldInvokeOnlyOnce() {
+    void updateShouldInvokeOnlyOnceWhenTakesStudent() {
         studentService.update(new Student());
+        verify(studentDao, only()).update(any(Student.class));
+    }
+
+    @Test
+    void updateShouldInvokeOnlyOnceWhenTakesStudentDto() {
+        studentService.update(mockGroup());
         verify(studentDao, only()).update(any(Student.class));
     }
     
@@ -80,6 +114,20 @@ class StudentServiceTest {
     void removeStudentFromGroupShouldInvokeOnlyOnce() {
         studentService.removeStudentFromGroup(1);
         verify(studentDao, only()).removeStudentFromGroup(anyInt());
+    }
+
+    @Test
+    void getStudentsByGroupIdShouldInvokeOnlyOnce() {
+        studentService.getStudentsByGroupId(1);
+        verify(studentDao, only()).getStudentsByGroupId(anyInt());
+    }
+
+    @Test
+    void whenGetStudentsByGroupIdCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(studentDao).getStudentsByGroupId(anyInt());
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            studentService.getStudentsByGroupId(1);
+        });
     }
     
     @Test

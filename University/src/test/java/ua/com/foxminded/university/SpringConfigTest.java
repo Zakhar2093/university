@@ -1,13 +1,15 @@
 package ua.com.foxminded.university;
 
-import javax.sql.DataSource;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
+import javax.sql.DataSource;
+
+@PropertySource("classpath:application.properties")
 @Configuration
 @ComponentScan("ua.com.foxminded.university")
 public class SpringConfigTest {

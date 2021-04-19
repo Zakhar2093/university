@@ -1,44 +1,48 @@
 package ua.com.foxminded.university.dao.imlementation;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.web.WebAppConfiguration;
+import ua.com.foxminded.university.SpringConfigTest;
+import ua.com.foxminded.university.dao.DatabaseInitialization;
+import ua.com.foxminded.university.dao.interfaces.*;
+import ua.com.foxminded.university.exception.DaoException;
+import ua.com.foxminded.university.model.Group;
+import ua.com.foxminded.university.model.Student;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.jdbc.core.JdbcTemplate;
+import static org.junit.jupiter.api.Assertions.*;
 
-import ua.com.foxminded.university.PropertyReader;
-import ua.com.foxminded.university.SpringConfigTest;
-import ua.com.foxminded.university.dao.DatabaseInitialization;
-import ua.com.foxminded.university.dao.implementation.GroupDaoImpl;
-import ua.com.foxminded.university.dao.implementation.StudentDaoImpl;
-import ua.com.foxminded.university.dao.interfaces.GroupDao;
-import ua.com.foxminded.university.dao.interfaces.StudentDao;
-import ua.com.foxminded.university.exception.DaoException;
-import ua.com.foxminded.university.model.Group;
-import ua.com.foxminded.university.model.Room;
-import ua.com.foxminded.university.model.Student;
-
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = SpringConfigTest.class)
+@WebAppConfiguration
 class StudentDaoImplTest {
-    private DatabaseInitialization dbInit = new DatabaseInitialization();
-    private AnnotationConfigApplicationContext context;
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
-    private PropertyReader propertyReader;
+    @Autowired
+    private LessonDao lessonDao;
+    @Autowired
     private GroupDao groupDao;
+    @Autowired
+    private TeacherDao teacherDao;
+    @Autowired
+    private RoomDao roomDao;
+    @Autowired
     private StudentDao studentDao;
+    @Autowired
+    private DatabaseInitialization dbInit;
 
     @BeforeEach
     void createBean() {
-        context = new AnnotationConfigApplicationContext(SpringConfigTest.class);
-        jdbcTemplate = context.getBean("jdbcTemplate", JdbcTemplate.class);
-        propertyReader = context.getBean("propertyReader", PropertyReader.class);
-        groupDao = new GroupDaoImpl(jdbcTemplate, propertyReader);
-        studentDao = new StudentDaoImpl(jdbcTemplate, propertyReader, groupDao);
-        dbInit.initialization();
+        dbInit.initialization();;
     }
 
     @Test
@@ -128,7 +132,26 @@ class StudentDaoImplTest {
         studentDao.addStudentToGroup(1, 1);
         assertTrue(studentDao.getById(1).getGroup().equals(group));
     }
-    
+
+    @Test
+    void getStudentsByGroupIdShouldReturnCorrectData(){
+        Group group1 = new Group(1, "Java", false);
+        Group group2 = new Group(2, "C++", false);
+        groupDao.create(group1);
+        groupDao.create(group2);
+        Student student1 = new Student(1, "one", "one", group1, false);
+        Student student2 = new Student(2, "two", "two", group1, false);
+        Student student3 = new Student(3, "three", "three", group2, false);
+        studentDao.create(student1);
+        studentDao.create(student2);
+        studentDao.create(student3);
+        List<Student> expected = new ArrayList<>();
+        expected.add(student1);
+        expected.add(student2);
+        List<Student> actual = studentDao.getStudentsByGroupId(1);
+        assertEquals(expected, actual);
+    }
+
     @Test
     void whenGetByIdGetNonexistentDataShouldThrowsDaoException() {
         DaoException thrown = assertThrows(DaoException.class, () -> {
@@ -200,10 +223,5 @@ class StudentDaoImplTest {
             studentDao.removeStudentFromGroup(1);
         });
         assertTrue(thrown.getMessage().contains("Student can not be removed from Group id = 1. Student does not exist"));
-    }
-    
-    @AfterEach
-    void closeConext() {
-        context.close();
     }
 }

@@ -1,13 +1,17 @@
 package ua.com.foxminded.university.dao;
 
+import org.apache.ibatis.jdbc.ScriptRunner;
+import org.springframework.stereotype.Component;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
-import java.sql.*;
-import org.apache.ibatis.jdbc.ScriptRunner;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
-
+@Component
 public class DatabaseInitialization {
     
     public void initialization() {

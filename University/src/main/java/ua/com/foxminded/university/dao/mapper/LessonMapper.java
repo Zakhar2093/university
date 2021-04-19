@@ -1,24 +1,24 @@
 package ua.com.foxminded.university.dao.mapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
 import ua.com.foxminded.university.dao.interfaces.RoomDao;
 import ua.com.foxminded.university.dao.interfaces.TeacherDao;
-import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.model.Lesson;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 @Component
 public class LessonMapper implements RowMapper<Lesson>{
-    
+
     private GroupDao groupDao;
     private TeacherDao teacherDao;
     private RoomDao roomDao;
-    
+
+    @Autowired
     public LessonMapper(GroupDao groupDao, TeacherDao teacherDao, RoomDao roomDao) {
         super();
         this.groupDao = groupDao;
@@ -40,8 +40,9 @@ public class LessonMapper implements RowMapper<Lesson>{
         if (rs.getInt("room_id") != 0) {
             lesson.setRoom(roomDao.getRoomByLesson(rs.getInt("lesson_id")));
         }
-        
-        lesson.setDate(rs.getTimestamp("lesson_date").toLocalDateTime());
+        if (rs.getTimestamp("lesson_date") != null) {
+            lesson.setDate(rs.getTimestamp("lesson_date").toLocalDateTime());
+        }
         lesson.setLessonInactive(rs.getBoolean("lesson_inactive"));
         return lesson;
     }

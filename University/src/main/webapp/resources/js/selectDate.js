@@ -1,0 +1,14 @@
+
+    let simplepicker = new SimplePicker({
+      zIndex: 10
+    });
+
+    const $button = document.getElementById("datePicker")
+    $button.addEventListener('click', (e) => {
+      simplepicker.open();
+    });
+
+    simplepicker.on('submit', (date, readableDate) => {
+      $button.value = readableDate;
+    });
+

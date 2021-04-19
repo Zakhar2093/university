@@ -1,20 +1,20 @@
 package ua.com.foxminded.university.dao.interfaces;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import ua.com.foxminded.university.model.Lesson;
 import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.model.Teacher;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 public interface LessonDao extends GenericDao<Lesson, Integer> {
-    List<Lesson> getLessonByTeacherForDay(Teacher teacher, LocalDateTime date);
+    List<Lesson> getLessonByTeacherIdForDay(int teacherId, LocalDateTime date);
 
-    List<Lesson> getLessonByTeacherForMonth(Teacher teacher, LocalDateTime date);
+    List<Lesson> getLessonByTeacherIdForMonth(int teacherId, LocalDateTime date);
 
-    List<Lesson> getLessonByStudentForDay(Student student, LocalDateTime date);
+    List<Lesson> getLessonByStudentIdForDay(int studentId, LocalDateTime date);
 
-    List<Lesson> getLessonByStudentForMonth(Student student, LocalDateTime date);
+    List<Lesson> getLessonByStudentIdForMonth(int studentId, LocalDateTime date);
     
     void addGroupToLesson(Integer groupId, Integer lessonId);
     
@@ -27,5 +27,10 @@ public interface LessonDao extends GenericDao<Lesson, Integer> {
     void addTeacherToLesson(Integer teacherId, Integer lessonId);
     
     void removeTeacherFromLesson(Integer lessonId);
-    
+
+    List<Lesson> getLessonsByGroupId(Integer groupId);
+
+    List<Lesson> getLessonsByRoomId(Integer groupId);
+
+    List<Lesson> getLessonsByTeacherId(Integer groupId);
 }

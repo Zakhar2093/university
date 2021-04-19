@@ -1,9 +1,5 @@
 package ua.com.foxminded.university.service;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -12,6 +8,11 @@ import ua.com.foxminded.university.dao.interfaces.RoomDao;
 import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Room;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.*;
 
 class RoomServiceTest {
     
@@ -36,6 +37,12 @@ class RoomServiceTest {
     @Test
     void getAllShouldInvokeOnlyOnce() {
         roomService.getAll();
+        verify(roomDao, only()).getAll();
+    }
+
+    @Test
+    void getAllActivatedShouldInvokeOnlyOnce() {
+        roomService.getAllActivated();
         verify(roomDao, only()).getAll();
     }
     
@@ -66,7 +73,7 @@ class RoomServiceTest {
     
     @Test
     void getRoomByLessonShouldInvokeOnlyOnce() {
-        roomService.getRoomByLesson(1);;
+        roomService.getRoomByLesson(1);
         verify(roomDao, only()).getRoomByLesson(anyInt());
     }
     
