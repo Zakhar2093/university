@@ -60,7 +60,7 @@ public class StudentController {
         return "redirect:/students";
     }
 
-    @GetMapping("/byGroup/{id}")
+    @GetMapping("/getStudentsByGroup/{id}")
     public String showStudentsInGroup(Model model, @PathVariable("id") int id) {
         model.addAttribute("group", groupService.getById(id));
         model.addAttribute("students", studentService.getStudentsByGroupId(id));

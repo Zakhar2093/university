@@ -101,7 +101,7 @@ public class LessonController {
         return "lessons/index";
     }
 
-    @GetMapping("/byRoom/{id}")
+    @GetMapping("/getStudentsByRoom/{id}")
     public String showLessonsByRoom(Model model, @PathVariable("id") int id) {
         model.addAttribute("room", roomService.getById(id));
         model.addAttribute("lessons", lessonService.getLessonsByRoomId(id));
@@ -110,7 +110,7 @@ public class LessonController {
         return "lessons/index";
     }
 
-    @GetMapping("/byTeacher/{id}")
+    @GetMapping("/getStudentsByTeacher/{id}")
     public String showLessonsByTeacher(Model model, @PathVariable("id") int id) {
         model.addAttribute("teacher", teacherService.getById(id));
         model.addAttribute("lessons", lessonService.getLessonsByTeacherId(id));
@@ -119,7 +119,7 @@ public class LessonController {
         return "lessons/index";
     }
 
-    @GetMapping("/byGroup/{id}")
+    @GetMapping("/getStudentsByGroup/{id}")
     public String showLessonsByGroup(Model model, @PathVariable("id") int id) {
         model.addAttribute("group", groupService.getById(id));
         model.addAttribute("lessons", lessonService.getLessonsByGroupId(id));
