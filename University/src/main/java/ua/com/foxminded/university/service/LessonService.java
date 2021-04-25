@@ -103,7 +103,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
         }
     }
 
-    @Transactional
+//    @Transactional
     public void deactivate(Integer lessonId) {
         try {
             lessonDao.removeGroupFromLesson(lessonId);
