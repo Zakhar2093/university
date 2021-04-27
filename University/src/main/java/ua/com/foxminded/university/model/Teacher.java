@@ -1,12 +1,22 @@
 package ua.com.foxminded.university.model;
 
+import javax.persistence.*;
 import java.util.List;
 
+@Entity
+@Table(name="teachers", schema = "university")
 public class Teacher {
+    @Id
+    @Column(name="teacher_id")
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private int teacherId;
+    @Column(name="first_name")
     private String firstName;
+    @Column(name="last_name")
     private String lastName;
+    @Transient
     private List<Lesson> lessons;
+    @Column(name="teacher_inactive")
     private boolean teacherInactive;
     
     public Teacher() {
