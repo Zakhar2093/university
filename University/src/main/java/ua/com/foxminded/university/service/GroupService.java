@@ -65,7 +65,7 @@ public class GroupService implements GenericService<Group, Integer>{
         }
     }
 
-    @Transactional
+
     public void deactivate(Integer groupId) {
         try {
             groupDao.removeGroupFromAllLessons(groupId);
