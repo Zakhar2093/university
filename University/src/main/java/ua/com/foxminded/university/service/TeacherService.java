@@ -64,7 +64,7 @@ public class TeacherService implements GenericService<Teacher, Integer>{
         }
     }
 
-//    @Transactional
+    @Transactional
     public void deactivate(Integer teacherId) {
         try {
             teacherDao.removeTeacherFromAllLessons(teacherId);

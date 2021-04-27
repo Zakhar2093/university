@@ -65,7 +65,7 @@ public class RoomService implements GenericService<Room, Integer>{
         }
     }
 
-//    @Transactional
+    @Transactional
     public void deactivate(Integer roomId) {
         try {
             roomDao.removeRoomFromAllLessons(roomId);

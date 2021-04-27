@@ -4,26 +4,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ua.com.foxminded.university.dao.implementation.hibernate.TeacherDaoHibernate;
 import ua.com.foxminded.university.model.Teacher;
+import ua.com.foxminded.university.service.GroupService;
+import ua.com.foxminded.university.service.LessonService;
+import ua.com.foxminded.university.service.RoomService;
 import ua.com.foxminded.university.service.TeacherService;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/teachers")
 public class TeacherController {
 
     private TeacherService teacherService;
-    private TeacherDaoHibernate teacherDaoHibernate;
 
     @Autowired
-    public TeacherController(TeacherService teacherService, TeacherDaoHibernate teacherDaoHibernate) {
+    public TeacherController(TeacherService teacherService) {
         this.teacherService = teacherService;
-        this.teacherDaoHibernate = teacherDaoHibernate;
     }
 
     @GetMapping
-    public String getAll(@ModelAttribute("teacher") Teacher teacher, Model model) {
-        System.out.println(teacherDaoHibernate.findById(1));
+    public String getAll(@ModelAttribute("teacher") Teacher teacher, Model model) { ;
         model.addAttribute("teachers", teacherService.getAllActivated());
         return "teachers/index";
     }

@@ -95,7 +95,7 @@ public class StudentService implements GenericService<Student, Integer>{
         }
     }
     
-//    @Transactional
+    @Transactional
     public void deactivate(Integer studentId) {
         try {
             studentDao.removeStudentFromGroup(studentId);
