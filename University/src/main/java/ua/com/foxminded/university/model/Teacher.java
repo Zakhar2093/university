@@ -14,7 +14,7 @@ public class Teacher {
     private String firstName;
     @Column(name="last_name")
     private String lastName;
-    @Transient
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "teacher", fetch = FetchType.EAGER)
     private List<Lesson> lessons;
     @Column(name="teacher_inactive")
     private boolean teacherInactive;

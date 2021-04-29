@@ -1,14 +1,34 @@
 package ua.com.foxminded.university.model;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name="lessons", schema = "university")
 public class Lesson {
+
+    @Id
+    @Column(name="lesson_id")
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private int lessonId;
+
+    @Column(name = "lesson_name")
     private String lessonName;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "teacher_id")
     private Teacher teacher;
+
+    @Transient
     private Group group;
+
+    @Transient
     private Room room;
+
+    @Column(name = "lesson_date")
     private LocalDateTime date;
+
+    @Column(name = "lesson_inactive")
     private boolean lessonInactive;
     
     public Lesson() {
