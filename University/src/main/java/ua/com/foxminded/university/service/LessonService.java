@@ -1,6 +1,7 @@
 package ua.com.foxminded.university.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
@@ -28,7 +29,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
     private RoomDao roomDao;
 
     @Autowired
-    public LessonService(LessonDao lessonDao, GroupDao groupDao, TeacherDao teacherDao, RoomDao roomDao) {
+    public LessonService(LessonDao lessonDao, GroupDao groupDao, @Qualifier("teacherDaoHibernate") TeacherDao teacherDao, RoomDao roomDao) {
         this.lessonDao = lessonDao;
         this.groupDao = groupDao;
         this.teacherDao = teacherDao;

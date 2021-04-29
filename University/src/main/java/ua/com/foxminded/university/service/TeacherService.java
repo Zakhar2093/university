@@ -1,6 +1,7 @@
 package ua.com.foxminded.university.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.university.dao.interfaces.TeacherDao;
@@ -17,7 +18,7 @@ public class TeacherService implements GenericService<Teacher, Integer>{
     private TeacherDao teacherDao;
 
     @Autowired
-    public TeacherService(TeacherDao teacherDao) {
+    public TeacherService(@Qualifier("teacherDaoHibernate") TeacherDao teacherDao) {
         super();
         this.teacherDao = teacherDao;
     }

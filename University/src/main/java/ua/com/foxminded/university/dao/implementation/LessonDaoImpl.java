@@ -4,6 +4,7 @@ package ua.com.foxminded.university.dao.implementation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -32,7 +33,7 @@ public class LessonDaoImpl implements LessonDao{
 
     @Autowired 
     public LessonDaoImpl(JdbcTemplate jdbcTemplate, Environment env, GroupDao groupDao,
-            TeacherDao teacherDao, RoomDao roomDao, StudentDao studentDao) {
+                         @Qualifier("teacherDaoHibernate") TeacherDao teacherDao, RoomDao roomDao, StudentDao studentDao) {
         super();
         this.jdbcTemplate = jdbcTemplate;
         this.env = env;
