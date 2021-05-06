@@ -49,8 +49,8 @@ public class Lesson {
 
     @Override
     public String toString() {
-        return "Lesson [lessonId=" + lessonId + ", lessonName=" + lessonName + ", teacher=" + teacher + ", group="
-                + group + ", room=" + room + ", date=" + date + ", lessonInactive=" + lessonInactive + "]";
+        return "Lesson [lessonId=" + lessonId + ", lessonName=" + lessonName + ", teacherId=" + teacher.getTeacherId() + ", groupId="
+                + group.getGroupId() + ", roomId=" + room.getRoomId() + ", date=" + date + ", lessonInactive=" + lessonInactive + "]";
     }
 
     @Override
@@ -84,7 +84,7 @@ public class Lesson {
         if (group == null) {
             if (other.group != null)
                 return false;
-        } else if (!group.equals(other.group))
+        } else if (group.getGroupId() == other.group.getGroupId())
             return false;
         if (lessonId != other.lessonId)
             return false;
@@ -98,13 +98,13 @@ public class Lesson {
         if (room == null) {
             if (other.room != null)
                 return false;
-        } else if (!room.equals(other.room))
-            return false;
+        } else if (room.getRoomId() == other.room.getRoomId())
+            return true;
         if (teacher == null) {
             if (other.teacher != null)
                 return false;
-        } else if (!teacher.equals(other.teacher))
-            return false;
+        } else if (teacher.getTeacherId() == other.teacher.getTeacherId())
+            return true;
         return true;
     }
 
