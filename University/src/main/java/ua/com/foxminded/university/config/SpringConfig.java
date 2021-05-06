@@ -24,6 +24,8 @@ public class SpringConfig  {
 
     @Value("${dataSource.JNDI_JDBC}")
     private String JNDI_JDBC;
+    @Value("${dataSource.dialect}")
+    private String dialect;
 
     @Bean
     public DataSource dataSource() throws NamingException {
@@ -52,10 +54,11 @@ public class SpringConfig  {
         return transactionManager;
     }
 
-    private final Properties hibernateProperties() {
+    @Bean
+    public Properties hibernateProperties() {
         Properties hibernateProperties = new Properties();
         hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "update");
-        hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL9Dialect");
+        hibernateProperties.setProperty("hibernate.dialect", dialect);
         return hibernateProperties;
     }
 }
