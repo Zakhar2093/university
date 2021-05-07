@@ -33,10 +33,8 @@ public class TeacherDaoHibernate implements TeacherDao{
     public void create(Teacher teacher) {
         logger.debug("Creating teacher with name {} {}", teacher.getFirstName(), teacher.getLastName());
         try (Session session = sessionFactory.openSession()){
-            Transaction tx = session.beginTransaction();
             session.save(teacher);
-            tx.commit();
-        } catch (ConstraintViolationException e) {
+        } catch (PersistenceException e) {
             logger.error("Creating was not successful. Teacher can not be created. Some field is null", e);
             throw new DaoException("Teacher can not be created. Some field is null", e);
         }
@@ -53,8 +51,9 @@ public class TeacherDaoHibernate implements TeacherDao{
     public Teacher getById(Integer teacherId) {
         logger.debug("Getting teacher by id = {}", teacherId);
         Session session = sessionFactory.openSession();
-        Teacher teacher = Optional.of(session.get(Teacher.class, teacherId))
-                .orElseThrow(() -> new DaoException(String.format("Teacher with such id %d does not exist", teacherId)));
+        Teacher teacher = Optional.ofNullable(session.get(Teacher.class, teacherId))
+                .orElseThrow(() -> new DaoException(String.format("Teacher with such id %d does not exist", teacherId)))
+                ;
         return teacher;
     }
 
@@ -62,7 +61,9 @@ public class TeacherDaoHibernate implements TeacherDao{
         logger.debug("Updating teacher with name {} {}", teacher.getFirstName(), teacher.getLastName());
         try (Session session = sessionFactory.openSession()){
             Transaction tx = session.beginTransaction();
+
             session.merge(teacher);
+
             tx.commit();
         } catch (PersistenceException e) {
             logger.error("Updating was not successful. Teacher can not be updated. Some new field is null", e);
@@ -93,6 +94,7 @@ public class TeacherDaoHibernate implements TeacherDao{
 
         Query query = session.createQuery("UPDATE Teacher SET teacherInactive = false WHERE id =: teacherId");
         query.setParameter("teacherId", teacherId);
+        query.executeUpdate();
 
         tx.commit();
         session.close();
@@ -122,9 +124,14 @@ public class TeacherDaoHibernate implements TeacherDao{
 
         Query query = session.createQuery("SELECT L.teacher FROM Lesson L WHERE L.lessonId =: lessonId");
         query.setParameter("lessonId", lessonId);
-        Optional<Teacher> first = query.getResultList().stream().findFirst();
-        Teacher teacher = Optional.of(first.get())
-                .orElseThrow(() -> new DaoException(String.format("Such lesson (id = %d) does not have any teacher", lessonId)));
+        Optional<Teacher> optionalTeacher = query.getResultList().stream().findFirst();
+
+        Teacher teacher;
+        if (optionalTeacher.isPresent()){
+            teacher = optionalTeacher.get();
+        } else {
+            throw new DaoException(String.format("Such lesson (id = %d) does not have any teacher", lessonId));
+        }
 
         tx.commit();
         session.close();
