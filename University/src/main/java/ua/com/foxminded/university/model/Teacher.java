@@ -2,7 +2,6 @@ package ua.com.foxminded.university.model;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name="teachers", schema = "university")
@@ -18,7 +17,7 @@ public class Teacher {
     @Column(name="last_name")
     private String lastName;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "teacher", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "teacher", fetch = FetchType.LAZY)
     private List<Lesson> lessons;
 
     @Column(name="teacher_inactive")
@@ -118,8 +117,9 @@ public class Teacher {
         if (lessons == null) {
             if (other.lessons != null)
                 return false;
-        } else if (!lessons.equals(other.lessons))
-            return false;
+        }
+//        else if (!lessons.equals(other.lessons))
+//            return false;
         if (teacherId != other.teacherId)
             return false;
         if (teacherInactive != other.teacherInactive)
@@ -137,5 +137,4 @@ public class Teacher {
                 ", teacherInactive=" + teacherInactive +
                 '}';
     }
-
 }

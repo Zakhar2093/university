@@ -15,7 +15,7 @@ public class Lesson {
     @Column(name = "lesson_name")
     private String lessonName;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
@@ -49,8 +49,18 @@ public class Lesson {
 
     @Override
     public String toString() {
-        return "Lesson [lessonId=" + lessonId + ", lessonName=" + lessonName + ", teacherId=" + teacher.getTeacherId() + ", groupId="
-                + group.getGroupId() + ", roomId=" + room.getRoomId() + ", date=" + date + ", lessonInactive=" + lessonInactive + "]";
+        String teacherId = teacher == null ? "Without teacher" : String.valueOf(teacher.getTeacherId());
+        String groupId = group == null ? "Without group" : String.valueOf(group.getGroupId());
+        String roomId = room == null ? "Without room" : String.valueOf(room.getRoomId());
+        return "Lesson{" +
+                "lessonId=" + lessonId +
+                ", lessonName='" + lessonName + '\'' +
+                ", teacher=" + teacherId +
+                ", group=" + groupId +
+                ", room=" + roomId +
+                ", date=" + date +
+                ", lessonInactive=" + lessonInactive +
+                '}';
     }
 
     @Override
@@ -84,8 +94,10 @@ public class Lesson {
         if (group == null) {
             if (other.group != null)
                 return false;
-        } else if (group.getGroupId() == other.group.getGroupId())
-            return false;
+        } else if (group != null && other.group != null){
+            if (group.getGroupId() != other.group.getGroupId())
+                return false;
+        }
         if (lessonId != other.lessonId)
             return false;
         if (lessonInactive != other.lessonInactive)
@@ -98,13 +110,17 @@ public class Lesson {
         if (room == null) {
             if (other.room != null)
                 return false;
-        } else if (room.getRoomId() == other.room.getRoomId())
-            return true;
+        } else if (room != null && other.room != null){
+            if (room.getRoomId() != other.room.getRoomId())
+                return false;
+        }
         if (teacher == null) {
             if (other.teacher != null)
                 return false;
-        } else if (teacher.getTeacherId() == other.teacher.getTeacherId())
-            return true;
+        } else if (teacher != null && other.teacher != null){
+            if (teacher.getTeacherId() != other.teacher.getTeacherId())
+                return false;
+        }
         return true;
     }
 
