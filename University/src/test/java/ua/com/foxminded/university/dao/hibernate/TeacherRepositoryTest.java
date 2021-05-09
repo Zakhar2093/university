@@ -26,14 +26,12 @@ import static org.junit.jupiter.api.Assertions.*;
 @ContextConfiguration(classes = SpringConfigTest.class)
 @WebAppConfiguration
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class TeacherDaoHibernateTest {
+class TeacherRepositoryTest {
 
     @Autowired
     private LessonDao lessonDao;
     @Autowired
-    @Qualifier("teacherDaoHibernate")
     private TeacherDao teacherDao;
-
 
     @Test
     void getByIdAndCreateShouldInsertAndGetCorrectData() {
@@ -144,25 +142,6 @@ class TeacherDaoHibernateTest {
         });
         assertTrue(thrown.getMessage().contains("Such lesson (id = 1) does not have any teacher"));
     }
-// todo it dont catch exception
-//    @Test
-//    void whenCreateTeacherWithNullShouldThrowsDaoException() {
-//        DaoException thrown = assertThrows(DaoException.class, () -> {
-//            teacherDao.create(new Teacher());
-//        });
-//        assertTrue(thrown.getMessage().contains("Teacher can not be created. Some field is null"));
-//    }
-//
-//    @Test
-//    void whenUpdateTeacherWithNullShouldThrowsDaoException() {
-//        DaoException thrown = assertThrows(DaoException.class, () -> {
-//            Teacher groupBeforeUpdating = new Teacher(1, "one", "one", false);
-//            Teacher groupAfterUpdating = new Teacher(1, null, null, false);
-//            teacherDao.create(groupBeforeUpdating);
-//            teacherDao.update(groupAfterUpdating);
-//        });
-//        assertTrue(thrown.getMessage().contains("Teacher can not be updated. Some new field is null"));
-//    }
 
     private Lesson createLesson() {
         Teacher teacher = new Teacher(1, "one", "one", false);

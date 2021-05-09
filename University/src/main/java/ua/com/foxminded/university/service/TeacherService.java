@@ -18,7 +18,7 @@ public class TeacherService implements GenericService<Teacher, Integer>{
     private TeacherDao teacherDao;
 
     @Autowired
-    public TeacherService(@Qualifier("teacherDaoHibernate") TeacherDao teacherDao) {
+    public TeacherService(TeacherDao teacherDao) {
         super();
         this.teacherDao = teacherDao;
     }

@@ -1,9 +1,8 @@
-package ua.com.foxminded.university.dao.implementation.hibernate;
+package ua.com.foxminded.university.dao.implementation;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +19,13 @@ import java.util.Optional;
 
 @Component
 @Repository
-public class TeacherDaoHibernate implements TeacherDao{
+public class TeacherRepository implements TeacherDao{
 
-    private static final Logger logger = LoggerFactory.getLogger(TeacherDaoHibernate.class);
+    private static final Logger logger = LoggerFactory.getLogger(TeacherRepository.class);
     private SessionFactory sessionFactory;
 
     @Autowired
-    public TeacherDaoHibernate(SessionFactory sessionFactory) {
+    public TeacherRepository(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 

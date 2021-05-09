@@ -20,7 +20,7 @@ public class LessonMapper implements RowMapper<Lesson>{
     private RoomDao roomDao;
 
     @Autowired
-    public LessonMapper(GroupDao groupDao, @Qualifier("teacherDaoHibernate") TeacherDao teacherDao, RoomDao roomDao) {
+    public LessonMapper(GroupDao groupDao, TeacherDao teacherDao, RoomDao roomDao) {
         super();
         this.groupDao = groupDao;
         this.teacherDao = teacherDao;

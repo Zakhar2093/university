@@ -32,8 +32,7 @@ public class LessonDaoImpl implements LessonDao{
     private StudentDao studentDao;
 
     @Autowired 
-    public LessonDaoImpl(JdbcTemplate jdbcTemplate, Environment env, GroupDao groupDao,
-                         @Qualifier("teacherDaoHibernate") TeacherDao teacherDao, RoomDao roomDao, StudentDao studentDao) {
+    public LessonDaoImpl(JdbcTemplate jdbcTemplate, Environment env, GroupDao groupDao,  TeacherDao teacherDao, RoomDao roomDao, StudentDao studentDao) {
         super();
         this.jdbcTemplate = jdbcTemplate;
         this.env = env;

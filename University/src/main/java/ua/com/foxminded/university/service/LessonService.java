@@ -29,7 +29,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
     private RoomDao roomDao;
 
     @Autowired
-    public LessonService(LessonDao lessonDao, GroupDao groupDao, @Qualifier("teacherDaoHibernate") TeacherDao teacherDao, RoomDao roomDao) {
+    public LessonService(LessonDao lessonDao, GroupDao groupDao, TeacherDao teacherDao, RoomDao roomDao) {
         this.lessonDao = lessonDao;
         this.groupDao = groupDao;
         this.teacherDao = teacherDao;
