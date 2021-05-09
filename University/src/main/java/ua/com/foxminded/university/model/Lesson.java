@@ -22,7 +22,8 @@ public class Lesson {
     @Transient
     private Group group;
 
-    @Transient
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_id")
     private Room room;
 
     @Column(name = "lesson_date")

@@ -118,8 +118,6 @@ public class Teacher {
             if (other.lessons != null)
                 return false;
         }
-//        else if (!lessons.equals(other.lessons))
-//            return false;
         if (teacherId != other.teacherId)
             return false;
         if (teacherInactive != other.teacherInactive)
