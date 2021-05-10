@@ -77,8 +77,7 @@ public class StudentRepository implements StudentDao{
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
 
-        removeStudentFromGroup(studentId);
-        Query query = session.createQuery("UPDATE Student SET studentInactive = true WHERE id =: studentId");
+        Query query = session.createQuery("UPDATE Student S SET S.studentInactive = true, S.group = null WHERE S.studentId =: studentId");
         query.setParameter("studentId", studentId);
         query.executeUpdate();
 
@@ -100,7 +99,7 @@ public class StudentRepository implements StudentDao{
         session.close();
         logger.debug("Activating was successful", studentId);
     }
-
+// todo delete
     public void removeStudentFromGroup(Integer studentId) {
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();

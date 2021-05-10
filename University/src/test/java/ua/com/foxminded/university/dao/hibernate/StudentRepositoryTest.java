@@ -3,7 +3,6 @@ package ua.com.foxminded.university.dao.hibernate;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -15,10 +14,8 @@ import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -83,9 +80,10 @@ class StudentRepositoryTest {
 
     @Test
     void deactivateShouldSetTrueInStudentInactive() {
-        createGroupWithStudent();
-        studentDao.deactivate(1);
+        Student student = createStudentWithGroup();
+        studentDao.deactivate(student.getStudentId());
         assertTrue(studentDao.getById(1).isStudentInactive());
+        assertTrue(groupDao.getById(1).getStudents().isEmpty());
     }
 
     @Test
@@ -134,11 +132,11 @@ class StudentRepositoryTest {
         assertTrue(thrown.getMessage().contains("Student with such id 1 does not exist"));
     }
 
-    private Group createGroupWithStudent() {
+    private Student createStudentWithGroup() {
         Group group = new Group(1, "any", false);
         groupDao.create(group);
         Student student = new Student(1, "one", "one", group, false);
         studentDao.create(student);
-        return group;
+        return student;
     }
 }

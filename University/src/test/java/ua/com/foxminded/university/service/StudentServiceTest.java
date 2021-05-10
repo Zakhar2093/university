@@ -94,7 +94,6 @@ class StudentServiceTest {
     @Test
     void deactivateShouldInvokeOnlyOnce() {
         studentService.deactivate(1);
-        verify(studentDao, times(1)).removeStudentFromGroup(anyInt());
         verify(studentDao, times(1)).deactivate(anyInt());
     }
     
@@ -103,13 +102,7 @@ class StudentServiceTest {
         studentService.activate(1);
         verify(studentDao, only()).activate(anyInt());
     }
-    
-    @Test
-    void addStudentToGroupShouldInvokeOnlyOnce() {
-        studentService.addStudentToGroup(1, 1);
-        verify(studentDao, only()).addStudentToGroup(anyInt(), anyInt());
-    }
-    
+
     @Test
     void removeStudentFromGroupShouldInvokeOnlyOnce() {
         studentService.removeStudentFromGroup(1);
@@ -177,15 +170,7 @@ class StudentServiceTest {
             studentService.activate(1);
         });
     }
-    
-    @Test
-    void whenAddStudentToGroupCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException(EMPTY_STRING)).when(studentDao).addStudentToGroup(anyInt(), anyInt());
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            studentService.addStudentToGroup(1, 1);
-        });
-    }
-    
+
     @Test
     void whenRemoveStudentFromGroupCatchDaoExceptionShouldThrowServiceException() {
         doThrow(new DaoException(EMPTY_STRING)).when(studentDao).removeStudentFromGroup(anyInt());
