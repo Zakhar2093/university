@@ -104,12 +104,8 @@ public class LessonService implements GenericService<Lesson, Integer>{
         }
     }
 
-
     public void deactivate(Integer lessonId) {
         try {
-            lessonDao.removeGroupFromLesson(lessonId);
-            lessonDao.removeRoomFromLesson(lessonId);
-            lessonDao.removeTeacherFromLesson(lessonId);
             lessonDao.deactivate(lessonId);
         } catch (DaoException e) {
             throw new ServiceException(e);

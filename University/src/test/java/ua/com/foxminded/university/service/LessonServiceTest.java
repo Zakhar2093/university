@@ -114,9 +114,6 @@ class LessonServiceTest {
     @Test
     void deactivateShouldInvokeOnlyOnce() {
         lessonService.deactivate(1);
-        verify(lessonDao, times(1)).removeGroupFromLesson(anyInt());
-        verify(lessonDao, times(1)).removeRoomFromLesson(anyInt());
-        verify(lessonDao, times(1)).removeTeacherFromLesson(anyInt());
         verify(lessonDao, times(1)).deactivate(anyInt());
     }
     
