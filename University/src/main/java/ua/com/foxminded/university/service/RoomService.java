@@ -68,7 +68,6 @@ public class RoomService implements GenericService<Room, Integer>{
 
     public void deactivate(Integer roomId) {
         try {
-            roomDao.removeRoomFromAllLessons(roomId);
             roomDao.deactivate(roomId);
         } catch (DaoException e) {
             throw new ServiceException(e);

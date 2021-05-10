@@ -60,8 +60,7 @@ class RoomServiceTest {
     
     @Test
     void deactivateShouldInvokeOnlyOnce() {
-        roomService.deactivate(1);
-        verify(roomDao, times(1)).removeRoomFromAllLessons(anyInt());
+        roomService.deactivate(1);;
         verify(roomDao, times(1)).deactivate(anyInt());
     }
     

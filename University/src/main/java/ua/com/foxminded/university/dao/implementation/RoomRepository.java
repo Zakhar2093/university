@@ -78,9 +78,15 @@ public class RoomRepository implements RoomDao {
         Transaction tx = session.beginTransaction();
 
         removeRoomFromAllLessons(roomId);
-        Query query = session.createQuery("UPDATE Room SET roomInactive = true WHERE id =: roomId");
-        query.setParameter("roomId", roomId);
-        query.executeUpdate();
+        Query deactivateRoom = session.createQuery("UPDATE Room SET roomInactive = true WHERE id =: roomId");
+        deactivateRoom.setParameter("roomId", roomId);
+        deactivateRoom.executeUpdate();
+
+        Query deleteRoomFromLesson = session.createQuery("UPDATE Lesson L SET L.room = null WHERE L.room =: roomId");
+        Room roomG = new Room();
+        roomG.setRoomId(roomId);
+        deleteRoomFromLesson.setParameter("roomId", roomG);
+        deleteRoomFromLesson.executeUpdate();
 
         tx.commit();
         session.close();
@@ -101,6 +107,7 @@ public class RoomRepository implements RoomDao {
         logger.debug("Activating was successful", roomId);
     }
 
+    // todo delete
     public void removeRoomFromAllLessons(Integer roomId) {
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
