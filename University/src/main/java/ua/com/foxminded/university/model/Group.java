@@ -1,12 +1,26 @@
 package ua.com.foxminded.university.model;
 
+import javax.persistence.*;
 import java.util.List;
 
+@Entity
+@Table(name="groups", schema = "university")
 public class Group {
+    @Id
+    @Column(name="group_id")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int groupId;
+
+    @Column(name="group_name")
     private String groupName;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "group", fetch = FetchType.LAZY)
     private List<Student> students;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "group", fetch = FetchType.LAZY)
     private List<Lesson> lessons;
+
+    @Column(name="group_inactive")
     private boolean groupInactive;
 
     public Group() {
@@ -101,13 +115,11 @@ public class Group {
         if (lessons == null) {
             if (other.lessons != null)
                 return false;
-        } else if (!lessons.equals(other.lessons))
-            return false;
+        }
         if (students == null) {
             if (other.students != null)
                 return false;
-        } else if (!students.equals(other.students))
-            return false;
+        }
         return true;
     }
 

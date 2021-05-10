@@ -1,10 +1,26 @@
 package ua.com.foxminded.university.model;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name="students", schema = "university")
 public class Student {
+    @Id
+    @Column(name="student_id")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int studentId;
+
+    @Column(name="first_name")
     private String firstName;
+
+    @Column(name="last_name")
     private String lastName;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_id")
     private Group group;
+
+    @Column(name="student_inactive")
     private boolean studentInactive;
 
     public Student() {
@@ -88,8 +104,10 @@ public class Student {
         if (group == null) {
             if (other.group != null)
                 return false;
-        } else if (!group.equals(other.group))
-            return false;
+        } else if (group != null && other.group != null){
+            if (group.getGroupId() != other.group.getGroupId())
+                return false;
+        }
         if (studentInactive != other.studentInactive)
             return false;
         if (lastName == null) {
@@ -104,7 +122,13 @@ public class Student {
 
     @Override
     public String toString() {
-        return "Student [studentId=" + studentId + ", firstName=" + firstName + ", lastName=" + lastName + ", group="
-                + group + ", studentInactive=" + studentInactive + "]";
+        String groupId = group == null ? "Without group" : String.valueOf(group.getGroupId());
+        return "Student{" +
+                "studentId=" + studentId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", group=" + groupId +
+                ", studentInactive=" + studentInactive +
+                '}';
     }
 }

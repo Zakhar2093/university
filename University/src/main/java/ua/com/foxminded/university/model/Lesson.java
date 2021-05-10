@@ -9,7 +9,7 @@ public class Lesson {
 
     @Id
     @Column(name="lesson_id")
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int lessonId;
 
     @Column(name = "lesson_name")
@@ -19,7 +19,8 @@ public class Lesson {
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
-    @Transient
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_id")
     private Group group;
 
     @ManyToOne(fetch = FetchType.LAZY)
