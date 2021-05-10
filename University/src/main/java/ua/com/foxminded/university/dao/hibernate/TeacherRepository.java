@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.dao.implementation;
+package ua.com.foxminded.university.dao.hibernate;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

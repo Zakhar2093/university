@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.dao.implementation;
+package ua.com.foxminded.university.dao.hibernate;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ua.com.foxminded.university.dao.interfaces.StudentDao;
 import ua.com.foxminded.university.exception.DaoException;
-import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
 
 import javax.persistence.PersistenceException;

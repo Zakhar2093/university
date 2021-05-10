@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.dao.implementation;
+package ua.com.foxminded.university.dao.hibernate;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -12,9 +12,7 @@ import ua.com.foxminded.university.dao.interfaces.LessonDao;
 import ua.com.foxminded.university.dao.interfaces.StudentDao;
 import ua.com.foxminded.university.dao.interfaces.TeacherDao;
 import ua.com.foxminded.university.exception.DaoException;
-import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lesson;
-import ua.com.foxminded.university.model.Teacher;
 
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
