@@ -61,7 +61,6 @@ class TeacherServiceTest {
     @Test
     void deactivateShouldInvokeOnlyOnce() {
         teacherService.deactivate(1);
-        verify(teacherDao, times(1)).removeTeacherFromAllLessons(anyInt());
         verify(teacherDao, times(1)).deactivate(anyInt());
     }
     

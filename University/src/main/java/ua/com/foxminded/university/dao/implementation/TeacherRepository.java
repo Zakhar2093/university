@@ -77,9 +77,15 @@ public class TeacherRepository implements TeacherDao{
         Transaction tx = session.beginTransaction();
 
         removeTeacherFromAllLessons(teacherId);
-        Query query = session.createQuery("UPDATE Teacher SET teacherInactive = true WHERE id =: teacherId");
-        query.setParameter("teacherId", teacherId);
-        query.executeUpdate();
+        Query deactivateTeacher = session.createQuery("UPDATE Teacher SET teacherInactive = true WHERE id =: teacherId");
+        deactivateTeacher.setParameter("teacherId", teacherId);
+        deactivateTeacher.executeUpdate();
+
+        Query deleteTeacherFromLesson = session.createQuery("UPDATE Lesson L SET L.teacher = null WHERE L.teacher =: teacherId");
+        Teacher teacherG = new Teacher();
+        teacherG.setTeacherId(teacherId);
+        deleteTeacherFromLesson.setParameter("teacherId", teacherG);
+        deleteTeacherFromLesson.executeUpdate();
 
         tx.commit();
         session.close();
@@ -100,6 +106,7 @@ public class TeacherRepository implements TeacherDao{
         logger.debug("Activating was successful", teacherId);
     }
 
+    // todo delete
     public void removeTeacherFromAllLessons(Integer teacherId) {
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();

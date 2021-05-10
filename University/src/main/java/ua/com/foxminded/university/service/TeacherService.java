@@ -68,7 +68,6 @@ public class TeacherService implements GenericService<Teacher, Integer>{
 
     public void deactivate(Integer teacherId) {
         try {
-            teacherDao.removeTeacherFromAllLessons(teacherId);
             teacherDao.deactivate(teacherId);
         } catch (DaoException e) {
             throw new ServiceException(e);
