@@ -104,58 +104,11 @@ class GroupRepositoryTest {
     }
 
     @Test
-    void removeGroupFromLessonsShouldSetNullInLessonsGroupId() {
-        Group group1 = new Group(1, "one",  false);
-        Group group2 = new Group(2, "one",  false);
-        groupDao.create(group1);
-        groupDao.create(group2);
-        Lesson lesson1 = new Lesson(1, "Math", null, group1, null, LocalDateTime.now(), false);
-        Lesson lesson2 = new Lesson(2, "Math", null, group1, null, LocalDateTime.now(), false);
-        Lesson lesson3 = new Lesson(3, "Math", null, group2, null, LocalDateTime.now(), false);
-        lessonDao.create(lesson1);
-        lessonDao.create(lesson2);
-        lessonDao.create(lesson3);
-
-        groupDao.removeGroupFromAllLessons(1);
-
-        List<Lesson> expected = new ArrayList<>();
-        expected.add(lesson3);
-        List<Lesson> actual = lessonDao.getAll()
-                .stream()
-                .filter((x) -> x.getGroup() != null)
-                .collect(Collectors.toList()
-                );
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void getGroupByLessonShouldReturnCorrectGroup() {
-        List<Student> students = new ArrayList<>();
-        Lesson lesson = createLesson();
-        List<Lesson> lessons = new ArrayList<>();
-        lessons.add(lesson);
-        Group expected = new Group(1, "one", students, lessons ,false);
-        Group actual = groupDao.getGroupByLesson(1);
-
-        assertEquals(expected, actual);
-    }
-
-    @Test
     void whenGetByIdGetNonexistentDataShouldThrowsDaoException() {
         DaoException thrown = assertThrows(DaoException.class, () -> {
             groupDao.getById(1);
         });
         assertTrue(thrown.getMessage().contains("Group with such id 1 does not exist"));
-    }
-
-    @Test
-    void whenGetGroupByLessonGetNonexistentDataShouldThrowsDaoException() {
-        createLesson();
-        groupDao.removeGroupFromAllLessons(1);
-        DaoException thrown = assertThrows(DaoException.class, () -> {
-            groupDao.getGroupByLesson(1);
-        });
-        assertTrue(thrown.getMessage().contains("Such lesson (id = 1) does not have any group"));
     }
 
     private Lesson createLesson() {

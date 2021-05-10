@@ -71,18 +71,6 @@ class GroupServiceTest {
     }
     
     @Test
-    void getGroupByLessonShouldInvokeOnlyOnce() {
-        groupService.getGroupByLesson(1);;
-        verify(groupDao, only()).getGroupByLesson(anyInt());
-    }
-    
-    @Test
-    void getGroupByStudentShouldInvokeOnlyOnce() {
-        groupService.getGroupByStudent(1);;
-        verify(groupDao, only()).getGroupByStudent(anyInt());
-    }
-    
-    @Test
     void whenCreateCatchDaoExceptionShouldThrowServiceException() {
         doThrow(new DaoException(EMPTY_STRING)).when(groupDao).create(any(Group.class));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
@@ -127,22 +115,6 @@ class GroupServiceTest {
         doThrow(new DaoException(EMPTY_STRING)).when(groupDao).activate(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             groupService.activate(1);
-        });
-    }
-    
-    @Test
-    void whenGetGroupByLessonCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException(EMPTY_STRING)).when(groupDao).getGroupByLesson(anyInt());
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            groupService.getGroupByLesson(1);;
-        });
-    }
-    
-    @Test
-    void whenGetGroupByStudentCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException(EMPTY_STRING)).when(groupDao).getGroupByStudent(anyInt());
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            groupService.getGroupByStudent(1);;
         });
     }
 }

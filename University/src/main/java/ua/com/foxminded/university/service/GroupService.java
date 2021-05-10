@@ -81,20 +81,4 @@ public class GroupService implements GenericService<Group, Integer>{
             throw new ServiceException(e);
         }
     }
-
-    public void getGroupByLesson(Integer lessonId) {
-        try {
-            groupDao.getGroupByLesson(lessonId);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public void getGroupByStudent(Integer studentId) {
-        try {
-            groupDao.getGroupByStudent(studentId);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
 }
