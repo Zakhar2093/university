@@ -16,7 +16,7 @@ import ua.com.foxminded.university.model.Student;
 import java.util.List;
 
 @Component    
-public class StudentDaoImpl implements StudentDao {
+public class StudentDaoImpl  {
 
     private static final Logger logger = LoggerFactory.getLogger(StudentDaoImpl.class);
     private final JdbcTemplate jdbcTemplate;
