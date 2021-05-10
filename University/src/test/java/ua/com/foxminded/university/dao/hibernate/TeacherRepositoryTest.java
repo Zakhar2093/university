@@ -90,57 +90,11 @@ class TeacherRepositoryTest {
     }
 
     @Test
-    void removeTeacherFromLessonsShouldSetNullInLessonsTeacherId() {
-        Teacher teacher1 = new Teacher(1, "one", "one", false);
-        Teacher teacher2 = new Teacher(2, "one", "one", false);
-        teacherDao.create(teacher1);
-        teacherDao.create(teacher2);
-        Lesson lesson1 = new Lesson(1, "Math", teacher1, null, null, LocalDateTime.now(), false);
-        Lesson lesson2 = new Lesson(2, "Math", teacher1, null, null, LocalDateTime.now(), false);
-        Lesson lesson3 = new Lesson(3, "Math", teacher2, null, null, LocalDateTime.now(), false);
-        lessonDao.create(lesson1);
-        lessonDao.create(lesson2);
-        lessonDao.create(lesson3);
-
-        teacherDao.removeTeacherFromAllLessons(1);
-
-        List<Lesson> expected = new ArrayList<>();
-        expected.add(lesson3);
-        List<Lesson> actual = lessonDao.getAll()
-                .stream()
-                .filter((x) -> x.getTeacher() != null)
-                .collect(Collectors.toList()
-                );
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void getTeacherByLessonShouldReturnCorrectTeacher() {
-        Lesson lesson = createLesson();
-        List<Lesson> lessons = new ArrayList<>();
-        lessons.add(lesson);
-        Teacher expected = new Teacher(1, "one", "one", lessons ,false);
-        Teacher actual = teacherDao.getTeacherByLesson(1);
-
-        assertEquals(expected, actual);
-    }
-
-    @Test
     void whenGetByIdGetNonexistentDataShouldThrowsDaoException() {
         DaoException thrown = assertThrows(DaoException.class, () -> {
             teacherDao.getById(1);
         });
         assertTrue(thrown.getMessage().contains("Teacher with such id 1 does not exist"));
-    }
-
-    @Test
-    void whenGetTeacherByLessonGetNonexistentDataShouldThrowsDaoException() {
-        createLesson();
-        teacherDao.removeTeacherFromAllLessons(1);
-        DaoException thrown = assertThrows(DaoException.class, () -> {
-            teacherDao.getTeacherByLesson(1);
-        });
-        assertTrue(thrown.getMessage().contains("Such lesson (id = 1) does not have any teacher"));
     }
 
     private Lesson createLesson() {

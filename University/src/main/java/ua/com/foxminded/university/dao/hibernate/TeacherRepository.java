@@ -76,7 +76,6 @@ public class TeacherRepository implements TeacherDao{
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
 
-        removeTeacherFromAllLessons(teacherId);
         Query deactivateTeacher = session.createQuery("UPDATE Teacher SET teacherInactive = true WHERE id =: teacherId");
         deactivateTeacher.setParameter("teacherId", teacherId);
         deactivateTeacher.executeUpdate();
@@ -104,43 +103,5 @@ public class TeacherRepository implements TeacherDao{
         tx.commit();
         session.close();
         logger.debug("Activating was successful", teacherId);
-    }
-
-    // todo delete
-    public void removeTeacherFromAllLessons(Integer teacherId) {
-        Session session = sessionFactory.openSession();
-        Transaction tx = session.beginTransaction();
-
-        Query query = session.createQuery("UPDATE Lesson L SET L.teacher = null WHERE L.teacher =: teacherId");
-        Teacher teacherG = new Teacher();
-        teacherG.setTeacherId(teacherId);
-        query.setParameter("teacherId", teacherG);
-        query.executeUpdate();
-
-        tx.commit();
-        session.close();
-
-        logger.debug("removed Teacher with id = {} from all Lessons", teacherId);
-    }
-
-    public Teacher getTeacherByLesson(Integer lessonId) {
-        logger.debug("Getting teacher By lesson id = {}", lessonId);
-        Session session = sessionFactory.openSession();
-        Transaction tx = session.beginTransaction();
-
-        Query query = session.createQuery("SELECT L.teacher FROM Lesson L WHERE L.lessonId =: lessonId");
-        query.setParameter("lessonId", lessonId);
-        Optional<Teacher> optionalTeacher = query.getResultList().stream().findFirst();
-
-        Teacher teacher;
-        if (optionalTeacher.isPresent()){
-            teacher = optionalTeacher.get();
-        } else {
-            throw new DaoException(String.format("Such lesson (id = %d) does not have any teacher", lessonId));
-        }
-
-        tx.commit();
-        session.close();
-        return teacher;
     }
 }

@@ -71,12 +71,6 @@ class TeacherServiceTest {
     }
     
     @Test
-    void getTeacherByLessonShouldInvokeOnlyOnce() {
-        teacherService.getTeacherByLesson(1);
-        verify(teacherDao, only()).getTeacherByLesson(anyInt());
-    }
-    
-    @Test
     void whenCreateCatchDaoExceptionShouldThrowServiceException() {
         doThrow(new DaoException(EMPTY_STRING)).when(teacherDao).create(any(Teacher.class));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
@@ -121,14 +115,6 @@ class TeacherServiceTest {
         doThrow(new DaoException(EMPTY_STRING)).when(teacherDao).activate(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             teacherService.activate(1);
-        });
-    }
-    
-    @Test
-    void whenGetTeacherByLessonCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException(EMPTY_STRING)).when(teacherDao).getTeacherByLesson(anyInt());
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            teacherService.getTeacherByLesson(1);
         });
     }
 }

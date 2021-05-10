@@ -65,7 +65,6 @@ public class TeacherService implements GenericService<Teacher, Integer>{
         }
     }
 
-
     public void deactivate(Integer teacherId) {
         try {
             teacherDao.deactivate(teacherId);
@@ -77,14 +76,6 @@ public class TeacherService implements GenericService<Teacher, Integer>{
     public void activate(Integer teacherId) {
         try {
             teacherDao.activate(teacherId);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public void getTeacherByLesson(Integer lessonId) {
-        try {
-            teacherDao.getTeacherByLesson(lessonId);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
