@@ -104,26 +104,6 @@ class StudentServiceTest {
     }
 
     @Test
-    void removeStudentFromGroupShouldInvokeOnlyOnce() {
-        studentService.removeStudentFromGroup(1);
-        verify(studentDao, only()).removeStudentFromGroup(anyInt());
-    }
-
-    @Test
-    void getStudentsByGroupIdShouldInvokeOnlyOnce() {
-        studentService.getStudentsByGroupId(1);
-        verify(studentDao, only()).getStudentsByGroupId(anyInt());
-    }
-
-    @Test
-    void whenGetStudentsByGroupIdCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException(EMPTY_STRING)).when(studentDao).getStudentsByGroupId(anyInt());
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            studentService.getStudentsByGroupId(1);
-        });
-    }
-    
-    @Test
     void whenCreateCatchDaoExceptionShouldThrowServiceException() {
         doThrow(new DaoException(EMPTY_STRING)).when(studentDao).create(any(Student.class));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
@@ -168,14 +148,6 @@ class StudentServiceTest {
         doThrow(new DaoException(EMPTY_STRING)).when(studentDao).activate(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             studentService.activate(1);
-        });
-    }
-
-    @Test
-    void whenRemoveStudentFromGroupCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException(EMPTY_STRING)).when(studentDao).removeStudentFromGroup(anyInt());
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            studentService.removeStudentFromGroup(1);
         });
     }
 }

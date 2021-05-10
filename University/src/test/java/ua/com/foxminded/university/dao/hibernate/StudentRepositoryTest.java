@@ -99,32 +99,6 @@ class StudentRepositoryTest {
     }
 
     @Test
-    void removeStudentFromGroupsShouldSetNullInGroupsStudentId() {
-        Group group = new Group(1, "Math",  false);
-        groupDao.create(group);
-        Student student = new Student(1, "one", "one", group, false);
-        studentDao.create(student);
-        studentDao.removeStudentFromGroup(1);
-        assertNull(studentDao.getById(student.getStudentId()).getGroup());
-    }
-
-    @Test
-    void getStudentsByGroupIdShouldReturnCorrectStudents() {
-        Group group = new Group(1, "any", false);
-        groupDao.create(group);
-        Student student = new Student(1, "one", "one", group, false);
-        Student student2 = new Student(2, "two", "two", group, false);
-        studentDao.create(student);
-        studentDao.create(student2);
-
-        List<Student> expected = new ArrayList<>();
-        expected.add(student);
-        expected.add(student2);
-        List<Student> actual = studentDao.getStudentsByGroupId(group.getGroupId());
-        assertEquals(expected, actual);
-    }
-
-    @Test
     void whenGetByIdGetNonexistentDataShouldThrowsDaoException() {
         DaoException thrown = assertThrows(DaoException.class, () -> {
             studentDao.getById(1);

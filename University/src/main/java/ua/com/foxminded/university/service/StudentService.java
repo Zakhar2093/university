@@ -111,22 +111,6 @@ public class StudentService implements GenericService<Student, Integer>{
             throw new ServiceException(e);
         }
     }
-    
-    public void removeStudentFromGroup(Integer studentId) {
-        try {
-            studentDao.removeStudentFromGroup(studentId);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public List<Student> getStudentsByGroupId(Integer groupId) {
-        try {
-            return studentDao.getStudentsByGroupId(groupId);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
 
     private Student mapDtoToStudent(StudentDto dto){
         Student student = new Student();

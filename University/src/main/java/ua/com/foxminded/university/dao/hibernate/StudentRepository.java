@@ -98,33 +98,4 @@ public class StudentRepository implements StudentDao{
         session.close();
         logger.debug("Activating was successful", studentId);
     }
-// todo delete
-    public void removeStudentFromGroup(Integer studentId) {
-        Session session = sessionFactory.openSession();
-        Transaction tx = session.beginTransaction();
-
-        Query query = session.createQuery("UPDATE Student S SET S.group = null WHERE S.studentId =: studentId");
-        query.setParameter("studentId", studentId);
-        query.executeUpdate();
-
-        tx.commit();
-        session.close();
-
-        logger.debug("removed Student with id = {} from group", studentId);
-    }
-
-    @Override
-    public List<Student> getStudentsByGroupId(Integer groupId) {
-        logger.debug("Getting students By groupId = {}", groupId);
-        Session session = sessionFactory.openSession();
-        Transaction tx = session.beginTransaction();
-
-        Query query = session.createQuery("SELECT G.students From Group G WHERE G.groupId =: groupId");
-        query.setParameter("groupId", groupId);
-        List<Student> students = query.getResultList();
-
-        tx.commit();
-        session.close();
-        return students;
-    }
 }
