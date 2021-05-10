@@ -120,54 +120,6 @@ public class LessonService implements GenericService<Lesson, Integer>{
         }
     }
 
-    public void addGroupToLesson(Integer groupId, Integer lessonId) {
-        try {
-            lessonDao.addGroupToLesson(groupId, lessonId);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public void removeGroupFromLesson(Integer lessonId) {
-        try {
-            lessonDao.removeGroupFromLesson(lessonId);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public void addRoomToLesson(Integer roomId, Integer lessonId) {
-        try {
-            lessonDao.addRoomToLesson(roomId, lessonId);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public void removeRoomFromLesson(Integer lessonId) {
-        try {
-            lessonDao.removeRoomFromLesson(lessonId);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public void addTeacherToLesson(Integer teacherId, Integer lessonId) {
-        try {
-            lessonDao.addTeacherToLesson(teacherId, lessonId);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public void removeTeacherFromLesson(Integer lessonId) {
-        try {
-            lessonDao.removeTeacherFromLesson(lessonId);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
     public List<Lesson> getLessonByTeacherIdForDay(int teacherId, LocalDateTime date) {
         try {
             return lessonDao.getLessonByTeacherIdForDay(teacherId, date);
@@ -195,30 +147,6 @@ public class LessonService implements GenericService<Lesson, Integer>{
     public List<Lesson> getLessonByStudentIdForMonth(int studentId, LocalDateTime date) {
         try {
             return lessonDao.getLessonByStudentIdForMonth(studentId, date);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public List<Lesson> getLessonsByGroupId(Integer groupId) {
-        try {
-            return lessonDao.getLessonsByGroupId(groupId);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public List<Lesson> getLessonsByTeacherId(Integer teacherId) {
-        try {
-            return lessonDao.getLessonsByTeacherId(teacherId);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public List<Lesson> getLessonsByRoomId(Integer roomId) {
-        try {
-            return lessonDao.getLessonsByRoomId(roomId);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
