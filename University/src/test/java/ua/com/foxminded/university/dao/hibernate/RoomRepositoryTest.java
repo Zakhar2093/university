@@ -89,57 +89,11 @@ class RoomRepositoryTest {
     }
 
     @Test
-    void removeRoomFromLessonsShouldSetNullInLessonsRoomId() {
-        Room room1 = new Room(1, 1, false);
-        Room room2 = new Room(2, 2, false);
-        roomDao.create(room1);
-        roomDao.create(room2);
-        Lesson lesson1 = new Lesson(1, "Math", null, null, room1, LocalDateTime.now(), false);
-        Lesson lesson2 = new Lesson(2, "Math", null, null, room1, LocalDateTime.now(), false);
-        Lesson lesson3 = new Lesson(3, "Math", null, null, room2, LocalDateTime.now(), false);
-        lessonDao.create(lesson1);
-        lessonDao.create(lesson2);
-        lessonDao.create(lesson3);
-
-        roomDao.removeRoomFromAllLessons(1);
-
-        List<Lesson> expected = new ArrayList<>();
-        expected.add(lesson3);
-        List<Lesson> actual = lessonDao.getAll()
-                .stream()
-                .filter((x) -> x.getRoom() != null)
-                .collect(Collectors.toList()
-                );
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void getRoomByLessonShouldReturnCorrectRoom() {
-        Lesson lesson = createLesson();
-        List<Lesson> lessons = new ArrayList<>();
-        lessons.add(lesson);
-        Room expected = new Room(1, 1, lessons ,false);
-        Room actual = roomDao.getRoomByLesson(1);
-
-        assertEquals(expected, actual);
-    }
-
-    @Test
     void whenGetByIdGetNonexistentDataShouldThrowsDaoException() {
         DaoException thrown = assertThrows(DaoException.class, () -> {
             roomDao.getById(1);
         });
         assertTrue(thrown.getMessage().contains("Room with such id 1 does not exist"));
-    }
-
-    @Test
-    void whenGetRoomByLessonGetNonexistentDataShouldThrowsDaoException() {
-        createLesson();
-        roomDao.removeRoomFromAllLessons(1);
-        DaoException thrown = assertThrows(DaoException.class, () -> {
-            roomDao.getRoomByLesson(1);
-        });
-        assertTrue(thrown.getMessage().contains("Such lesson (id = 1) does not have any room"));
     }
 
     private Lesson createLesson() {

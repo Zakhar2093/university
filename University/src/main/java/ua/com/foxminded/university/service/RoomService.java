@@ -65,7 +65,6 @@ public class RoomService implements GenericService<Room, Integer>{
         }
     }
 
-
     public void deactivate(Integer roomId) {
         try {
             roomDao.deactivate(roomId);
@@ -77,14 +76,6 @@ public class RoomService implements GenericService<Room, Integer>{
     public void activate(Integer roomId) {
         try {
             roomDao.activate(roomId);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-    
-    public void getRoomByLesson(Integer lessonId) {
-        try {
-            roomDao.getRoomByLesson(lessonId);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

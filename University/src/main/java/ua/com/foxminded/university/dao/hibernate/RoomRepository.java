@@ -76,7 +76,6 @@ public class RoomRepository implements RoomDao {
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
 
-        removeRoomFromAllLessons(roomId);
         Query deactivateRoom = session.createQuery("UPDATE Room SET roomInactive = true WHERE id =: roomId");
         deactivateRoom.setParameter("roomId", roomId);
         deactivateRoom.executeUpdate();
@@ -104,43 +103,5 @@ public class RoomRepository implements RoomDao {
         tx.commit();
         session.close();
         logger.debug("Activating was successful", roomId);
-    }
-
-    // todo delete
-    public void removeRoomFromAllLessons(Integer roomId) {
-        Session session = sessionFactory.openSession();
-        Transaction tx = session.beginTransaction();
-
-        Query query = session.createQuery("UPDATE Lesson L SET L.room = null WHERE L.room =: roomId");
-        Room roomG = new Room();
-        roomG.setRoomId(roomId);
-        query.setParameter("roomId", roomG);
-        query.executeUpdate();
-
-        tx.commit();
-        session.close();
-
-        logger.debug("removed Room with id = {} from all Lessons", roomId);
-    }
-
-    public Room getRoomByLesson(Integer lessonId) {
-        logger.debug("Getting room By lesson id = {}", lessonId);
-        Session session = sessionFactory.openSession();
-        Transaction tx = session.beginTransaction();
-
-        Query query = session.createQuery("SELECT L.room FROM Lesson L WHERE L.lessonId =: lessonId");
-        query.setParameter("lessonId", lessonId);
-        Optional<Room> optionalRoom = query.getResultList().stream().findFirst();
-
-        Room room;
-        if (optionalRoom.isPresent()){
-            room = optionalRoom.get();
-        } else {
-            throw new DaoException(String.format("Such lesson (id = %d) does not have any room", lessonId));
-        }
-
-        tx.commit();
-        session.close();
-        return room;
     }
 }

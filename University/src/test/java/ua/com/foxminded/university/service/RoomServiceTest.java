@@ -70,12 +70,7 @@ class RoomServiceTest {
         verify(roomDao, only()).activate(anyInt());
     }
     
-    @Test
-    void getRoomByLessonShouldInvokeOnlyOnce() {
-        roomService.getRoomByLesson(1);
-        verify(roomDao, only()).getRoomByLesson(anyInt());
-    }
-    
+
     @Test
     void whenCreateCatchDaoExceptionShouldThrowServiceException() {
         doThrow(new DaoException(EMPTY_STRING)).when(roomDao).create(any(Room.class));
@@ -121,14 +116,6 @@ class RoomServiceTest {
         doThrow(new DaoException(EMPTY_STRING)).when(roomDao).activate(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             roomService.activate(1);
-        });
-    }
-    
-    @Test
-    void whenGetRoomByLessonCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException(EMPTY_STRING)).when(roomDao).getRoomByLesson(anyInt());
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            roomService.getRoomByLesson(1);
         });
     }
 }
