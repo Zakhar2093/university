@@ -68,8 +68,6 @@ public class GroupService implements GenericService<Group, Integer>{
 
     public void deactivate(Integer groupId) {
         try {
-            groupDao.removeGroupFromAllLessons(groupId);
-            groupDao.removeGroupFromAllStudents(groupId);
             groupDao.deactivate(groupId);
         } catch (DaoException e) {
             throw new ServiceException(e);

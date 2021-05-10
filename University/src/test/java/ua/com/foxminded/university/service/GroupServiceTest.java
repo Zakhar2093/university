@@ -61,7 +61,6 @@ class GroupServiceTest {
     @Test
     void deactivateShouldInvokeOnlyOnce() {
         groupService.deactivate(1);
-        verify(groupDao, times(1)).removeGroupFromAllLessons(anyInt());
         verify(groupDao, times(1)).deactivate(anyInt());
     }
     

@@ -76,10 +76,20 @@ public class GroupRepository implements GroupDao{
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
 
-        removeGroupFromAllLessons(groupId);
-        Query query = session.createQuery("UPDATE Group SET groupInactive = true WHERE id =: groupId");
-        query.setParameter("groupId", groupId);
-        query.executeUpdate();
+        Group group = new Group();
+        group.setGroupId(groupId);
+
+        Query deactivateGroup = session.createQuery("UPDATE Group SET groupInactive = true WHERE id =: groupId");
+        deactivateGroup.setParameter("groupId", groupId);
+        deactivateGroup.executeUpdate();
+
+        Query deleteGroupFromStudent = session.createQuery("UPDATE Student S SET S.group = null WHERE S.group =: groupId");
+        deleteGroupFromStudent.setParameter("groupId", group);
+        deleteGroupFromStudent.executeUpdate();
+
+        Query deleteGroupFromLesson = session.createQuery("UPDATE Lesson L SET L.group = null WHERE L.group =: groupId");
+        deleteGroupFromLesson.setParameter("groupId", group);
+        deleteGroupFromLesson.executeUpdate();
 
         tx.commit();
         session.close();
@@ -105,11 +115,11 @@ public class GroupRepository implements GroupDao{
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
 
-        Query query = session.createQuery("UPDATE Student S SET S.group = null WHERE S.group =: groupId");
+        Query deleteGroupFromStudent = session.createQuery("UPDATE Student S SET S.group = null WHERE S.group =: groupId");
         Group groupG = new Group();
         groupG.setGroupId(groupId);
-        query.setParameter("groupId", groupG);
-        query.executeUpdate();
+        deleteGroupFromStudent.setParameter("groupId", groupG);
+        deleteGroupFromStudent.executeUpdate();
 
         tx.commit();
         session.close();
@@ -121,11 +131,11 @@ public class GroupRepository implements GroupDao{
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
 
-        Query query = session.createQuery("UPDATE Lesson L SET L.group = null WHERE L.group =: groupId");
+        Query deleteGroupFromLesson = session.createQuery("UPDATE Lesson L SET L.group = null WHERE L.group =: groupId");
         Group groupG = new Group();
         groupG.setGroupId(groupId);
-        query.setParameter("groupId", groupG);
-        query.executeUpdate();
+        deleteGroupFromLesson.setParameter("groupId", groupG);
+        deleteGroupFromLesson.executeUpdate();
 
         tx.commit();
         session.close();

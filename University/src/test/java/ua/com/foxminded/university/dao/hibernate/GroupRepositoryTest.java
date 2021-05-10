@@ -11,6 +11,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import ua.com.foxminded.university.SpringConfigTest;
 import ua.com.foxminded.university.dao.interfaces.LessonDao;
 import ua.com.foxminded.university.dao.interfaces.GroupDao;
+import ua.com.foxminded.university.dao.interfaces.StudentDao;
 import ua.com.foxminded.university.exception.DaoException;
 import ua.com.foxminded.university.model.Lesson;
 import ua.com.foxminded.university.model.Group;
@@ -33,6 +34,8 @@ class GroupRepositoryTest {
     private LessonDao lessonDao;
     @Autowired
     private GroupDao groupDao;
+    @Autowired
+    private StudentDao studentDao;
 
     @Test
     void getByIdAndCreateShouldInsertAndGetCorrectData() {
@@ -78,11 +81,17 @@ class GroupRepositoryTest {
 
     @Test
     void deactivateShouldSetTrueInGroupInactive() {
-        // todo add student
+        Group group = new Group(1, "one",  false);
+        groupDao.create(group);
+        Lesson lesson = new Lesson(1, "Math", null, group, null, LocalDateTime.now(), false);
+        lessonDao.create(lesson);
+        Student student = new Student(1, "one", "one", group, false);
+        studentDao.create(student);
         createLesson();
-        groupDao.deactivate(1);
-        assertTrue(groupDao.getById(1).isGroupInactive());
-        assertNull(lessonDao.getById(1).getGroup());
+        groupDao.deactivate(group.getGroupId());
+        assertTrue(groupDao.getById(group.getGroupId()).isGroupInactive());
+        assertNull(lessonDao.getById(lesson.getLessonId()).getGroup());
+        assertNull(studentDao.getById(student.getStudentId()).getGroup());
     }
 
     @Test
