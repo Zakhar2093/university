@@ -11,8 +11,12 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ua.com.foxminded.university.model.Room;
+import ua.com.foxminded.university.service.GroupService;
+import ua.com.foxminded.university.service.LessonService;
 import ua.com.foxminded.university.service.RoomService;
+import ua.com.foxminded.university.service.TeacherService;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,8 +30,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 public class RoomControllerTest {
 
+    private TestData testData;
+
+    @Mock
+    private LessonService lessonService;
     @Mock
     private RoomService roomService;
+    @Mock
+    private GroupService groupService;
+    @Mock
+    private TeacherService teacherService;
 
     @InjectMocks
     private RoomController roomController;
@@ -36,16 +48,17 @@ public class RoomControllerTest {
 
     @BeforeEach
     public void setMocks() {
+        testData = new TestData();
         mockMvc = MockMvcBuilders.standaloneSetup(roomController).build();
     }
 
     @Test
     void getAllShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        when(roomService.getAllActivated()).thenReturn(getTestRooms());
+        when(roomService.getAllActivated()).thenReturn(testData.getTestRooms());
 
         mockMvc.perform(get("/rooms/"))
                 .andExpect(view().name("rooms/index"))
-                .andExpect(model().attribute("rooms", getTestRooms()));
+                .andExpect(model().attribute("rooms", testData.getTestRooms()));
     }
 
     @Test
@@ -89,12 +102,19 @@ public class RoomControllerTest {
         verify(roomService, only()).deactivate(anyInt());
     }
 
+    @Test
+    void showLessonsByRoomShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
+        int id = 1;
+        when(lessonService.getLessonsByRoomId(id)).thenReturn(testData.getTestLessons());
+        when(roomService.getById(id)).thenReturn(testData.getTestRooms().get(0));
+        when(groupService.getAllActivated()).thenReturn(testData.getTestGroups());
+        when(teacherService.getAllActivated()).thenReturn(testData.getTestTeachers());
 
-    private List<Room> getTestRooms() {
-        List<Room> rooms = new ArrayList<>();
-        rooms.add(new Room(1, 101));
-        rooms.add(new Room(2, 102));
-        rooms.add(new Room(3, 103));
-        return rooms;
+        mockMvc.perform(get("/rooms/{id}/lessons", id))
+                .andExpect(view().name("lessons/index"))
+                .andExpect(model().attribute("lessons", testData.getTestLessons()))
+                .andExpect(model().attribute("room", testData.getTestRooms().get(0)))
+                .andExpect(model().attribute("groups", testData.getTestGroups()))
+                .andExpect(model().attribute("teachers", testData.getTestTeachers()));
     }
 }

@@ -80,7 +80,7 @@ public class LessonController {
         return "redirect:/lessons";
     }
 
-    @GetMapping("/getSchedule")
+    @GetMapping("/Schedule")
     public String getSchedule(Model model,
                               @RequestParam("entity") String entity,
                               @RequestParam("duration") String duration,
@@ -98,33 +98,6 @@ public class LessonController {
             lessons = lessonService.getLessonByTeacherIdForMonth(id, localDateTime);
         }
         model.addAttribute("lessons", lessons);
-        return "lessons/index";
-    }
-
-    @GetMapping("/getStudentsByRoom/{id}")
-    public String showLessonsByRoom(Model model, @PathVariable("id") int id) {
-        model.addAttribute("room", roomService.getById(id));
-        model.addAttribute("lessons", lessonService.getLessonsByRoomId(id));
-        model.addAttribute("teachers", teacherService.getAllActivated());
-        model.addAttribute("groups", groupService.getAllActivated());
-        return "lessons/index";
-    }
-
-    @GetMapping("/getStudentsByTeacher/{id}")
-    public String showLessonsByTeacher(Model model, @PathVariable("id") int id) {
-        model.addAttribute("teacher", teacherService.getById(id));
-        model.addAttribute("lessons", lessonService.getLessonsByTeacherId(id));
-        model.addAttribute("rooms", roomService.getAllActivated());
-        model.addAttribute("groups", groupService.getAllActivated());
-        return "lessons/index";
-    }
-
-    @GetMapping("/getStudentsByGroup/{id}")
-    public String showLessonsByGroup(Model model, @PathVariable("id") int id) {
-        model.addAttribute("group", groupService.getById(id));
-        model.addAttribute("lessons", lessonService.getLessonsByGroupId(id));
-        model.addAttribute("rooms", roomService.getAllActivated());
-        model.addAttribute("teachers", teacherService.getAllActivated());
         return "lessons/index";
     }
 }

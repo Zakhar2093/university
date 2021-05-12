@@ -17,17 +17,20 @@ import java.util.List;
 public class RoomController {
 
     private RoomService roomService;
+    private LessonService lessonService;
+    private GroupService groupService;
+    private TeacherService teacherService;
 
     @Autowired
-    public RoomController(RoomService roomService) {
+    public RoomController(LessonService lessonService, GroupService groupService, RoomService roomService, TeacherService teacherService) {
+        this.lessonService = lessonService;
+        this.groupService = groupService;
         this.roomService = roomService;
+        this.teacherService = teacherService;
     }
-
     @GetMapping
     public String getAll(@ModelAttribute("room") Room room, Model model) {
-        List<Room> rooms = roomService.getAll();
-        rooms.removeIf(p -> (p.isRoomInactive()));
-        model.addAttribute("rooms", rooms);
+        model.addAttribute("rooms", roomService.getAllActivated());
         model.addAttribute("roomNumber", room.getRoomNumber());
         return "rooms/index";
     }
@@ -55,5 +58,14 @@ public class RoomController {
     public String delete(@PathVariable("id") int id) {
         roomService.deactivate(id);
         return "redirect:/rooms";
+    }
+
+    @GetMapping("/{id}/lessons")
+    public String showLessonsByRoom(Model model, @PathVariable("id") int id) {
+        model.addAttribute("room", roomService.getById(id));
+        model.addAttribute("lessons", lessonService.getLessonsByRoomId(id));
+        model.addAttribute("teachers", teacherService.getAllActivated());
+        model.addAttribute("groups", groupService.getAllActivated());
+        return "lessons/index";
     }
 }

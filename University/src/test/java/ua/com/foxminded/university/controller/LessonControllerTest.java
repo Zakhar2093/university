@@ -38,6 +38,8 @@ public class LessonControllerTest {
     private static final String FORMAT = "dd MM yyyy hh:mm a";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(FORMAT);
 
+    private TestData testData;
+
     @Mock
     private LessonService lessonService;
     @Mock
@@ -54,37 +56,38 @@ public class LessonControllerTest {
 
     @BeforeEach
     public void setMocks() {
+        testData = new TestData();
         mockMvc = MockMvcBuilders.standaloneSetup(lessonController).build();
     }
 
     @Test
     void getAllShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        when(lessonService.getAllActivated()).thenReturn(getTestLessons());
-        when(roomService.getAllActivated()).thenReturn(getTestRooms());
-        when(groupService.getAllActivated()).thenReturn(getTestGroups());
-        when(teacherService.getAllActivated()).thenReturn(getTestTeachers());
+        when(lessonService.getAllActivated()).thenReturn(testData.getTestLessons());
+        when(roomService.getAllActivated()).thenReturn(testData.getTestRooms());
+        when(groupService.getAllActivated()).thenReturn(testData.getTestGroups());
+        when(teacherService.getAllActivated()).thenReturn(testData.getTestTeachers());
 
         mockMvc.perform(get("/lessons/"))
                 .andExpect(view().name("lessons/index"))
-                .andExpect(model().attribute("lessons", getTestLessons()))
-                .andExpect(model().attribute("rooms", getTestRooms()))
-                .andExpect(model().attribute("groups", getTestGroups()))
-                .andExpect(model().attribute("teachers", getTestTeachers()));
+                .andExpect(model().attribute("lessons", testData.getTestLessons()))
+                .andExpect(model().attribute("rooms", testData.getTestRooms()))
+                .andExpect(model().attribute("groups", testData.getTestGroups()))
+                .andExpect(model().attribute("teachers", testData.getTestTeachers()));
     }
 
     @Test
     void createShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        when(roomService.getAllActivated()).thenReturn(getTestRooms());
-        when(groupService.getAllActivated()).thenReturn(getTestGroups());
-        when(teacherService.getAllActivated()).thenReturn(getTestTeachers());
+        when(roomService.getAllActivated()).thenReturn(testData.getTestRooms());
+        when(groupService.getAllActivated()).thenReturn(testData.getTestGroups());
+        when(teacherService.getAllActivated()).thenReturn(testData.getTestTeachers());
 
         LessonDto lessonDto = new LessonDto();
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/lessons/add").flashAttr("lessonDto", lessonDto);
         mockMvc.perform(request)
                 .andExpect(view().name("lessons/add"))
-                .andExpect(model().attribute("rooms", getTestRooms()))
-                .andExpect(model().attribute("groups", getTestGroups()))
-                .andExpect(model().attribute("teachers", getTestTeachers()));
+                .andExpect(model().attribute("rooms", testData.getTestRooms()))
+                .andExpect(model().attribute("groups", testData.getTestGroups()))
+                .andExpect(model().attribute("teachers", testData.getTestTeachers()));
     }
 
     @Test
@@ -101,16 +104,16 @@ public class LessonControllerTest {
     void updateShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
         LessonDto lessonDto = new LessonDto();
         when(lessonService.getDtoById(anyInt())).thenReturn(lessonDto);
-        when(roomService.getAllActivated()).thenReturn(getTestRooms());
-        when(groupService.getAllActivated()).thenReturn(getTestGroups());
-        when(teacherService.getAllActivated()).thenReturn(getTestTeachers());
+        when(roomService.getAllActivated()).thenReturn(testData.getTestRooms());
+        when(groupService.getAllActivated()).thenReturn(testData.getTestGroups());
+        when(teacherService.getAllActivated()).thenReturn(testData.getTestTeachers());
 
         mockMvc.perform(get("/lessons/{id}/edit", 2))
                 .andExpect(view().name("lessons/update"))
                 .andExpect(model().attribute("lessonDto", lessonDto))
-                .andExpect(model().attribute("rooms", getTestRooms()))
-                .andExpect(model().attribute("groups", getTestGroups()))
-                .andExpect(model().attribute("teachers", getTestTeachers()));;
+                .andExpect(model().attribute("rooms", testData.getTestRooms()))
+                .andExpect(model().attribute("groups", testData.getTestGroups()))
+                .andExpect(model().attribute("teachers", testData.getTestTeachers()));;
     }
 
     @Test
@@ -142,15 +145,15 @@ public class LessonControllerTest {
         String date = "11 04 2021 12:44 AM";
         LocalDateTime localDateTime = LocalDateTime.parse(date, FORMATTER);
 
-        when(lessonService.getLessonByStudentIdForDay(anyInt(), eq(localDateTime))).thenReturn(getTestLessons());
+        when(lessonService.getLessonByStudentIdForDay(anyInt(), eq(localDateTime))).thenReturn(testData.getTestLessons());
 
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/lessons/getSchedule")
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/lessons/Schedule")
                 .param("entity", entity)
                 .param("duration", duration)
                 .param("id", String.valueOf(id))
                 .param("date", date);
         mockMvc.perform(request)
-                .andExpect(model().attribute("lessons", getTestLessons()))
+                .andExpect(model().attribute("lessons", testData.getTestLessons()))
                 .andExpect(view().name("lessons/index"));
 
         verify(lessonService, only()).getLessonByStudentIdForDay(id, localDateTime);
@@ -167,15 +170,15 @@ public class LessonControllerTest {
         String date = "11 04 2021 12:44 AM";
         LocalDateTime localDateTime = LocalDateTime.parse(date, FORMATTER);
 
-        when(lessonService.getLessonByStudentIdForMonth(anyInt(), eq(localDateTime))).thenReturn(getTestLessons());
+        when(lessonService.getLessonByStudentIdForMonth(anyInt(), eq(localDateTime))).thenReturn(testData.getTestLessons());
 
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/lessons/getSchedule")
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/lessons/Schedule")
                 .param("entity", entity)
                 .param("duration", duration)
                 .param("id", String.valueOf(id))
                 .param("date", date);
         mockMvc.perform(request)
-                .andExpect(model().attribute("lessons", getTestLessons()))
+                .andExpect(model().attribute("lessons", testData.getTestLessons()))
                 .andExpect(view().name("lessons/index"));
 
         verify(lessonService, never()).getLessonByStudentIdForDay(id, localDateTime);
@@ -192,15 +195,15 @@ public class LessonControllerTest {
         String date = "11 04 2021 12:44 AM";
         LocalDateTime localDateTime = LocalDateTime.parse(date, FORMATTER);
 
-        when(lessonService.getLessonByTeacherIdForDay(anyInt(), eq(localDateTime))).thenReturn(getTestLessons());
+        when(lessonService.getLessonByTeacherIdForDay(anyInt(), eq(localDateTime))).thenReturn(testData.getTestLessons());
 
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/lessons/getSchedule")
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/lessons/Schedule")
                 .param("entity", entity)
                 .param("duration", duration)
                 .param("id", String.valueOf(id))
                 .param("date", date);
         mockMvc.perform(request)
-                .andExpect(model().attribute("lessons", getTestLessons()))
+                .andExpect(model().attribute("lessons", testData.getTestLessons()))
                 .andExpect(view().name("lessons/index"));
 
         verify(lessonService, never()).getLessonByStudentIdForDay(id, localDateTime);
@@ -217,107 +220,20 @@ public class LessonControllerTest {
         String date = "11 04 2021 12:44 AM";
         LocalDateTime localDateTime = LocalDateTime.parse(date, FORMATTER);
 
-        when(lessonService.getLessonByTeacherIdForMonth(anyInt(), eq(localDateTime))).thenReturn(getTestLessons());
+        when(lessonService.getLessonByTeacherIdForMonth(anyInt(), eq(localDateTime))).thenReturn(testData.getTestLessons());
 
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/lessons/getSchedule")
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/lessons/Schedule")
                 .param("entity", entity)
                 .param("duration", duration)
                 .param("id", String.valueOf(id))
                 .param("date", date);
         mockMvc.perform(request)
-                .andExpect(model().attribute("lessons", getTestLessons()))
+                .andExpect(model().attribute("lessons", testData.getTestLessons()))
                 .andExpect(view().name("lessons/index"));
 
         verify(lessonService, never()).getLessonByStudentIdForDay(id, localDateTime);
         verify(lessonService, never()).getLessonByStudentIdForMonth(id, localDateTime);
         verify(lessonService, never()).getLessonByTeacherIdForDay(id, localDateTime);
         verify(lessonService, only()).getLessonByTeacherIdForMonth(id, localDateTime);
-    }
-
-    @Test
-    void showLessonsByRoomShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        int id = 1;
-        when(lessonService.getLessonsByRoomId(id)).thenReturn(getTestLessons());
-        when(roomService.getById(id)).thenReturn(getTestRooms().get(0));
-        when(groupService.getAllActivated()).thenReturn(getTestGroups());
-        when(teacherService.getAllActivated()).thenReturn(getTestTeachers());
-
-        mockMvc.perform(get("/lessons/byRoom/{id}", id))
-                .andExpect(view().name("lessons/index"))
-                .andExpect(model().attribute("lessons", getTestLessons()))
-                .andExpect(model().attribute("room", getTestRooms().get(0)))
-                .andExpect(model().attribute("groups", getTestGroups()))
-                .andExpect(model().attribute("teachers", getTestTeachers()));
-    }
-
-    @Test
-    void showLessonsByTeacherShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        int id = 1;
-        when(lessonService.getLessonsByTeacherId(id)).thenReturn(getTestLessons());
-        when(roomService.getAllActivated()).thenReturn(getTestRooms());
-        when(groupService.getAllActivated()).thenReturn(getTestGroups());
-        when(teacherService.getById(id)).thenReturn(getTestTeachers().get(0));
-
-        mockMvc.perform(get("/lessons/byTeacher/{id}", id))
-                .andExpect(view().name("lessons/index"))
-                .andExpect(model().attribute("lessons", getTestLessons()))
-                .andExpect(model().attribute("rooms", getTestRooms()))
-                .andExpect(model().attribute("groups", getTestGroups()))
-                .andExpect(model().attribute("teacher", getTestTeachers().get(0)));
-    }
-
-    @Test
-    void showLessonsByGroupShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        int id = 1;
-        when(lessonService.getLessonsByGroupId(id)).thenReturn(getTestLessons());
-        when(roomService.getAllActivated()).thenReturn(getTestRooms());
-        when(groupService.getById(id)).thenReturn(getTestGroups().get(0));
-        when(teacherService.getAllActivated()).thenReturn(getTestTeachers());
-
-        mockMvc.perform(get("/lessons/byGroup/{id}", id))
-                .andExpect(view().name("lessons/index"))
-                .andExpect(model().attribute("lessons", getTestLessons()))
-                .andExpect(model().attribute("rooms", getTestRooms()))
-                .andExpect(model().attribute("group", getTestGroups().get(0)))
-                .andExpect(model().attribute("teachers", getTestTeachers()));
-    }
-
-    private List<Room> getTestRooms() {
-        List<Room> rooms = new ArrayList<>();
-        rooms.add(new Room(1, 101));
-        rooms.add(new Room(2, 102));
-        rooms.add(new Room(3, 103));
-        return rooms;
-    }
-
-    private List<Group> getTestGroups() {
-        List<Group> groups = new ArrayList<>();
-        groups.add(new Group(1, "Java", false));
-        groups.add(new Group(2, "C++", false));
-        groups.add(new Group(3, "PHP", false));
-        return groups;
-    }
-
-    private List<Teacher> getTestTeachers() {
-        List<Teacher> teachers = new ArrayList<>();
-        teachers.add(new Teacher(1, "one", "one", false));
-        teachers.add(new Teacher(2, "two", "two", false));
-        teachers.add(new Teacher(3, "Three", "Three", false));
-        return teachers;
-    }
-
-    private List<Lesson> getTestLessons() {
-        List<Teacher> teachers = getTestTeachers();
-        List<Group> groups = getTestGroups();
-        List<Room> rooms = getTestRooms();
-        LocalDateTime date = LocalDateTime.parse("11 04 2021 12:44 AM", FORMATTER);
-
-        List<Lesson> lessons = new ArrayList<>();
-        lessons.add(new Lesson(1, "Math", teachers.get(1), groups.get(0), rooms.get(0), date, false));
-        lessons.add(new Lesson(2, "History", teachers.get(1), groups.get(1), rooms.get(0), date, false));
-        lessons.add(new Lesson(3, "English", teachers.get(2), groups.get(2), rooms.get(2), date, false));
-        lessons.add(new Lesson(4, "Math", teachers.get(0), groups.get(1), rooms.get(1), date, false));
-        lessons.add(new Lesson(5, "Bio", teachers.get(0), groups.get(2), rooms.get(1), date, false));
-        return lessons;
     }
 }

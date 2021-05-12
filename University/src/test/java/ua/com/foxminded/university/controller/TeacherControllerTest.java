@@ -6,18 +6,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import ua.com.foxminded.university.model.Group;
-import ua.com.foxminded.university.model.Student;
-import ua.com.foxminded.university.model.Teacher;
+import ua.com.foxminded.university.model.*;
 import ua.com.foxminded.university.model.model_dto.StudentDto;
-import ua.com.foxminded.university.service.GroupService;
-import ua.com.foxminded.university.service.StudentService;
-import ua.com.foxminded.university.service.TeacherService;
+import ua.com.foxminded.university.service.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +30,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 public class TeacherControllerTest {
 
+    private TestData testData;
+
+    @Mock
+    private LessonService lessonService;
+    @Mock
+    private RoomService roomService;
+    @Mock
+    private GroupService groupService;
     @Mock
     private TeacherService teacherService;
 
@@ -41,16 +48,17 @@ public class TeacherControllerTest {
 
     @BeforeEach
     public void setMocks() {
+        testData = new TestData();
         mockMvc = MockMvcBuilders.standaloneSetup(teacherController).build();
     }
 
     @Test
     void getAllShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        when(teacherService.getAllActivated()).thenReturn(getTestTeachers());
+        when(teacherService.getAllActivated()).thenReturn(testData.getTestTeachers());
 
         mockMvc.perform(get("/teachers/"))
                 .andExpect(view().name("teachers/index"))
-                .andExpect(model().attribute("teachers", getTestTeachers()));
+                .andExpect(model().attribute("teachers", testData.getTestTeachers()));
     }
 
     @Test
@@ -94,12 +102,19 @@ public class TeacherControllerTest {
         verify(teacherService, only()).deactivate(anyInt());
     }
 
+    @Test
+    void showLessonsByTeacherShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
+        int id = 1;
+        when(lessonService.getLessonsByTeacherId(id)).thenReturn(testData.getTestLessons());
+        when(roomService.getAllActivated()).thenReturn(testData.getTestRooms());
+        when(groupService.getAllActivated()).thenReturn(testData.getTestGroups());
+        when(teacherService.getById(id)).thenReturn(testData.getTestTeachers().get(0));
 
-    private List<Teacher> getTestTeachers() {
-        List<Teacher> teachers = new ArrayList<>();
-        teachers.add(new Teacher(1, "one", "one", false));
-        teachers.add(new Teacher(2, "two", "two", false));
-        teachers.add(new Teacher(3, "Three", "Three", false));
-        return teachers;
+        mockMvc.perform(get("/teachers/{id}/lessons", id))
+                .andExpect(view().name("lessons/index"))
+                .andExpect(model().attribute("lessons", testData.getTestLessons()))
+                .andExpect(model().attribute("rooms", testData.getTestRooms()))
+                .andExpect(model().attribute("groups", testData.getTestGroups()))
+                .andExpect(model().attribute("teacher", testData.getTestTeachers().get(0)));
     }
 }

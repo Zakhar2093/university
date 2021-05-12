@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Group;
-import ua.com.foxminded.university.service.GroupService;
+import ua.com.foxminded.university.service.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +27,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 public class GroupControllerTest {
 
+    private TestData testData;
+
+    @Mock
+    private StudentService studentService;
+    @Mock
+    private LessonService lessonService;
+    @Mock
+    private RoomService roomService;
     @Mock
     private GroupService groupService;
+    @Mock
+    private TeacherService teacherService;
 
     @InjectMocks
     private GroupController groupController;
@@ -37,16 +47,17 @@ public class GroupControllerTest {
 
     @BeforeEach
     public void setMocks() {
+        testData = new TestData();
         mockMvc = MockMvcBuilders.standaloneSetup(groupController).build();
     }
 
     @Test
     void getAllShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        when(groupService.getAllActivated()).thenReturn(getTestGroups());
+        when(groupService.getAllActivated()).thenReturn(testData.getTestGroups());
 
         mockMvc.perform(get("/groups/"))
                 .andExpect(view().name("groups/index"))
-                .andExpect(model().attribute("groups", getTestGroups()));
+                .andExpect(model().attribute("groups", testData.getTestGroups()));
     }
 
     @Test
@@ -90,12 +101,31 @@ public class GroupControllerTest {
         verify(groupService, only()).deactivate(anyInt());
     }
 
+    @Test
+    void showLessonsByGroupShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
+        int id = 1;
+        when(lessonService.getLessonsByGroupId(id)).thenReturn(testData.getTestLessons());
+        when(roomService.getAllActivated()).thenReturn(testData.getTestRooms());
+        when(groupService.getById(id)).thenReturn(testData.getTestGroups().get(0));
+        when(teacherService.getAllActivated()).thenReturn(testData.getTestTeachers());
 
-    private List<Group> getTestGroups() {
-        List<Group> groups = new ArrayList<>();
-        groups.add(new Group(1, "Java", false));
-        groups.add(new Group(2, "C++", false));
-        groups.add(new Group(3, "PHP", false));
-        return groups;
+        mockMvc.perform(get("/groups/{id}/lessons", id))
+                .andExpect(view().name("lessons/index"))
+                .andExpect(model().attribute("lessons", testData.getTestLessons()))
+                .andExpect(model().attribute("rooms", testData.getTestRooms()))
+                .andExpect(model().attribute("group", testData.getTestGroups().get(0)))
+                .andExpect(model().attribute("teachers", testData.getTestTeachers()));
+    }
+
+    @Test
+    void showStudentsByGroupShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
+        int id = 1;
+        when(studentService.getStudentsByGroupId(id)).thenReturn(testData.getTestStudent());
+        when(groupService.getById(id)).thenReturn(testData.getTestGroups().get(0));
+
+        mockMvc.perform(get("/groups/{id}/students", id))
+                .andExpect(view().name("students/index"))
+                .andExpect(model().attribute("students", testData.getTestStudent()))
+                .andExpect(model().attribute("group", testData.getTestGroups().get(0)));
     }
 }
