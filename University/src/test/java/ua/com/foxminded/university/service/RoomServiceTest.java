@@ -19,101 +19,101 @@ class RoomServiceTest {
     private static final String EMPTY_STRING = "";
     private RoomService roomService;
     @Mock
-    private RoomRepository roomDao;
+    private RoomRepository roomRepository;
 
 
     @BeforeEach
     public void initMocks() {
         MockitoAnnotations.initMocks(this);
-        roomService = new RoomService(roomDao);
+        roomService = new RoomService(roomRepository);
     }
 
     @Test
     void createShouldInvokeOnlyOnce() {
         roomService.create(new Room(1, 101));
-        verify(roomDao, only()).create(any(Room.class));
+        verify(roomRepository, only()).create(any(Room.class));
     }
     
     @Test
     void getAllShouldInvokeOnlyOnce() {
         roomService.getAll();
-        verify(roomDao, only()).getAll();
+        verify(roomRepository, only()).getAll();
     }
 
     @Test
     void getAllActivatedShouldInvokeOnlyOnce() {
         roomService.getAllActivated();
-        verify(roomDao, only()).getAll();
+        verify(roomRepository, only()).getAll();
     }
     
     @Test
     void getByIdShouldInvokeOnlyOnce() {
         roomService.getById(1);
-        verify(roomDao, only()).getById(anyInt());
+        verify(roomRepository, only()).getById(anyInt());
     }
     
     @Test
     void updateShouldInvokeOnlyOnce() {
         roomService.update(new Room(1, 101));
-        verify(roomDao, only()).update(any(Room.class));
+        verify(roomRepository, only()).update(any(Room.class));
     }
     
     @Test
     void deactivateShouldInvokeOnlyOnce() {
         roomService.deactivate(1);;
-        verify(roomDao, times(1)).deactivate(anyInt());
+        verify(roomRepository, times(1)).deactivate(anyInt());
     }
     
     @Test
     void activateShouldInvokeOnlyOnce() {
         roomService.activate(1);
-        verify(roomDao, only()).activate(anyInt());
+        verify(roomRepository, only()).activate(anyInt());
     }
     
 
     @Test
-    void whenCreateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(roomDao).create(any(Room.class));
+    void whenCreateCatchRepositoryExceptionShouldThrowServiceException() {
+        doThrow(new RepositoryException(EMPTY_STRING)).when(roomRepository).create(any(Room.class));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             roomService.create(new Room());
         });
     }
     
     @Test
-    void whenGetAllCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(roomDao).getAll();
+    void whenGetAllCatchRepositoryExceptionShouldThrowServiceException() {
+        doThrow(new RepositoryException(EMPTY_STRING)).when(roomRepository).getAll();
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             roomService.getAll();
         });    
     }
     
     @Test
-    void whenGetByIdCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(roomDao).getById(anyInt());
+    void whenGetByIdCatchRepositoryExceptionShouldThrowServiceException() {
+        doThrow(new RepositoryException(EMPTY_STRING)).when(roomRepository).getById(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             roomService.getById(1);
         });
     }
     
     @Test
-    void whenUpdateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(roomDao).update(any(Room.class));
+    void whenUpdateCatchRepositoryExceptionShouldThrowServiceException() {
+        doThrow(new RepositoryException(EMPTY_STRING)).when(roomRepository).update(any(Room.class));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             roomService.update(new Room());
         });
     }
     
     @Test
-    void whenDeactivateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(roomDao).deactivate(anyInt());
+    void whenDeactivateCatchRepositoryExceptionShouldThrowServiceException() {
+        doThrow(new RepositoryException(EMPTY_STRING)).when(roomRepository).deactivate(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             roomService.deactivate(1);
         });
     }
     
     @Test
-    void whenActivateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(roomDao).activate(anyInt());
+    void whenActivateCatchRepositoryExceptionShouldThrowServiceException() {
+        doThrow(new RepositoryException(EMPTY_STRING)).when(roomRepository).activate(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             roomService.activate(1);
         });

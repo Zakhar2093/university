@@ -26,22 +26,22 @@ import static org.junit.jupiter.api.Assertions.*;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class RoomRepositoryHibernateTest {
 
-    private LessonRepository lessonDao;
-    private RoomRepository roomDao;
+    private LessonRepository lessonRepository;
+    private RoomRepository roomRepository;
 
     @Autowired
-    public RoomRepositoryHibernateTest(LessonRepository lessonDao, RoomRepository roomDao) {
-        this.lessonDao = lessonDao;
-        this.roomDao = roomDao;
+    public RoomRepositoryHibernateTest(LessonRepository lessonRepository, RoomRepository roomRepository) {
+        this.lessonRepository = lessonRepository;
+        this.roomRepository = roomRepository;
     }
 
     @Test
     void getByIdAndCreateShouldInsertAndGetCorrectData() {
         List<Lesson> lessons = new ArrayList<>();
         Room room = new Room(1, 1, lessons,false);
-        roomDao.create(room);
+        roomRepository.create(room);
         Room expected = room;
-        Room actual = roomDao.getById(1);
+        Room actual = roomRepository.getById(1);
         assertEquals(expected, actual);
     }
 
@@ -52,11 +52,11 @@ class RoomRepositoryHibernateTest {
         rooms.add(new Room(1, 1, lessons,false));
         rooms.add(new Room(2, 2, lessons,false));
         rooms.add(new Room(3, 3, lessons,false));
-        roomDao.create(rooms.get(0));
-        roomDao.create(rooms.get(1));
-        roomDao.create(rooms.get(2));
+        roomRepository.create(rooms.get(0));
+        roomRepository.create(rooms.get(1));
+        roomRepository.create(rooms.get(2));
         List<Room> expected = rooms;
-        List<Room> actual = roomDao.getAll();
+        List<Room> actual = roomRepository.getAll();
         assertEquals(expected, actual);
     }
 
@@ -65,11 +65,11 @@ class RoomRepositoryHibernateTest {
         List<Lesson> lessons = new ArrayList<>();
         Room groupBeforeUpdating = new Room(1, 1, lessons,false);
         Room groupAfterUpdating = new Room(1, 1, lessons,false);
-        roomDao.create(groupBeforeUpdating);
-        roomDao.update(groupAfterUpdating);
+        roomRepository.create(groupBeforeUpdating);
+        roomRepository.update(groupAfterUpdating);
         Room expected = groupAfterUpdating;
-        Room actual = roomDao.getById(1);
-        List<Room> groups = roomDao.getAll();
+        Room actual = roomRepository.getById(1);
+        List<Room> groups = roomRepository.getAll();
         assertTrue(groups.size() == 1);
         assertEquals(expected, actual);
     }
@@ -77,33 +77,33 @@ class RoomRepositoryHibernateTest {
     @Test
     void deactivateShouldSetTrueInRoomInactive() {
         createLesson();
-        roomDao.deactivate(1);
-        assertTrue(roomDao.getById(1).isRoomInactive());
-        assertNull(lessonDao.getById(1).getRoom());
+        roomRepository.deactivate(1);
+        assertTrue(roomRepository.getById(1).isRoomInactive());
+        assertNull(lessonRepository.getById(1).getRoom());
     }
 
     @Test
     void activateShouldSetFalseInRoomInactive() {
         Room room = new Room(1, 1, true);
-        roomDao.create(room);
-        assertTrue(roomDao.getById(1).isRoomInactive());
-        roomDao.activate(1);
-        assertFalse(roomDao.getById(1).isRoomInactive());
+        roomRepository.create(room);
+        assertTrue(roomRepository.getById(1).isRoomInactive());
+        roomRepository.activate(1);
+        assertFalse(roomRepository.getById(1).isRoomInactive());
     }
 
     @Test
-    void whenGetByIdGetNonexistentDataShouldThrowsDaoException() {
+    void whenGetByIdGetNonexistentDataShouldThrowsRepositoryException() {
         RepositoryException thrown = assertThrows(RepositoryException.class, () -> {
-            roomDao.getById(1);
+            roomRepository.getById(1);
         });
         assertTrue(thrown.getMessage().contains("Room with such id 1 does not exist"));
     }
 
     private Lesson createLesson() {
         Room room = new Room(1, 1, false);
-        roomDao.create(room);
+        roomRepository.create(room);
         Lesson lesson = new Lesson(1, "Math", null, null, room, LocalDateTime.now(), false);
-        lessonDao.create(lesson);
+        lessonRepository.create(lesson);
         return lesson;
     }
 }

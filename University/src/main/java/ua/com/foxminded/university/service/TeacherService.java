@@ -12,17 +12,17 @@ import java.util.List;
 @Component
 public class TeacherService implements GenericService<Teacher, Integer>{
 
-    private TeacherRepository teacherDao;
+    private TeacherRepository teacherRepository;
 
     @Autowired
-    public TeacherService(TeacherRepository teacherDao) {
+    public TeacherService(TeacherRepository teacherRepository) {
         super();
-        this.teacherDao = teacherDao;
+        this.teacherRepository = teacherRepository;
     }
 
     public void create(Teacher teacher) {
         try {
-            teacherDao.create(teacher);
+            teacherRepository.create(teacher);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -30,7 +30,7 @@ public class TeacherService implements GenericService<Teacher, Integer>{
 
     public List<Teacher> getAll() {
         try {
-            return teacherDao.getAll();
+            return teacherRepository.getAll();
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -38,7 +38,7 @@ public class TeacherService implements GenericService<Teacher, Integer>{
 
     public List<Teacher> getAllActivated() {
         try {
-            List<Teacher> teachers = teacherDao.getAll();
+            List<Teacher> teachers = teacherRepository.getAll();
             teachers.removeIf(p -> (p.isTeacherInactive()));
             return teachers;
         } catch (RepositoryException e) {
@@ -48,7 +48,7 @@ public class TeacherService implements GenericService<Teacher, Integer>{
 
     public Teacher getById(Integer teacherId) {
         try {
-            return teacherDao.getById(teacherId);
+            return teacherRepository.getById(teacherId);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -56,7 +56,7 @@ public class TeacherService implements GenericService<Teacher, Integer>{
 
     public void update(Teacher teacher) {
         try {
-            teacherDao.update(teacher);
+            teacherRepository.update(teacher);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -64,7 +64,7 @@ public class TeacherService implements GenericService<Teacher, Integer>{
 
     public void deactivate(Integer teacherId) {
         try {
-            teacherDao.deactivate(teacherId);
+            teacherRepository.deactivate(teacherId);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -72,7 +72,7 @@ public class TeacherService implements GenericService<Teacher, Integer>{
 
     public void activate(Integer teacherId) {
         try {
-            teacherDao.activate(teacherId);
+            teacherRepository.activate(teacherId);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }

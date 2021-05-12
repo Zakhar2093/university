@@ -26,22 +26,22 @@ import static org.junit.jupiter.api.Assertions.*;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class TeacherRepositoryHibernateTest {
 
-    private LessonRepository lessonDao;
-    private TeacherRepository teacherDao;
+    private LessonRepository lessonRepository;
+    private TeacherRepository teacherRepository;
 
     @Autowired
-    public TeacherRepositoryHibernateTest(LessonRepository lessonDao, TeacherRepository teacherDao) {
-        this.lessonDao = lessonDao;
-        this.teacherDao = teacherDao;
+    public TeacherRepositoryHibernateTest(LessonRepository lessonRepository, TeacherRepository teacherRepository) {
+        this.lessonRepository = lessonRepository;
+        this.teacherRepository = teacherRepository;
     }
 
     @Test
     void getByIdAndCreateShouldInsertAndGetCorrectData() {
         List<Lesson> lessons = new ArrayList<>();
         Teacher teacher = new Teacher(1, "one", "one", lessons,false);
-        teacherDao.create(teacher);
+        teacherRepository.create(teacher);
         Teacher expected = teacher;
-        Teacher actual = teacherDao.getById(1);
+        Teacher actual = teacherRepository.getById(1);
         assertEquals(expected, actual);
     }
 
@@ -52,11 +52,11 @@ class TeacherRepositoryHibernateTest {
         teachers.add(new Teacher(1, "one", "one", lessons,false));
         teachers.add(new Teacher(2, "two", "two", lessons,false));
         teachers.add(new Teacher(3, "three", "three", lessons,false));
-        teacherDao.create(teachers.get(0));
-        teacherDao.create(teachers.get(1));
-        teacherDao.create(teachers.get(2));
+        teacherRepository.create(teachers.get(0));
+        teacherRepository.create(teachers.get(1));
+        teacherRepository.create(teachers.get(2));
         List<Teacher> expected = teachers;
-        List<Teacher> actual = teacherDao.getAll();
+        List<Teacher> actual = teacherRepository.getAll();
         assertEquals(expected, actual);
     }
 
@@ -65,11 +65,11 @@ class TeacherRepositoryHibernateTest {
         List<Lesson> lessons = new ArrayList<>();
         Teacher groupBeforeUpdating = new Teacher(1, "one", "one", lessons,false);
         Teacher groupAfterUpdating = new Teacher(1, "two", "one", lessons,false);
-        teacherDao.create(groupBeforeUpdating);
-        teacherDao.update(groupAfterUpdating);
+        teacherRepository.create(groupBeforeUpdating);
+        teacherRepository.update(groupAfterUpdating);
         Teacher expected = groupAfterUpdating;
-        Teacher actual = teacherDao.getById(1);
-        List<Teacher> groups = teacherDao.getAll();
+        Teacher actual = teacherRepository.getById(1);
+        List<Teacher> groups = teacherRepository.getAll();
         assertTrue(groups.size() == 1);
         assertEquals(expected, actual);
     }
@@ -77,33 +77,33 @@ class TeacherRepositoryHibernateTest {
     @Test
     void deactivateShouldSetTrueInTeacherInactive() {
         createLesson();
-        teacherDao.deactivate(1);
-        assertTrue(teacherDao.getById(1).isTeacherInactive());
-        assertNull(lessonDao.getById(1).getTeacher());
+        teacherRepository.deactivate(1);
+        assertTrue(teacherRepository.getById(1).isTeacherInactive());
+        assertNull(lessonRepository.getById(1).getTeacher());
     }
 
     @Test
     void activateShouldSetFalseInTeacherInactive() {
         Teacher teacher = new Teacher(1, "one", "one", true);
-        teacherDao.create(teacher);
-        assertTrue(teacherDao.getById(1).isTeacherInactive());
-        teacherDao.activate(1);
-        assertFalse(teacherDao.getById(1).isTeacherInactive());
+        teacherRepository.create(teacher);
+        assertTrue(teacherRepository.getById(1).isTeacherInactive());
+        teacherRepository.activate(1);
+        assertFalse(teacherRepository.getById(1).isTeacherInactive());
     }
 
     @Test
-    void whenGetByIdGetNonexistentDataShouldThrowsDaoException() {
+    void whenGetByIdGetNonexistentDataShouldThrowsRepositoryException() {
         RepositoryException thrown = assertThrows(RepositoryException.class, () -> {
-            teacherDao.getById(1);
+            teacherRepository.getById(1);
         });
         assertTrue(thrown.getMessage().contains("Teacher with such id 1 does not exist"));
     }
 
     private Lesson createLesson() {
         Teacher teacher = new Teacher(1, "one", "one", false);
-        teacherDao.create(teacher);
+        teacherRepository.create(teacher);
         Lesson lesson = new Lesson(1, "Math", teacher, null, null, LocalDateTime.now(), false);
-        lessonDao.create(lesson);
+        lessonRepository.create(lesson);
         return lesson;
     }
 }

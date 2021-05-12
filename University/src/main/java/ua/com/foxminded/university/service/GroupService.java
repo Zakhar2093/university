@@ -12,17 +12,17 @@ import java.util.List;
 @Component
 public class GroupService implements GenericService<Group, Integer>{
 
-    private GroupRepository groupDao;
+    private GroupRepository groupRepository;
 
     @Autowired
-    public GroupService(GroupRepository groupDao) {
+    public GroupService(GroupRepository groupRepository) {
         super();
-        this.groupDao = groupDao;
+        this.groupRepository = groupRepository;
     }
 
     public void create(Group group) {
         try {
-            groupDao.create(group);
+            groupRepository.create(group);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -30,7 +30,7 @@ public class GroupService implements GenericService<Group, Integer>{
 
     public List<Group> getAll() {
         try {
-            return groupDao.getAll();
+            return groupRepository.getAll();
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -38,7 +38,7 @@ public class GroupService implements GenericService<Group, Integer>{
 
     public List<Group> getAllActivated() {
         try {
-            List<Group> groups = groupDao.getAll();
+            List<Group> groups = groupRepository.getAll();
             groups.removeIf(p -> (p.isGroupInactive()));
             return groups;
         } catch (RepositoryException e) {
@@ -48,7 +48,7 @@ public class GroupService implements GenericService<Group, Integer>{
 
     public Group getById(Integer groupId) {
         try {
-            return groupDao.getById(groupId);
+            return groupRepository.getById(groupId);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -56,7 +56,7 @@ public class GroupService implements GenericService<Group, Integer>{
 
     public void update(Group group) {
         try {
-            groupDao.update(group);
+            groupRepository.update(group);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -65,7 +65,7 @@ public class GroupService implements GenericService<Group, Integer>{
 
     public void deactivate(Integer groupId) {
         try {
-            groupDao.deactivate(groupId);
+            groupRepository.deactivate(groupId);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -73,7 +73,7 @@ public class GroupService implements GenericService<Group, Integer>{
 
     public void activate(Integer groupId) {
         try {
-            groupDao.activate(groupId);
+            groupRepository.activate(groupId);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }

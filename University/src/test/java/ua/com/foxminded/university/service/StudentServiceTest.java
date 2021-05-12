@@ -23,141 +23,141 @@ class StudentServiceTest {
     private StudentService studentService;
 
     @Mock
-    private GroupRepository groupDao;
+    private GroupRepository groupRepository;
     
     @Mock
-    private StudentRepository studentDao;
+    private StudentRepository studentRepository;
 
     @BeforeEach
     public void initMocks() {
         MockitoAnnotations.initMocks(this);
-        studentService = new StudentService(studentDao, groupDao);
+        studentService = new StudentService(studentRepository, groupRepository);
     }
 
     @Test
     void createShouldInvokeOnlyOnceWhenTakesStudent() {
         studentService.create(new Student());
-        verify(studentDao, only()).create(any(Student.class));
+        verify(studentRepository, only()).create(any(Student.class));
     }
 
     @Test
     void createShouldInvokeOnlyOnceWhenTakesStudentDto() {
         studentService.create(mockGroup());
-        verify(studentDao, only()).create(any(Student.class));
+        verify(studentRepository, only()).create(any(Student.class));
     }
 
     private StudentDto mockGroup(){
         StudentDto studentDto = new StudentDto();
         Group group = new Group(1, "Math", false);
-        when(groupDao.getById(anyInt())).thenReturn(group);
+        when(groupRepository.getById(anyInt())).thenReturn(group);
         return studentDto;
     }
 
     @Test
     void getAllShouldInvokeOnlyOnce() {
         studentService.getAll();
-        verify(studentDao, only()).getAll();
+        verify(studentRepository, only()).getAll();
     }
 
     @Test
     void getAllActivatedShouldInvokeOnlyOnce() {
         studentService.getAllActivated();
-        verify(studentDao, only()).getAll();
+        verify(studentRepository, only()).getAll();
     }
     
     @Test
     void getByIdShouldInvokeOnlyOnce() {
         studentService.getById(1);
-        verify(studentDao, only()).getById(anyInt());
+        verify(studentRepository, only()).getById(anyInt());
     }
 
     @Test
     void getStudentsByGroupIdShouldInvokeOnlyOnce() {
         studentService.getStudentsByGroupId(1);
-        verify(studentDao, only()).getStudentsByGroupId(anyInt());
+        verify(studentRepository, only()).getStudentsByGroupId(anyInt());
     }
 
     @Test
-    void whenGetStudentsByGroupIdCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(studentDao).getStudentsByGroupId(anyInt());
+    void whenGetStudentsByGroupIdCatchRepositoryExceptionShouldThrowServiceException() {
+        doThrow(new RepositoryException(EMPTY_STRING)).when(studentRepository).getStudentsByGroupId(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {studentService.getStudentsByGroupId(1); });
     }
 
     @Test
     void getDtoByIdShouldInvokeOnlyOnce() {
         Student student = new Student(1, "one", "two", new Group(), false);
-        when(studentDao.getById(anyInt())).thenReturn(student);
+        when(studentRepository.getById(anyInt())).thenReturn(student);
         studentService.getDtoById(1);
-        verify(studentDao, only()).getById(anyInt());
+        verify(studentRepository, only()).getById(anyInt());
     }
     
     @Test
     void updateShouldInvokeOnlyOnceWhenTakesStudent() {
         studentService.update(new Student());
-        verify(studentDao, only()).update(any(Student.class));
+        verify(studentRepository, only()).update(any(Student.class));
     }
 
     @Test
     void updateShouldInvokeOnlyOnceWhenTakesStudentDto() {
         studentService.update(mockGroup());
-        verify(studentDao, only()).update(any(Student.class));
+        verify(studentRepository, only()).update(any(Student.class));
     }
     
     @Test
     void deactivateShouldInvokeOnlyOnce() {
         studentService.deactivate(1);
-        verify(studentDao, times(1)).deactivate(anyInt());
+        verify(studentRepository, times(1)).deactivate(anyInt());
     }
     
     @Test
     void activateShouldInvokeOnlyOnce() {
         studentService.activate(1);
-        verify(studentDao, only()).activate(anyInt());
+        verify(studentRepository, only()).activate(anyInt());
     }
 
     @Test
-    void whenCreateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(studentDao).create(any(Student.class));
+    void whenCreateCatchRepositoryExceptionShouldThrowServiceException() {
+        doThrow(new RepositoryException(EMPTY_STRING)).when(studentRepository).create(any(Student.class));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             studentService.create(new Student());
         });
     }
     
     @Test
-    void whenGetAllCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(studentDao).getAll();
+    void whenGetAllCatchRepositoryExceptionShouldThrowServiceException() {
+        doThrow(new RepositoryException(EMPTY_STRING)).when(studentRepository).getAll();
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             studentService.getAll();
         });    
     }
     
     @Test
-    void whenGetByIdCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(studentDao).getById(anyInt());
+    void whenGetByIdCatchRepositoryExceptionShouldThrowServiceException() {
+        doThrow(new RepositoryException(EMPTY_STRING)).when(studentRepository).getById(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             studentService.getById(1);
         });
     }
     
     @Test
-    void whenUpdateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(studentDao).update(any(Student.class));
+    void whenUpdateCatchRepositoryExceptionShouldThrowServiceException() {
+        doThrow(new RepositoryException(EMPTY_STRING)).when(studentRepository).update(any(Student.class));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             studentService.update(new Student());
         });
     }
     
     @Test
-    void whenDeactivateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(studentDao).deactivate(anyInt());
+    void whenDeactivateCatchRepositoryExceptionShouldThrowServiceException() {
+        doThrow(new RepositoryException(EMPTY_STRING)).when(studentRepository).deactivate(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             studentService.deactivate(1);
         });
     }
     
     @Test
-    void whenActivateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(studentDao).activate(anyInt());
+    void whenActivateCatchRepositoryExceptionShouldThrowServiceException() {
+        doThrow(new RepositoryException(EMPTY_STRING)).when(studentRepository).activate(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             studentService.activate(1);
         });

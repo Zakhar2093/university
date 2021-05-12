@@ -25,58 +25,58 @@ import static org.junit.jupiter.api.Assertions.*;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class StudentRepositoryHibernateTest {
 
-    private GroupRepository groupDao;
-    private StudentRepository studentDao;
+    private GroupRepository groupRepository;
+    private StudentRepository studentRepository;
 
     @Autowired
-    public StudentRepositoryHibernateTest(GroupRepository groupDao, StudentRepository studentDao) {
-        this.groupDao = groupDao;
-        this.studentDao = studentDao;
+    public StudentRepositoryHibernateTest(GroupRepository groupRepository, StudentRepository studentRepository) {
+        this.groupRepository = groupRepository;
+        this.studentRepository = studentRepository;
     }
 
     @Test
     void getByIdAndCreateShouldInsertAndGetCorrectData() {
         Group group = new Group(1, "any", false);
-        groupDao.create(group);
+        groupRepository.create(group);
 
         Student student = new Student(1, "one", "one", group,false);
-        studentDao.create(student);
+        studentRepository.create(student);
 
         Student expected = student;
-        Student actual = studentDao.getById(1);
+        Student actual = studentRepository.getById(1);
         assertEquals(expected, actual);
     }
 
     @Test
     void getAllAndCreateShouldInsertAndGetCorrectData() {
         Group group = new Group(1, "any", false);
-        groupDao.create(group);
+        groupRepository.create(group);
 
         List<Student> students = new ArrayList<>();
         students.add(new Student(1, "one", "one", group,false));
         students.add(new Student(2, "two", "two", group,false));
         students.add(new Student(3, "three", "three", group,false));
-        studentDao.create(students.get(0));
-        studentDao.create(students.get(1));
-        studentDao.create(students.get(2));
+        studentRepository.create(students.get(0));
+        studentRepository.create(students.get(1));
+        studentRepository.create(students.get(2));
 
         List<Student> expected = students;
-        List<Student> actual = studentDao.getAll();
+        List<Student> actual = studentRepository.getAll();
         assertEquals(expected, actual);
     }
 
     @Test
     void updateShouldUpdateCorrectData() {
         Group group = new Group(1, "any", false);
-        groupDao.create(group);
+        groupRepository.create(group);
 
         Student groupBeforeUpdating = new Student(1, "one", "one", group,false);
         Student groupAfterUpdating = new Student(1, "two", "one", group,false);
-        studentDao.create(groupBeforeUpdating);
-        studentDao.update(groupAfterUpdating);
+        studentRepository.create(groupBeforeUpdating);
+        studentRepository.update(groupAfterUpdating);
         Student expected = groupAfterUpdating;
-        Student actual = studentDao.getById(1);
-        List<Student> groups = studentDao.getAll();
+        Student actual = studentRepository.getById(1);
+        List<Student> groups = studentRepository.getAll();
 
         assertTrue(groups.size() == 1);
         assertEquals(expected, actual);
@@ -85,27 +85,27 @@ class StudentRepositoryHibernateTest {
     @Test
     void deactivateShouldSetTrueInStudentInactive() {
         Student student = createStudentWithGroup();
-        studentDao.deactivate(student.getStudentId());
-        assertTrue(studentDao.getById(1).isStudentInactive());
-        assertTrue(groupDao.getById(1).getStudents().isEmpty());
+        studentRepository.deactivate(student.getStudentId());
+        assertTrue(studentRepository.getById(1).isStudentInactive());
+        assertTrue(groupRepository.getById(1).getStudents().isEmpty());
     }
 
     @Test
     void activateShouldSetFalseInStudentInactive() {
         Group group = new Group(1, "any", false);
-        groupDao.create(group);
+        groupRepository.create(group);
         Student student = new Student(1, "one", "one", group, true);
-        studentDao.create(student);
+        studentRepository.create(student);
 
-        assertTrue(studentDao.getById(1).isStudentInactive());
-        studentDao.activate(1);
-        assertFalse(studentDao.getById(1).isStudentInactive());
+        assertTrue(studentRepository.getById(1).isStudentInactive());
+        studentRepository.activate(1);
+        assertFalse(studentRepository.getById(1).isStudentInactive());
     }
 
     @Test
-    void whenGetByIdGetNonexistentDataShouldThrowsDaoException() {
+    void whenGetByIdGetNonexistentDataShouldThrowsRepositoryException() {
         RepositoryException thrown = assertThrows(RepositoryException.class, () -> {
-            studentDao.getById(1);
+            studentRepository.getById(1);
         });
         assertTrue(thrown.getMessage().contains("Student with such id 1 does not exist"));
     }
@@ -114,26 +114,26 @@ class StudentRepositoryHibernateTest {
     void getStudentsByGroupIdShouldReturnCorrectData(){
         Group group1 = new Group(1, "Java", false);
         Group group2 = new Group(2, "C++", false);
-        groupDao.create(group1);
-        groupDao.create(group2);
+        groupRepository.create(group1);
+        groupRepository.create(group2);
         Student student1 = new Student(1, "one", "one", group1, false);
         Student student2 = new Student(2, "two", "two", group1, false);
         Student student3 = new Student(3, "three", "three", group2, false);
-        studentDao.create(student1);
-        studentDao.create(student2);
-        studentDao.create(student3);
+        studentRepository.create(student1);
+        studentRepository.create(student2);
+        studentRepository.create(student3);
         List<Student> expected = new ArrayList<>();
         expected.add(student1);
         expected.add(student2);
-        List<Student> actual = studentDao.getStudentsByGroupId(1);
+        List<Student> actual = studentRepository.getStudentsByGroupId(1);
         assertEquals(expected, actual);
     }
 
     private Student createStudentWithGroup() {
         Group group = new Group(1, "any", false);
-        groupDao.create(group);
+        groupRepository.create(group);
         Student student = new Student(1, "one", "one", group, false);
-        studentDao.create(student);
+        studentRepository.create(student);
         return student;
     }
 }

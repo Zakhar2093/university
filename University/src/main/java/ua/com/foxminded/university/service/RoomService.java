@@ -12,17 +12,17 @@ import java.util.List;
 @Component
 public class RoomService implements GenericService<Room, Integer>{
 
-    private RoomRepository roomDao;
+    private RoomRepository roomRepository;
 
     @Autowired
-    public RoomService(RoomRepository roomDao) {
+    public RoomService(RoomRepository roomRepository) {
         super();
-        this.roomDao = roomDao;
+        this.roomRepository = roomRepository;
     }
     
     public void create(Room room) {
         try {
-            roomDao.create(room);
+            roomRepository.create(room);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -30,7 +30,7 @@ public class RoomService implements GenericService<Room, Integer>{
     
     public List<Room> getAll(){
         try {
-            return roomDao.getAll();
+            return roomRepository.getAll();
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -38,7 +38,7 @@ public class RoomService implements GenericService<Room, Integer>{
 
     public List<Room> getAllActivated() {
         try {
-            List<Room> rooms = roomDao.getAll();
+            List<Room> rooms = roomRepository.getAll();
             rooms.removeIf(p -> (p.isRoomInactive()));
             return rooms;
         } catch (RepositoryException e) {
@@ -48,7 +48,7 @@ public class RoomService implements GenericService<Room, Integer>{
 
     public Room getById(Integer roomId) {
         try {
-            return roomDao.getById(roomId);
+            return roomRepository.getById(roomId);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -56,7 +56,7 @@ public class RoomService implements GenericService<Room, Integer>{
 
     public void update(Room room) {
         try {
-            roomDao.update(room);
+            roomRepository.update(room);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -64,7 +64,7 @@ public class RoomService implements GenericService<Room, Integer>{
 
     public void deactivate(Integer roomId) {
         try {
-            roomDao.deactivate(roomId);
+            roomRepository.deactivate(roomId);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -72,7 +72,7 @@ public class RoomService implements GenericService<Room, Integer>{
     
     public void activate(Integer roomId) {
         try {
-            roomDao.activate(roomId);
+            roomRepository.activate(roomId);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }

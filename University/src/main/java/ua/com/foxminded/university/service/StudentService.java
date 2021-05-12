@@ -15,19 +15,19 @@ import java.util.List;
 @Component
 public class StudentService implements GenericService<Student, Integer>{
     
-    private StudentRepository studentDao;
-    private GroupRepository groupDao;
+    private StudentRepository studentRepository;
+    private GroupRepository groupRepository;
     
     @Autowired
-    public StudentService(StudentRepository studentDao, GroupRepository groupDao) {
+    public StudentService(StudentRepository studentRepository, GroupRepository groupRepository) {
         super();
-        this.studentDao = studentDao;
-        this.groupDao = groupDao;
+        this.studentRepository = studentRepository;
+        this.groupRepository = groupRepository;
     }
     
     public void create(Student student) {
         try {
-            studentDao.create(student);
+            studentRepository.create(student);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -36,7 +36,7 @@ public class StudentService implements GenericService<Student, Integer>{
     public void create(StudentDto studentDto) {
         try {
             Student student = mapDtoToStudent(studentDto);
-            studentDao.create(student);
+            studentRepository.create(student);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -44,7 +44,7 @@ public class StudentService implements GenericService<Student, Integer>{
     
     public List<Student> getAll(){
         try {
-            return studentDao.getAll();
+            return studentRepository.getAll();
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -52,7 +52,7 @@ public class StudentService implements GenericService<Student, Integer>{
 
     public List<Student> getAllActivated(){
         try {
-            List<Student> students = studentDao.getAll();
+            List<Student> students = studentRepository.getAll();
             students.removeIf(p -> (p.isStudentInactive()));
             return students;
         } catch (RepositoryException e) {
@@ -62,7 +62,7 @@ public class StudentService implements GenericService<Student, Integer>{
 
     public Student getById(Integer studentId) {
         try {
-            return studentDao.getById(studentId);
+            return studentRepository.getById(studentId);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -70,7 +70,7 @@ public class StudentService implements GenericService<Student, Integer>{
 
     public StudentDto getDtoById(Integer studentId) {
         try {
-            return mapStudentToDto(studentDao.getById(studentId));
+            return mapStudentToDto(studentRepository.getById(studentId));
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -78,7 +78,7 @@ public class StudentService implements GenericService<Student, Integer>{
 
     public void update(Student student) {
         try {
-            studentDao.update(student);
+            studentRepository.update(student);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -87,7 +87,7 @@ public class StudentService implements GenericService<Student, Integer>{
     public void update(StudentDto studentDto) {
         try {
             Student student = mapDtoToStudent(studentDto);
-            studentDao.update(student);
+            studentRepository.update(student);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -95,7 +95,7 @@ public class StudentService implements GenericService<Student, Integer>{
 
     public void deactivate(Integer studentId) {
         try {
-            studentDao.deactivate(studentId);
+            studentRepository.deactivate(studentId);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -103,7 +103,7 @@ public class StudentService implements GenericService<Student, Integer>{
     
     public void activate(Integer studentId) {
         try {
-            studentDao.activate(studentId);
+            studentRepository.activate(studentId);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -111,7 +111,7 @@ public class StudentService implements GenericService<Student, Integer>{
 
     public List<Student> getStudentsByGroupId(Integer groupId) {
         try {
-            return studentDao.getStudentsByGroupId(groupId);
+            return studentRepository.getStudentsByGroupId(groupId);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -122,7 +122,7 @@ public class StudentService implements GenericService<Student, Integer>{
         student.setStudentId(dto.getStudentId());
         student.setFirstName(dto.getFirstName());
         student.setLastName(dto.getLastName());
-        Group group = groupDao.getById(dto.getGroupId());
+        Group group = groupRepository.getById(dto.getGroupId());
         student.setGroup(group);
         student.setStudentInactive(dto.isStudentInactive());
         return student;

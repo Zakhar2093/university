@@ -19,100 +19,100 @@ class GroupServiceTest {
     private static final String EMPTY_STRING = "";
     private GroupService groupService;
     @Mock
-    private GroupRepository groupDao;
+    private GroupRepository groupRepository;
 
 
     @BeforeEach
     public void initMocks() {
         MockitoAnnotations.initMocks(this);
-        groupService = new GroupService(groupDao);
+        groupService = new GroupService(groupRepository);
     }
 
     @Test
     void createShouldInvokeOnlyOnce() {
         groupService.create(new Group());
-        verify(groupDao, only()).create(any(Group.class));
+        verify(groupRepository, only()).create(any(Group.class));
     }
     
     @Test
     void getAllShouldInvokeOnlyOnce() {
         groupService.getAll();
-        verify(groupDao, only()).getAll();
+        verify(groupRepository, only()).getAll();
     }
 
     @Test
     void getAllActivatedShouldInvokeOnlyOnce() {
         groupService.getAllActivated();
-        verify(groupDao, only()).getAll();
+        verify(groupRepository, only()).getAll();
     }
     
     @Test
     void getByIdShouldInvokeOnlyOnce() {
         groupService.getById(1);
-        verify(groupDao, only()).getById(anyInt());
+        verify(groupRepository, only()).getById(anyInt());
     }
     
     @Test
     void updateShouldInvokeOnlyOnce() {
         groupService.update(new Group());
-        verify(groupDao, only()).update(any(Group.class));
+        verify(groupRepository, only()).update(any(Group.class));
     }
     
     @Test
     void deactivateShouldInvokeOnlyOnce() {
         groupService.deactivate(1);
-        verify(groupDao, times(1)).deactivate(anyInt());
+        verify(groupRepository, times(1)).deactivate(anyInt());
     }
     
     @Test
     void activateShouldInvokeOnlyOnce() {
         groupService.activate(1);
-        verify(groupDao, only()).activate(anyInt());
+        verify(groupRepository, only()).activate(anyInt());
     }
     
     @Test
-    void whenCreateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(groupDao).create(any(Group.class));
+    void whenCreateCatchRepositoryExceptionShouldThrowServiceException() {
+        doThrow(new RepositoryException(EMPTY_STRING)).when(groupRepository).create(any(Group.class));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             groupService.create(new Group());
         });
     }
     
     @Test
-    void whenGetAllCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(groupDao).getAll();
+    void whenGetAllCatchRepositoryExceptionShouldThrowServiceException() {
+        doThrow(new RepositoryException(EMPTY_STRING)).when(groupRepository).getAll();
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             groupService.getAll();
         });    
     }
     
     @Test
-    void whenGetByIdCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(groupDao).getById(anyInt());
+    void whenGetByIdCatchRepositoryExceptionShouldThrowServiceException() {
+        doThrow(new RepositoryException(EMPTY_STRING)).when(groupRepository).getById(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             groupService.getById(1);
         });
     }
     
     @Test
-    void whenUpdateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(groupDao).update(any(Group.class));
+    void whenUpdateCatchRepositoryExceptionShouldThrowServiceException() {
+        doThrow(new RepositoryException(EMPTY_STRING)).when(groupRepository).update(any(Group.class));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             groupService.update(new Group());
         });
     }
     
     @Test
-    void whenDeactivateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(groupDao).deactivate(anyInt());
+    void whenDeactivateCatchRepositoryExceptionShouldThrowServiceException() {
+        doThrow(new RepositoryException(EMPTY_STRING)).when(groupRepository).deactivate(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             groupService.deactivate(1);
         });
     }
     
     @Test
-    void whenActivateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(groupDao).activate(anyInt());
+    void whenActivateCatchRepositoryExceptionShouldThrowServiceException() {
+        doThrow(new RepositoryException(EMPTY_STRING)).when(groupRepository).activate(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             groupService.activate(1);
         });

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+import ua.com.foxminded.university.repository.LessonRepository;
 import ua.com.foxminded.university.repository.StudentRepository;
 import ua.com.foxminded.university.repository.TeacherRepository;
 import ua.com.foxminded.university.exception.RepositoryException;
@@ -22,17 +23,17 @@ import java.util.Optional;
 
 @Component
 @Repository
-public class LessonRepositoryHibernate implements ua.com.foxminded.university.repository.LessonRepository {
+public class LessonRepositoryHibernate implements LessonRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(LessonRepositoryHibernate.class);
     private SessionFactory sessionFactory;
-    private StudentRepository studentDao;
+    private StudentRepository studentRepository;
     private Environment env;
 
     @Autowired
-    public LessonRepositoryHibernate(SessionFactory sessionFactory, StudentRepository studentDao, Environment env) {
+    public LessonRepositoryHibernate(SessionFactory sessionFactory, StudentRepository studentRepository, Environment env) {
         this.sessionFactory = sessionFactory;
-        this.studentDao = studentDao;
+        this.studentRepository = studentRepository;
         this.env = env;
     }
 
@@ -146,7 +147,7 @@ public class LessonRepositoryHibernate implements ua.com.foxminded.university.re
         Transaction tx = session.beginTransaction();
 
         Query query = session.createQuery(env.getProperty("lesson.getLessonByStudentForDay"));
-        query.setParameter("group", studentDao.getById(studentId).getGroup());
+        query.setParameter("group", studentRepository.getById(studentId).getGroup());
         query.setParameter("year", date.getYear());
         query.setParameter("month", date.getMonthValue());
         query.setParameter("day", date.getDayOfMonth());
@@ -163,7 +164,7 @@ public class LessonRepositoryHibernate implements ua.com.foxminded.university.re
         Transaction tx = session.beginTransaction();
 
         Query query = session.createQuery(env.getProperty("lesson.getLessonByStudentForMonth"));
-        query.setParameter("group", studentDao.getById(studentId).getGroup());
+        query.setParameter("group", studentRepository.getById(studentId).getGroup());
         query.setParameter("year", date.getYear());
         query.setParameter("month", date.getMonthValue());
         List<Lesson> lessons = query.getResultList();

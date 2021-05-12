@@ -28,15 +28,15 @@ import static org.junit.jupiter.api.Assertions.*;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class GroupRepositoryHibernateTest {
 
-    private LessonRepository lessonDao;
-    private GroupRepository groupDao;
-    private StudentRepository studentDao;
+    private LessonRepository lessonRepository;
+    private GroupRepository groupRepository;
+    private StudentRepository studentRepository;
 
     @Autowired
-    public GroupRepositoryHibernateTest(LessonRepository lessonDao, GroupRepository groupDao, StudentRepository studentDao) {
-        this.lessonDao = lessonDao;
-        this.groupDao = groupDao;
-        this.studentDao = studentDao;
+    public GroupRepositoryHibernateTest(LessonRepository lessonRepository, GroupRepository groupRepository, StudentRepository studentRepository) {
+        this.lessonRepository = lessonRepository;
+        this.groupRepository = groupRepository;
+        this.studentRepository = studentRepository;
     }
 
     @Test
@@ -44,9 +44,9 @@ class GroupRepositoryHibernateTest {
         List<Lesson> lessons = new ArrayList<>();
         List<Student> students = new ArrayList<>();
         Group group = new Group(1, "one", students, lessons,false);
-        groupDao.create(group);
+        groupRepository.create(group);
         Group expected = group;
-        Group actual = groupDao.getById(1);
+        Group actual = groupRepository.getById(1);
         assertEquals(expected, actual);
     }
 
@@ -58,11 +58,11 @@ class GroupRepositoryHibernateTest {
         groups.add(new Group(1, "one", students, lessons,false));
         groups.add(new Group(2, "two", students, lessons,false));
         groups.add(new Group(3, "three", students, lessons,false));
-        groupDao.create(groups.get(0));
-        groupDao.create(groups.get(1));
-        groupDao.create(groups.get(2));
+        groupRepository.create(groups.get(0));
+        groupRepository.create(groups.get(1));
+        groupRepository.create(groups.get(2));
         List<Group> expected = groups;
-        List<Group> actual = groupDao.getAll();
+        List<Group> actual = groupRepository.getAll();
         assertEquals(expected, actual);
     }
 
@@ -72,11 +72,11 @@ class GroupRepositoryHibernateTest {
         List<Lesson> lessons = new ArrayList<>();
         Group groupBeforeUpdating = new Group(1, "one", students, lessons,false);
         Group groupAfterUpdating = new Group(1, "two", students, lessons,false);
-        groupDao.create(groupBeforeUpdating);
-        groupDao.update(groupAfterUpdating);
+        groupRepository.create(groupBeforeUpdating);
+        groupRepository.update(groupAfterUpdating);
         Group expected = groupAfterUpdating;
-        Group actual = groupDao.getById(1);
-        List<Group> groups = groupDao.getAll();
+        Group actual = groupRepository.getById(1);
+        List<Group> groups = groupRepository.getAll();
         assertTrue(groups.size() == 1);
         assertEquals(expected, actual);
     }
@@ -84,31 +84,31 @@ class GroupRepositoryHibernateTest {
     @Test
     void deactivateShouldSetTrueInGroupInactive() {
         Group group = new Group(1, "one",  false);
-        groupDao.create(group);
+        groupRepository.create(group);
         Lesson lesson = new Lesson(1, "Math", null, group, null, LocalDateTime.now(), false);
-        lessonDao.create(lesson);
+        lessonRepository.create(lesson);
         Student student = new Student(1, "one", "one", group, false);
-        studentDao.create(student);
+        studentRepository.create(student);
         createLesson();
-        groupDao.deactivate(group.getGroupId());
-        assertTrue(groupDao.getById(group.getGroupId()).isGroupInactive());
-        assertNull(lessonDao.getById(lesson.getLessonId()).getGroup());
-        assertNull(studentDao.getById(student.getStudentId()).getGroup());
+        groupRepository.deactivate(group.getGroupId());
+        assertTrue(groupRepository.getById(group.getGroupId()).isGroupInactive());
+        assertNull(lessonRepository.getById(lesson.getLessonId()).getGroup());
+        assertNull(studentRepository.getById(student.getStudentId()).getGroup());
     }
 
     @Test
     void activateShouldSetFalseInGroupInactive() {
         Group group = new Group(1, "one", true);
-        groupDao.create(group);
-        assertTrue(groupDao.getById(1).isGroupInactive());
-        groupDao.activate(1);
-        assertFalse(groupDao.getById(1).isGroupInactive());
+        groupRepository.create(group);
+        assertTrue(groupRepository.getById(1).isGroupInactive());
+        groupRepository.activate(1);
+        assertFalse(groupRepository.getById(1).isGroupInactive());
     }
 
     @Test
-    void whenGetByIdGetNonexistentDataShouldThrowsDaoException() {
+    void whenGetByIdGetNonexistentDataShouldThrowsRepositoryException() {
         RepositoryException thrown = assertThrows(RepositoryException.class, () -> {
-            groupDao.getById(1);
+            groupRepository.getById(1);
         });
         assertTrue(thrown.getMessage().contains("Group with such id 1 does not exist"));
     }
@@ -116,9 +116,9 @@ class GroupRepositoryHibernateTest {
     private Lesson createLesson() {
 
         Group group = new Group(1, "one",  false);
-        groupDao.create(group);
+        groupRepository.create(group);
         Lesson lesson = new Lesson(1, "Math", null, group, null, LocalDateTime.now(), false);
-        lessonDao.create(lesson);
+        lessonRepository.create(lesson);
         return lesson;
     }
 }
