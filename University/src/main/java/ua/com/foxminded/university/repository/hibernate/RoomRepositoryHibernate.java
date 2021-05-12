@@ -6,6 +6,7 @@ import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ua.com.foxminded.university.exception.RepositoryException;
@@ -22,10 +23,12 @@ public class RoomRepositoryHibernate implements ua.com.foxminded.university.repo
 
     private static final Logger logger = LoggerFactory.getLogger(RoomRepositoryHibernate.class);
     private SessionFactory sessionFactory;
+    private Environment env;
 
     @Autowired
-    public RoomRepositoryHibernate(SessionFactory sessionFactory) {
+    public RoomRepositoryHibernate(SessionFactory sessionFactory, Environment env) {
         this.sessionFactory = sessionFactory;
+        this.env = env;
     }
 
     public void create(Room room) {
@@ -42,7 +45,7 @@ public class RoomRepositoryHibernate implements ua.com.foxminded.university.repo
     public List<Room> getAll() {
         logger.debug("Getting all Rooms");
         Session session = sessionFactory.openSession();
-        Query query = session.createQuery("from Room");
+        Query query = session.createQuery(env.getProperty("room.getAll"));
         return query.getResultList();
     }
 
@@ -75,11 +78,11 @@ public class RoomRepositoryHibernate implements ua.com.foxminded.university.repo
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
 
-        Query deactivateRoom = session.createQuery("UPDATE Room SET roomInactive = true WHERE id =: roomId");
+        Query deactivateRoom = session.createQuery(env.getProperty("room.deactivate"));
         deactivateRoom.setParameter("roomId", roomId);
         deactivateRoom.executeUpdate();
 
-        Query deleteRoomFromLesson = session.createQuery("UPDATE Lesson L SET L.room = null WHERE L.room =: roomId");
+        Query deleteRoomFromLesson = session.createQuery(env.getProperty("room.removeRoomFromAllLessons"));
         Room roomG = new Room();
         roomG.setRoomId(roomId);
         deleteRoomFromLesson.setParameter("roomId", roomG);
@@ -95,7 +98,7 @@ public class RoomRepositoryHibernate implements ua.com.foxminded.university.repo
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
 
-        Query query = session.createQuery("UPDATE Room SET roomInactive = false WHERE id =: roomId");
+        Query query = session.createQuery(env.getProperty("room.activate"));
         query.setParameter("roomId", roomId);
         query.executeUpdate();
 

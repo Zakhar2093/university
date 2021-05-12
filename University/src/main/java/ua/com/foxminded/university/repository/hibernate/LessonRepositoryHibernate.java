@@ -6,6 +6,7 @@ import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ua.com.foxminded.university.repository.StudentRepository;
@@ -27,12 +28,14 @@ public class LessonRepositoryHibernate implements ua.com.foxminded.university.re
     private SessionFactory sessionFactory;
     private TeacherRepository teacherDao;
     private StudentRepository studentDao;
+    private Environment env;
 
     @Autowired
-    public LessonRepositoryHibernate(SessionFactory sessionFactory, TeacherRepository teacherDao, StudentRepository studentDao) {
+    public LessonRepositoryHibernate(SessionFactory sessionFactory, TeacherRepository teacherDao, StudentRepository studentDao, Environment env) {
         this.sessionFactory = sessionFactory;
         this.teacherDao = teacherDao;
         this.studentDao = studentDao;
+        this.env = env;
     }
 
     public void create(Lesson lesson) {
@@ -49,7 +52,7 @@ public class LessonRepositoryHibernate implements ua.com.foxminded.university.re
     public List<Lesson> getAll() {
         logger.debug("Getting all Lessons");
         Session session = sessionFactory.openSession();
-        Query query = session.createQuery("from Lesson");
+        Query query = session.createQuery(env.getProperty("lesson.getAll"));
         return query.getResultList();
     }
 
@@ -82,7 +85,7 @@ public class LessonRepositoryHibernate implements ua.com.foxminded.university.re
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
 
-        Query query = session.createQuery("UPDATE Lesson L SET L.lessonInactive = true, L.group = null, L.room = null, L.teacher = null WHERE L.lessonId =: lessonId");
+        Query query = session.createQuery(env.getProperty("lesson.deactivate"));
         query.setParameter("lessonId", lessonId);
         query.executeUpdate();
 
@@ -96,7 +99,7 @@ public class LessonRepositoryHibernate implements ua.com.foxminded.university.re
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
 
-        Query query = session.createQuery("UPDATE Lesson SET lessonInactive = false WHERE id =: lessonId");
+        Query query = session.createQuery(env.getProperty("lesson.activate"));
         query.setParameter("lessonId", lessonId);
         query.executeUpdate();
 
@@ -111,7 +114,7 @@ public class LessonRepositoryHibernate implements ua.com.foxminded.university.re
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
 
-        Query query = session.createQuery("FROM Lesson L WHERE L.teacher =: teacher AND EXTRACT(YEAR FROM L.date) =: year AND EXTRACT(MONTH FROM L.date) =: month AND EXTRACT(DAY FROM L.date) =: day");
+        Query query = session.createQuery(env.getProperty("lesson.getLessonByTeacherForDay"));
         query.setParameter("teacher", teacherDao.getById(teacherId));
         query.setParameter("year", date.getYear());
         query.setParameter("month", date.getMonthValue());
@@ -128,7 +131,7 @@ public class LessonRepositoryHibernate implements ua.com.foxminded.university.re
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
 
-        Query query = session.createQuery("FROM Lesson L WHERE L.teacher =: teacher AND EXTRACT(YEAR FROM L.date) =: year AND EXTRACT(MONTH FROM L.date) =: month");
+        Query query = session.createQuery(env.getProperty("lesson.getLessonByTeacherForMonth"));
         query.setParameter("teacher", teacherDao.getById(teacherId));
         query.setParameter("year", date.getYear());
         query.setParameter("month", date.getMonthValue());
@@ -144,7 +147,7 @@ public class LessonRepositoryHibernate implements ua.com.foxminded.university.re
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
 
-        Query query = session.createQuery("FROM Lesson L WHERE L.group =: group AND EXTRACT(YEAR FROM L.date) =: year AND EXTRACT(MONTH FROM L.date) =: month AND EXTRACT(DAY FROM L.date) =: day");
+        Query query = session.createQuery(env.getProperty("lesson.getLessonByStudentForDay"));
         query.setParameter("group", studentDao.getById(studentId).getGroup());
         query.setParameter("year", date.getYear());
         query.setParameter("month", date.getMonthValue());
@@ -161,7 +164,7 @@ public class LessonRepositoryHibernate implements ua.com.foxminded.university.re
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
 
-        Query query = session.createQuery("FROM Lesson L WHERE L.group =: group AND EXTRACT(YEAR FROM L.date) =: year AND EXTRACT(MONTH FROM L.date) =: month");
+        Query query = session.createQuery(env.getProperty("lesson.getLessonByStudentForMonth"));
         query.setParameter("group", studentDao.getById(studentId).getGroup());
         query.setParameter("year", date.getYear());
         query.setParameter("month", date.getMonthValue());
@@ -178,7 +181,7 @@ public class LessonRepositoryHibernate implements ua.com.foxminded.university.re
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
 
-        Query query = session.createQuery("SELECT G.lessons FROM Group G WHERE G.groupId =: groupId");
+        Query query = session.createQuery(env.getProperty("lesson.getLessonsByGroupId"));
         query.setParameter("groupId", groupId);
         List<Lesson> lessons = query.getResultList();
 
@@ -194,7 +197,7 @@ public class LessonRepositoryHibernate implements ua.com.foxminded.university.re
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
 
-        Query query = session.createQuery("SELECT R.lessons FROM Room R WHERE R.roomId =: roomId");
+        Query query = session.createQuery(env.getProperty("lesson.getLessonsByRoomId"));
         query.setParameter("roomId", roomId);
         List<Lesson> lessons = query.getResultList();
 
@@ -210,7 +213,7 @@ public class LessonRepositoryHibernate implements ua.com.foxminded.university.re
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
 
-        Query query = session.createQuery("SELECT T.lessons FROM Teacher T WHERE T.teacherId =: teacherId");
+        Query query = session.createQuery(env.getProperty("lesson.getLessonsByTeacherId"));
         query.setParameter("teacherId", teacherId);
         List<Lesson> lessons = query.getResultList();
 

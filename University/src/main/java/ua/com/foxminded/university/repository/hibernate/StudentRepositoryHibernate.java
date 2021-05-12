@@ -6,10 +6,12 @@ import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.model.Student;
+import ua.com.foxminded.university.repository.StudentRepository;
 
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -18,14 +20,16 @@ import java.util.Optional;
 
 @Component
 @Repository
-public class StudentRepositoryHibernate implements ua.com.foxminded.university.repository.StudentRepository {
+public class StudentRepositoryHibernate implements StudentRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(StudentRepositoryHibernate.class);
     private SessionFactory sessionFactory;
+    private Environment env;
 
     @Autowired
-    public StudentRepositoryHibernate(SessionFactory sessionFactory) {
+    public StudentRepositoryHibernate(SessionFactory sessionFactory, Environment env) {
         this.sessionFactory = sessionFactory;
+        this.env = env;
     }
 
     public void create(Student student) {
@@ -42,7 +46,7 @@ public class StudentRepositoryHibernate implements ua.com.foxminded.university.r
     public List<Student> getAll() {
         logger.debug("Getting all Students");
         Session session = sessionFactory.openSession();
-        Query query = session.createQuery("from Student");
+        Query query = session.createQuery(env.getProperty("student.getAll"));
         return query.getResultList();
     }
 
@@ -75,7 +79,7 @@ public class StudentRepositoryHibernate implements ua.com.foxminded.university.r
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
 
-        Query query = session.createQuery("UPDATE Student S SET S.studentInactive = true, S.group = null WHERE S.studentId =: studentId");
+        Query query = session.createQuery(env.getProperty("student.deactivate"));
         query.setParameter("studentId", studentId);
         query.executeUpdate();
 
@@ -89,7 +93,7 @@ public class StudentRepositoryHibernate implements ua.com.foxminded.university.r
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
 
-        Query query = session.createQuery("UPDATE Student SET studentInactive = false WHERE id =: studentId");
+        Query query = session.createQuery(env.getProperty("student.activate"));
         query.setParameter("studentId", studentId);
         query.executeUpdate();
 
@@ -103,7 +107,7 @@ public class StudentRepositoryHibernate implements ua.com.foxminded.university.r
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
 
-        Query query = session.createQuery("SELECT G.students FROM Group G WHERE G.groupId =: groupId");
+        Query query = session.createQuery(env.getProperty("student.getStudentsByGroupId"));
         query.setParameter("groupId", groupId);
         List<Student> students = query.getResultList();
 

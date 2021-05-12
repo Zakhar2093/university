@@ -6,10 +6,12 @@ import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.model.Group;
+import ua.com.foxminded.university.repository.GroupRepository;
 
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -18,14 +20,16 @@ import java.util.Optional;
 
 @Component
 @Repository
-public class GroupRepositoryHibernate implements ua.com.foxminded.university.repository.GroupRepository {
+public class GroupRepositoryHibernate implements GroupRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(GroupRepositoryHibernate.class);
     private SessionFactory sessionFactory;
+    private Environment env;
 
     @Autowired
-    public GroupRepositoryHibernate(SessionFactory sessionFactory) {
+    public GroupRepositoryHibernate(SessionFactory sessionFactory, Environment env) {
         this.sessionFactory = sessionFactory;
+        this.env = env;
     }
 
     public void create(Group group) {
@@ -42,17 +46,16 @@ public class GroupRepositoryHibernate implements ua.com.foxminded.university.rep
     public List<Group> getAll() {
         logger.debug("Getting all Groups");
         Session session = sessionFactory.openSession();
-        Query query = session.createQuery("from Group");
+        Query query = session.createQuery(env.getProperty("group.getAll"));
         return query.getResultList();
     }
 
     public Group getById(Integer groupId) {
         logger.debug("Getting group by id = {}", groupId);
         Session session = sessionFactory.openSession();
-        Group group = Optional.ofNullable(session.get(Group.class, groupId))
-                .orElseThrow(() -> new RepositoryException(String.format("Group with such id %d does not exist", groupId)))
-                ;
-        return group;
+        return Optional.ofNullable(session.get(Group.class, groupId))
+                .orElseThrow(() -> new RepositoryException(String.format("Group with such id %d does not exist", groupId)));
+
     }
 
     public void update(Group group) {
@@ -78,15 +81,15 @@ public class GroupRepositoryHibernate implements ua.com.foxminded.university.rep
         Group group = new Group();
         group.setGroupId(groupId);
 
-        Query deactivateGroup = session.createQuery("UPDATE Group SET groupInactive = true WHERE id =: groupId");
+        Query deactivateGroup = session.createQuery(env.getProperty("group.deactivate"));
         deactivateGroup.setParameter("groupId", groupId);
         deactivateGroup.executeUpdate();
 
-        Query deleteGroupFromStudent = session.createQuery("UPDATE Student S SET S.group = null WHERE S.group =: groupId");
+        Query deleteGroupFromStudent = session.createQuery(env.getProperty("group.removeGroupFromAllStudents"));
         deleteGroupFromStudent.setParameter("groupId", group);
         deleteGroupFromStudent.executeUpdate();
 
-        Query deleteGroupFromLesson = session.createQuery("UPDATE Lesson L SET L.group = null WHERE L.group =: groupId");
+        Query deleteGroupFromLesson = session.createQuery(env.getProperty("group.removeGroupFromAllLessons"));
         deleteGroupFromLesson.setParameter("groupId", group);
         deleteGroupFromLesson.executeUpdate();
 
@@ -100,7 +103,7 @@ public class GroupRepositoryHibernate implements ua.com.foxminded.university.rep
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
 
-        Query query = session.createQuery("UPDATE Group SET groupInactive = false WHERE id =: groupId");
+        Query query = session.createQuery(env.getProperty("group.activate"));
         query.setParameter("groupId", groupId);
         query.executeUpdate();
 
