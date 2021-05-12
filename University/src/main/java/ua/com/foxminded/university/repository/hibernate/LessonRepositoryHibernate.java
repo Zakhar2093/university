@@ -26,14 +26,12 @@ public class LessonRepositoryHibernate implements ua.com.foxminded.university.re
 
     private static final Logger logger = LoggerFactory.getLogger(LessonRepositoryHibernate.class);
     private SessionFactory sessionFactory;
-    private TeacherRepository teacherDao;
     private StudentRepository studentDao;
     private Environment env;
 
     @Autowired
-    public LessonRepositoryHibernate(SessionFactory sessionFactory, TeacherRepository teacherDao, StudentRepository studentDao, Environment env) {
+    public LessonRepositoryHibernate(SessionFactory sessionFactory, StudentRepository studentDao, Environment env) {
         this.sessionFactory = sessionFactory;
-        this.teacherDao = teacherDao;
         this.studentDao = studentDao;
         this.env = env;
     }
@@ -115,7 +113,7 @@ public class LessonRepositoryHibernate implements ua.com.foxminded.university.re
         Transaction tx = session.beginTransaction();
 
         Query query = session.createQuery(env.getProperty("lesson.getLessonByTeacherForDay"));
-        query.setParameter("teacher", teacherDao.getById(teacherId));
+        query.setParameter("teacherId", teacherId);
         query.setParameter("year", date.getYear());
         query.setParameter("month", date.getMonthValue());
         query.setParameter("day", date.getDayOfMonth());
@@ -132,7 +130,7 @@ public class LessonRepositoryHibernate implements ua.com.foxminded.university.re
         Transaction tx = session.beginTransaction();
 
         Query query = session.createQuery(env.getProperty("lesson.getLessonByTeacherForMonth"));
-        query.setParameter("teacher", teacherDao.getById(teacherId));
+        query.setParameter("teacherId", teacherId);
         query.setParameter("year", date.getYear());
         query.setParameter("month", date.getMonthValue());
         List<Lesson> lessons = query.getResultList();

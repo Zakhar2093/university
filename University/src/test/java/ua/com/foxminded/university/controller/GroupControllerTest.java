@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -27,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 public class GroupControllerTest {
 
-    private TestData testData;
+    private TestData testData = new TestData();;
 
     @Mock
     private StudentService studentService;
@@ -47,7 +48,7 @@ public class GroupControllerTest {
 
     @BeforeEach
     public void setMocks() {
-        testData = new TestData();
+//        testData = new TestData();
         mockMvc = MockMvcBuilders.standaloneSetup(groupController).build();
     }
 
