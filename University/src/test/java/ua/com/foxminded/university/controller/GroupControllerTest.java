@@ -7,16 +7,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ua.com.foxminded.university.model.Group;
-import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.service.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -26,9 +23,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @ExtendWith(MockitoExtension.class)
+@SpringJUnitConfig(TestData.class)
 public class GroupControllerTest {
 
-    private TestData testData = new TestData();;
+    @Autowired
+    private TestData testData;
 
     @Mock
     private StudentService studentService;
@@ -48,7 +47,6 @@ public class GroupControllerTest {
 
     @BeforeEach
     public void setMocks() {
-//        testData = new TestData();
         mockMvc = MockMvcBuilders.standaloneSetup(groupController).build();
     }
 

@@ -6,6 +6,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -27,8 +29,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @ExtendWith(MockitoExtension.class)
+@SpringJUnitConfig(TestData.class)
 public class StudentControllerTest {
 
+    @Autowired
     private TestData testData;
 
     @Mock
@@ -44,7 +48,6 @@ public class StudentControllerTest {
 
     @BeforeEach
     public void setMocks() {
-        testData = new TestData();
         mockMvc = MockMvcBuilders.standaloneSetup(studentController).build();
     }
 
