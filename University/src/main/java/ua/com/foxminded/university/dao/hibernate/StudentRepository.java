@@ -98,4 +98,19 @@ public class StudentRepository implements StudentDao{
         session.close();
         logger.debug("Activating was successful", studentId);
     }
+
+    public List<Student> getStudentsByGroupId(Integer groupId) {
+        logger.debug("Getting students with group id = {}",  groupId);
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.beginTransaction();
+
+        Query query = session.createQuery("SELECT G.students FROM Group G WHERE G.groupId =: groupId");
+        query.setParameter("groupId", groupId);
+        List<Student> students = query.getResultList();
+
+        tx.commit();
+        session.close();
+        logger.debug("Getting was successful");
+        return students;
+    }
 }

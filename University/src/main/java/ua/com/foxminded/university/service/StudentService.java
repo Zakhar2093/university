@@ -94,7 +94,6 @@ public class StudentService implements GenericService<Student, Integer>{
             throw new ServiceException(e);
         }
     }
-    
 
     public void deactivate(Integer studentId) {
         try {
@@ -107,6 +106,14 @@ public class StudentService implements GenericService<Student, Integer>{
     public void activate(Integer studentId) {
         try {
             studentDao.activate(studentId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public List<Student> getStudentsByGroupId(Integer groupId) {
+        try {
+            return studentDao.getStudentsByGroupId(groupId);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

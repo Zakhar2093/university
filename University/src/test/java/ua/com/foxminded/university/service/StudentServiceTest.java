@@ -72,6 +72,18 @@ class StudentServiceTest {
     }
 
     @Test
+    void getStudentsByGroupIdShouldInvokeOnlyOnce() {
+        studentService.getStudentsByGroupId(1);
+        verify(studentDao, only()).getStudentsByGroupId(anyInt());
+    }
+
+    @Test
+    void whenGetStudentsByGroupIdCatchDaoExceptionShouldThrowServiceException() {
+        doThrow(new DaoException(EMPTY_STRING)).when(studentDao).getStudentsByGroupId(anyInt());
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {studentService.getStudentsByGroupId(1); });
+    }
+
+    @Test
     void getDtoByIdShouldInvokeOnlyOnce() {
         Student student = new Student(1, "one", "two", new Group(), false);
         when(studentDao.getById(anyInt())).thenReturn(student);
