@@ -25,10 +25,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class StudentRepositoryHibernateTest {
 
-    @Autowired
     private GroupRepository groupDao;
-    @Autowired
     private StudentRepository studentDao;
+
+    @Autowired
+    public StudentRepositoryHibernateTest(GroupRepository groupDao, StudentRepository studentDao) {
+        this.groupDao = groupDao;
+        this.studentDao = studentDao;
+    }
 
     @Test
     void getByIdAndCreateShouldInsertAndGetCorrectData() {

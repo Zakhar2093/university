@@ -32,16 +32,20 @@ class LessonRepositoryHibernateTest {
     private static final String FORMAT = "yyyy.MM.dd-HH.mm.ss";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(FORMAT);
 
-    @Autowired
     private GroupRepository groupDao;
-    @Autowired
     private LessonRepository lessonDao;
-    @Autowired
     private TeacherRepository teacherDao;
-    @Autowired
     private RoomRepository roomDao;
-    @Autowired
     private StudentRepository studentDao;
+
+    @Autowired
+    public LessonRepositoryHibernateTest(GroupRepository groupDao, LessonRepository lessonDao, TeacherRepository teacherDao, RoomRepository roomDao, StudentRepository studentDao) {
+        this.groupDao = groupDao;
+        this.lessonDao = lessonDao;
+        this.teacherDao = teacherDao;
+        this.roomDao = roomDao;
+        this.studentDao = studentDao;
+    }
 
     @Test
     void getByIdAndCreateShouldInsertAndGetCorrectData() {
