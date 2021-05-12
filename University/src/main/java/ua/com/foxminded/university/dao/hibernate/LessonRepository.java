@@ -172,4 +172,52 @@ public class LessonRepository implements LessonDao{
         session.close();
         return lessons;
     }
+
+    @Override
+    public List<Lesson> getLessonsByGroupId(Integer groupId) {
+        logger.debug("Getting lessons from group id = {}",  groupId);
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.beginTransaction();
+
+        Query query = session.createQuery("SELECT G.lessons FROM Group G WHERE G.groupId =: groupId");
+        query.setParameter("groupId", groupId);
+        List<Lesson> lessons = query.getResultList();
+
+        tx.commit();
+        session.close();
+        logger.debug("Getting was successful");
+        return lessons;
+    }
+
+    @Override
+    public List<Lesson> getLessonsByRoomId(Integer roomId) {
+        logger.debug("Getting lessons from room id = {}",  roomId);
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.beginTransaction();
+
+        Query query = session.createQuery("SELECT R.lessons FROM Room R WHERE R.roomId =: roomId");
+        query.setParameter("roomId", roomId);
+        List<Lesson> lessons = query.getResultList();
+
+        tx.commit();
+        session.close();
+        logger.debug("Getting was successful");
+        return lessons;
+    }
+
+    @Override
+    public List<Lesson> getLessonsByTeacherId(Integer teacherId) {
+        logger.debug("Getting lessons from teacher id = {}",  teacherId);
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.beginTransaction();
+
+        Query query = session.createQuery("SELECT T.lessons FROM Teacher T WHERE T.teacherId =: teacherId");
+        query.setParameter("teacherId", teacherId);
+        List<Lesson> lessons = query.getResultList();
+
+        tx.commit();
+        session.close();
+        logger.debug("Getting was successful");
+        return lessons;
+    }
 }

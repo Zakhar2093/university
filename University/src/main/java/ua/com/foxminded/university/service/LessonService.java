@@ -152,6 +152,30 @@ public class LessonService implements GenericService<Lesson, Integer>{
         }
     }
 
+    public List<Lesson> getLessonsByGroupId(Integer groupId) {
+        try {
+            return lessonDao.getLessonsByGroupId(groupId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public List<Lesson> getLessonsByTeacherId(Integer teacherId) {
+        try {
+            return lessonDao.getLessonsByTeacherId(teacherId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public List<Lesson> getLessonsByRoomId(Integer roomId) {
+        try {
+            return lessonDao.getLessonsByRoomId(roomId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
     private Lesson mapDtoToLesson(LessonDto dto){
         Lesson lesson = new Lesson();
         lesson.setLessonId(dto.getLessonId());
