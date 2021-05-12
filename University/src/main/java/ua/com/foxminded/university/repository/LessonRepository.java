@@ -1,13 +1,11 @@
-package ua.com.foxminded.university.dao.interfaces;
+package ua.com.foxminded.university.repository;
 
 import ua.com.foxminded.university.model.Lesson;
-import ua.com.foxminded.university.model.Student;
-import ua.com.foxminded.university.model.Teacher;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface LessonDao extends GenericDao<Lesson, Integer> {
+public interface LessonRepository extends GenericRepository<Lesson, Integer> {
     List<Lesson> getLessonByTeacherIdForDay(int teacherId, LocalDateTime date);
 
     List<Lesson> getLessonByTeacherIdForMonth(int teacherId, LocalDateTime date);

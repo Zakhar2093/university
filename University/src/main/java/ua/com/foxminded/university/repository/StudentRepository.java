@@ -1,9 +1,9 @@
-package ua.com.foxminded.university.dao.interfaces;
+package ua.com.foxminded.university.repository;
 
 import ua.com.foxminded.university.model.Student;
 
 import java.util.List;
 
-public interface StudentDao extends GenericDao<Student, Integer>{
+public interface StudentRepository extends GenericRepository<Student, Integer> {
     List<Student> getStudentsByGroupId(Integer groupId);
 }

@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.dao.hibernate;
+package ua.com.foxminded.university.repository.hibernate;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -8,8 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
-import ua.com.foxminded.university.dao.interfaces.RoomDao;
-import ua.com.foxminded.university.exception.DaoException;
+import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.model.Room;
 
 import javax.persistence.PersistenceException;
@@ -19,13 +18,13 @@ import java.util.Optional;
 
 @Component
 @Repository
-public class RoomRepository implements RoomDao {
+public class RoomRepositoryHibernate implements ua.com.foxminded.university.repository.RoomRepository {
 
-    private static final Logger logger = LoggerFactory.getLogger(RoomRepository.class);
+    private static final Logger logger = LoggerFactory.getLogger(RoomRepositoryHibernate.class);
     private SessionFactory sessionFactory;
 
     @Autowired
-    public RoomRepository(SessionFactory sessionFactory) {
+    public RoomRepositoryHibernate(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
@@ -35,7 +34,7 @@ public class RoomRepository implements RoomDao {
             session.save(room);
         } catch (PersistenceException e) {
             logger.error("Creating was not successful. Room can not be created. Some field is null", e);
-            throw new DaoException("Room can not be created. Some field is null", e);
+            throw new RepositoryException("Room can not be created. Some field is null", e);
         }
         logger.debug("Creating was successful");
     }
@@ -51,7 +50,7 @@ public class RoomRepository implements RoomDao {
         logger.debug("Getting room by id = {}", roomId);
         Session session = sessionFactory.openSession();
         Room room = Optional.ofNullable(session.get(Room.class, roomId))
-                .orElseThrow(() -> new DaoException(String.format("Room with such id %d does not exist", roomId)))
+                .orElseThrow(() -> new RepositoryException(String.format("Room with such id %d does not exist", roomId)))
                 ;
         return room;
     }
@@ -66,7 +65,7 @@ public class RoomRepository implements RoomDao {
             tx.commit();
         } catch (PersistenceException e) {
             logger.error("Updating was not successful. Room can not be updated. Some new field is null", e);
-            throw new DaoException("Room can not be updated. Some new field is null", e);
+            throw new RepositoryException("Room can not be updated. Some new field is null", e);
         }
         logger.debug("Updating was successful");
     }

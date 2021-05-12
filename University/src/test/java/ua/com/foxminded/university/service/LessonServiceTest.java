@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import ua.com.foxminded.university.dao.interfaces.GroupDao;
-import ua.com.foxminded.university.dao.interfaces.LessonDao;
-import ua.com.foxminded.university.dao.interfaces.RoomDao;
-import ua.com.foxminded.university.dao.interfaces.TeacherDao;
-import ua.com.foxminded.university.exception.DaoException;
+import ua.com.foxminded.university.repository.GroupRepository;
+import ua.com.foxminded.university.repository.LessonRepository;
+import ua.com.foxminded.university.repository.RoomRepository;
+import ua.com.foxminded.university.repository.TeacherRepository;
+import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.*;
 import ua.com.foxminded.university.model.model_dto.LessonDto;
@@ -27,16 +27,16 @@ class LessonServiceTest {
     private static final LocalDateTime TIME = LocalDateTime.now();
 
     @Mock
-    private GroupDao groupDao;
+    private GroupRepository groupDao;
 
     @Mock
-    private TeacherDao teacherDao;
+    private TeacherRepository teacherDao;
 
     @Mock
-    private RoomDao roomDao;
+    private RoomRepository roomDao;
 
     @Mock
-    private LessonDao lessonDao;
+    private LessonRepository lessonDao;
 
     @InjectMocks
     private LessonService lessonService;
@@ -148,7 +148,7 @@ class LessonServiceTest {
 
     @Test
     void whenCreateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).create(any(Lesson.class));
+        doThrow(new RepositoryException(EMPTY_STRING)).when(lessonDao).create(any(Lesson.class));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             lessonService.create(new Lesson());
         });
@@ -156,7 +156,7 @@ class LessonServiceTest {
     
     @Test
     void whenGetAllCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).getAll();
+        doThrow(new RepositoryException(EMPTY_STRING)).when(lessonDao).getAll();
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             lessonService.getAll();
         });    
@@ -164,7 +164,7 @@ class LessonServiceTest {
     
     @Test
     void whenGetByIdCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).getById(anyInt());
+        doThrow(new RepositoryException(EMPTY_STRING)).when(lessonDao).getById(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             lessonService.getById(1);
         });
@@ -172,7 +172,7 @@ class LessonServiceTest {
     
     @Test
     void whenUpdateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).update(any(Lesson.class));
+        doThrow(new RepositoryException(EMPTY_STRING)).when(lessonDao).update(any(Lesson.class));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             lessonService.update(new Lesson());
         });
@@ -180,7 +180,7 @@ class LessonServiceTest {
     
     @Test
     void whenDeactivateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).deactivate(anyInt());
+        doThrow(new RepositoryException(EMPTY_STRING)).when(lessonDao).deactivate(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             lessonService.deactivate(1);
         });
@@ -188,7 +188,7 @@ class LessonServiceTest {
     
     @Test
     void whenActivateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).activate(anyInt());
+        doThrow(new RepositoryException(EMPTY_STRING)).when(lessonDao).activate(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             lessonService.activate(1);
         });
@@ -196,7 +196,7 @@ class LessonServiceTest {
     
     @Test
     void whenGetLessonByTeacherForDayCatchDaoExceptionShouldThrowServiceException(){
-        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).getLessonByTeacherIdForDay(anyInt(), eq(TIME));
+        doThrow(new RepositoryException(EMPTY_STRING)).when(lessonDao).getLessonByTeacherIdForDay(anyInt(), eq(TIME));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             lessonService.getLessonByTeacherIdForDay(1, TIME);
         });
@@ -204,7 +204,7 @@ class LessonServiceTest {
 
     @Test
     void whenGetLessonByTeacherForMonthCatchDaoExceptionShouldThrowServiceException(){
-        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).getLessonByTeacherIdForMonth(anyInt(), eq(TIME));
+        doThrow(new RepositoryException(EMPTY_STRING)).when(lessonDao).getLessonByTeacherIdForMonth(anyInt(), eq(TIME));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             lessonService.getLessonByTeacherIdForMonth(1, TIME);
         });
@@ -212,7 +212,7 @@ class LessonServiceTest {
 
     @Test
     void whenGetLessonByStudentForDayCatchDaoExceptionShouldThrowServiceException(){
-        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).getLessonByStudentIdForDay(anyInt(), eq(TIME));
+        doThrow(new RepositoryException(EMPTY_STRING)).when(lessonDao).getLessonByStudentIdForDay(anyInt(), eq(TIME));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             lessonService.getLessonByStudentIdForDay(1, TIME);
         });
@@ -220,7 +220,7 @@ class LessonServiceTest {
 
     @Test
     void whenGetLessonByStudentForMonthCatchDaoExceptionShouldThrowServiceException(){
-        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).getLessonByStudentIdForMonth(anyInt(), eq(TIME));
+        doThrow(new RepositoryException(EMPTY_STRING)).when(lessonDao).getLessonByStudentIdForMonth(anyInt(), eq(TIME));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             lessonService.getLessonByStudentIdForMonth(1, TIME);
         });
@@ -246,19 +246,19 @@ class LessonServiceTest {
 
     @Test
     void whenGetLessonsByTeacherIdCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).getLessonsByTeacherId(anyInt());
+        doThrow(new RepositoryException(EMPTY_STRING)).when(lessonDao).getLessonsByTeacherId(anyInt());
         assertThrows(ServiceException.class, () -> {lessonService.getLessonsByTeacherId(1);});
     }
 
     @Test
     void whenGetLessonsByGroupIdCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).getLessonsByGroupId(anyInt());
+        doThrow(new RepositoryException(EMPTY_STRING)).when(lessonDao).getLessonsByGroupId(anyInt());
         assertThrows(ServiceException.class, () -> {lessonService.getLessonsByGroupId(1);});
     }
 
     @Test
     void whenGetLessonsByRoomIdCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException(EMPTY_STRING)).when(lessonDao).getLessonsByRoomId(anyInt());
+        doThrow(new RepositoryException(EMPTY_STRING)).when(lessonDao).getLessonsByRoomId(anyInt());
         assertThrows(ServiceException.class, () -> { lessonService.getLessonsByRoomId(1);});
     }
 

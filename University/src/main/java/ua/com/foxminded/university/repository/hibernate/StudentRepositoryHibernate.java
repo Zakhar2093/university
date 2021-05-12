@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.dao.hibernate;
+package ua.com.foxminded.university.repository.hibernate;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -8,8 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
-import ua.com.foxminded.university.dao.interfaces.StudentDao;
-import ua.com.foxminded.university.exception.DaoException;
+import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.model.Student;
 
 import javax.persistence.PersistenceException;
@@ -19,13 +18,13 @@ import java.util.Optional;
 
 @Component
 @Repository
-public class StudentRepository implements StudentDao{
+public class StudentRepositoryHibernate implements ua.com.foxminded.university.repository.StudentRepository {
 
-    private static final Logger logger = LoggerFactory.getLogger(StudentRepository.class);
+    private static final Logger logger = LoggerFactory.getLogger(StudentRepositoryHibernate.class);
     private SessionFactory sessionFactory;
 
     @Autowired
-    public StudentRepository(SessionFactory sessionFactory) {
+    public StudentRepositoryHibernate(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
@@ -35,7 +34,7 @@ public class StudentRepository implements StudentDao{
             session.save(student);
         } catch (PersistenceException e) {
             logger.error("Creating was not successful. Student can not be created. Some field is null", e);
-            throw new DaoException("Student can not be created. Some field is null", e);
+            throw new RepositoryException("Student can not be created. Some field is null", e);
         }
         logger.debug("Creating was successful");
     }
@@ -51,7 +50,7 @@ public class StudentRepository implements StudentDao{
         logger.debug("Getting student by id = {}", studentId);
         Session session = sessionFactory.openSession();
         Student student = Optional.ofNullable(session.get(Student.class, studentId))
-                .orElseThrow(() -> new DaoException(String.format("Student with such id %d does not exist", studentId)))
+                .orElseThrow(() -> new RepositoryException(String.format("Student with such id %d does not exist", studentId)))
                 ;
         return student;
     }
@@ -66,7 +65,7 @@ public class StudentRepository implements StudentDao{
             tx.commit();
         } catch (PersistenceException e) {
             logger.error("Updating was not successful. Student can not be updated. Some new field is null", e);
-            throw new DaoException("Student can not be updated. Some new field is null", e);
+            throw new RepositoryException("Student can not be updated. Some new field is null", e);
         }
         logger.debug("Updating was successful");
     }

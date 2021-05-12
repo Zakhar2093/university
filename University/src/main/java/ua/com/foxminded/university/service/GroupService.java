@@ -2,23 +2,20 @@ package ua.com.foxminded.university.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import ua.com.foxminded.university.dao.interfaces.GroupDao;
-import ua.com.foxminded.university.exception.DaoException;
+import ua.com.foxminded.university.repository.GroupRepository;
+import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Group;
-import ua.com.foxminded.university.model.Lesson;
-import ua.com.foxminded.university.model.Teacher;
 
 import java.util.List;
 
 @Component
 public class GroupService implements GenericService<Group, Integer>{
 
-    private GroupDao groupDao;
+    private GroupRepository groupDao;
 
     @Autowired
-    public GroupService(GroupDao groupDao) {
+    public GroupService(GroupRepository groupDao) {
         super();
         this.groupDao = groupDao;
     }
@@ -26,7 +23,7 @@ public class GroupService implements GenericService<Group, Integer>{
     public void create(Group group) {
         try {
             groupDao.create(group);
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
@@ -34,7 +31,7 @@ public class GroupService implements GenericService<Group, Integer>{
     public List<Group> getAll() {
         try {
             return groupDao.getAll();
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
@@ -44,7 +41,7 @@ public class GroupService implements GenericService<Group, Integer>{
             List<Group> groups = groupDao.getAll();
             groups.removeIf(p -> (p.isGroupInactive()));
             return groups;
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
@@ -52,7 +49,7 @@ public class GroupService implements GenericService<Group, Integer>{
     public Group getById(Integer groupId) {
         try {
             return groupDao.getById(groupId);
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
@@ -60,7 +57,7 @@ public class GroupService implements GenericService<Group, Integer>{
     public void update(Group group) {
         try {
             groupDao.update(group);
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
@@ -69,7 +66,7 @@ public class GroupService implements GenericService<Group, Integer>{
     public void deactivate(Integer groupId) {
         try {
             groupDao.deactivate(groupId);
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
@@ -77,7 +74,7 @@ public class GroupService implements GenericService<Group, Integer>{
     public void activate(Integer groupId) {
         try {
             groupDao.activate(groupId);
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }

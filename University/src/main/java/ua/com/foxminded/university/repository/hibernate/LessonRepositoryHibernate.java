@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.dao.hibernate;
+package ua.com.foxminded.university.repository.hibernate;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -8,10 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
-import ua.com.foxminded.university.dao.interfaces.LessonDao;
-import ua.com.foxminded.university.dao.interfaces.StudentDao;
-import ua.com.foxminded.university.dao.interfaces.TeacherDao;
-import ua.com.foxminded.university.exception.DaoException;
+import ua.com.foxminded.university.repository.StudentRepository;
+import ua.com.foxminded.university.repository.TeacherRepository;
+import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.model.Lesson;
 
 import javax.persistence.PersistenceException;
@@ -22,15 +21,15 @@ import java.util.Optional;
 
 @Component
 @Repository
-public class LessonRepository implements LessonDao{
+public class LessonRepositoryHibernate implements ua.com.foxminded.university.repository.LessonRepository {
 
-    private static final Logger logger = LoggerFactory.getLogger(LessonRepository.class);
+    private static final Logger logger = LoggerFactory.getLogger(LessonRepositoryHibernate.class);
     private SessionFactory sessionFactory;
-    private TeacherDao teacherDao;
-    private StudentDao studentDao;
+    private TeacherRepository teacherDao;
+    private StudentRepository studentDao;
 
     @Autowired
-    public LessonRepository(SessionFactory sessionFactory, TeacherDao teacherDao, StudentDao studentDao) {
+    public LessonRepositoryHibernate(SessionFactory sessionFactory, TeacherRepository teacherDao, StudentRepository studentDao) {
         this.sessionFactory = sessionFactory;
         this.teacherDao = teacherDao;
         this.studentDao = studentDao;
@@ -42,7 +41,7 @@ public class LessonRepository implements LessonDao{
             session.save(lesson);
         } catch (PersistenceException e) {
             logger.error("Creating was not successful. Lesson can not be created. Some field is null", e);
-            throw new DaoException("Lesson can not be created. Some field is null", e);
+            throw new RepositoryException("Lesson can not be created. Some field is null", e);
         }
         logger.debug("Creating was successful");
     }
@@ -58,7 +57,7 @@ public class LessonRepository implements LessonDao{
         logger.debug("Getting lesson by id = {}", lessonId);
         Session session = sessionFactory.openSession();
         Lesson lesson = Optional.ofNullable(session.get(Lesson.class, lessonId))
-                .orElseThrow(() -> new DaoException(String.format("Lesson with such id %d does not exist", lessonId)))
+                .orElseThrow(() -> new RepositoryException(String.format("Lesson with such id %d does not exist", lessonId)))
                 ;
         return lesson;
     }
@@ -73,7 +72,7 @@ public class LessonRepository implements LessonDao{
             tx.commit();
         } catch (PersistenceException e) {
             logger.error("Updating was not successful. Lesson can not be updated. Some new field is null", e);
-            throw new DaoException("Lesson can not be updated. Some new field is null", e);
+            throw new RepositoryException("Lesson can not be updated. Some new field is null", e);
         }
         logger.debug("Updating was successful");
     }

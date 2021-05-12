@@ -1,14 +1,12 @@
 package ua.com.foxminded.university.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import ua.com.foxminded.university.dao.interfaces.GroupDao;
-import ua.com.foxminded.university.dao.interfaces.LessonDao;
-import ua.com.foxminded.university.dao.interfaces.RoomDao;
-import ua.com.foxminded.university.dao.interfaces.TeacherDao;
-import ua.com.foxminded.university.exception.DaoException;
+import ua.com.foxminded.university.repository.GroupRepository;
+import ua.com.foxminded.university.repository.LessonRepository;
+import ua.com.foxminded.university.repository.RoomRepository;
+import ua.com.foxminded.university.repository.TeacherRepository;
+import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.*;
 import ua.com.foxminded.university.model.model_dto.LessonDto;
@@ -23,13 +21,13 @@ public class LessonService implements GenericService<Lesson, Integer>{
     private static final String FORMAT = "dd MM yyyy hh:mm a";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(FORMAT);
 
-    private LessonDao lessonDao;
-    private GroupDao groupDao;
-    private TeacherDao teacherDao;
-    private RoomDao roomDao;
+    private LessonRepository lessonDao;
+    private GroupRepository groupDao;
+    private TeacherRepository teacherDao;
+    private RoomRepository roomDao;
 
     @Autowired
-    public LessonService(LessonDao lessonDao, GroupDao groupDao, TeacherDao teacherDao, RoomDao roomDao) {
+    public LessonService(LessonRepository lessonDao, GroupRepository groupDao, TeacherRepository teacherDao, RoomRepository roomDao) {
         this.lessonDao = lessonDao;
         this.groupDao = groupDao;
         this.teacherDao = teacherDao;
@@ -39,7 +37,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
     public void create(Lesson lesson) {
         try {
             lessonDao.create(lesson);
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
@@ -48,7 +46,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
         try {
             Lesson lesson = mapDtoToLesson(lessonDto);
             lessonDao.create(lesson);
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
@@ -56,7 +54,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
     public List<Lesson> getAll() {
         try {
             return lessonDao.getAll();
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
@@ -66,7 +64,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
             List<Lesson> lessons = lessonDao.getAll();
             lessons.removeIf(p -> (p.isLessonInactive()));
             return lessons;
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
@@ -74,7 +72,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
     public Lesson getById(Integer lessonId) {
         try {
             return lessonDao.getById(lessonId);
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
@@ -82,7 +80,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
     public LessonDto getDtoById(Integer lessonId) {
         try {
             return mapLessonToDto(lessonDao.getById(lessonId));
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
@@ -90,7 +88,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
     public void update(Lesson lesson) {
         try {
             lessonDao.update(lesson);
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
@@ -99,7 +97,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
         try {
             Lesson lesson = mapDtoToLesson(lessonDto);
             lessonDao.update(lesson);
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
@@ -107,7 +105,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
     public void deactivate(Integer lessonId) {
         try {
             lessonDao.deactivate(lessonId);
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
@@ -115,7 +113,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
     public void activate(Integer lessonId) {
         try {
             lessonDao.activate(lessonId);
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
@@ -123,7 +121,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
     public List<Lesson> getLessonByTeacherIdForDay(int teacherId, LocalDateTime date) {
         try {
             return lessonDao.getLessonByTeacherIdForDay(teacherId, date);
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
@@ -131,7 +129,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
     public List<Lesson> getLessonByTeacherIdForMonth(int teacherId, LocalDateTime date) {
         try {
             return lessonDao.getLessonByTeacherIdForMonth(teacherId, date);
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
@@ -139,7 +137,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
     public List<Lesson> getLessonByStudentIdForDay(int studentId, LocalDateTime date) {
         try {
             return lessonDao.getLessonByStudentIdForDay(studentId, date);
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
@@ -147,7 +145,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
     public List<Lesson> getLessonByStudentIdForMonth(int studentId, LocalDateTime date) {
         try {
             return lessonDao.getLessonByStudentIdForMonth(studentId, date);
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
@@ -155,7 +153,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
     public List<Lesson> getLessonsByGroupId(Integer groupId) {
         try {
             return lessonDao.getLessonsByGroupId(groupId);
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
@@ -163,7 +161,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
     public List<Lesson> getLessonsByTeacherId(Integer teacherId) {
         try {
             return lessonDao.getLessonsByTeacherId(teacherId);
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
@@ -171,7 +169,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
     public List<Lesson> getLessonsByRoomId(Integer roomId) {
         try {
             return lessonDao.getLessonsByRoomId(roomId);
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }

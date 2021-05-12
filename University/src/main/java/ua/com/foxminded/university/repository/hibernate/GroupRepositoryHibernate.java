@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.dao.hibernate;
+package ua.com.foxminded.university.repository.hibernate;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -8,8 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
-import ua.com.foxminded.university.dao.interfaces.GroupDao;
-import ua.com.foxminded.university.exception.DaoException;
+import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.model.Group;
 
 import javax.persistence.PersistenceException;
@@ -19,13 +18,13 @@ import java.util.Optional;
 
 @Component
 @Repository
-public class GroupRepository implements GroupDao{
+public class GroupRepositoryHibernate implements ua.com.foxminded.university.repository.GroupRepository {
 
-    private static final Logger logger = LoggerFactory.getLogger(GroupRepository.class);
+    private static final Logger logger = LoggerFactory.getLogger(GroupRepositoryHibernate.class);
     private SessionFactory sessionFactory;
 
     @Autowired
-    public GroupRepository(SessionFactory sessionFactory) {
+    public GroupRepositoryHibernate(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
@@ -35,7 +34,7 @@ public class GroupRepository implements GroupDao{
             session.save(group);
         } catch (PersistenceException e) {
             logger.error("Creating was not successful. Group can not be created. Some field is null", e);
-            throw new DaoException("Group can not be created. Some field is null", e);
+            throw new RepositoryException("Group can not be created. Some field is null", e);
         }
         logger.debug("Creating was successful");
     }
@@ -51,7 +50,7 @@ public class GroupRepository implements GroupDao{
         logger.debug("Getting group by id = {}", groupId);
         Session session = sessionFactory.openSession();
         Group group = Optional.ofNullable(session.get(Group.class, groupId))
-                .orElseThrow(() -> new DaoException(String.format("Group with such id %d does not exist", groupId)))
+                .orElseThrow(() -> new RepositoryException(String.format("Group with such id %d does not exist", groupId)))
                 ;
         return group;
     }
@@ -66,7 +65,7 @@ public class GroupRepository implements GroupDao{
             tx.commit();
         } catch (PersistenceException e) {
             logger.error("Updating was not successful. Group can not be updated. Some new field is null", e);
-            throw new DaoException("Group can not be updated. Some new field is null", e);
+            throw new RepositoryException("Group can not be updated. Some new field is null", e);
         }
         logger.debug("Updating was successful");
     }

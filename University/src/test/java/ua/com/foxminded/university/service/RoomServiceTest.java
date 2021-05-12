@@ -4,8 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import ua.com.foxminded.university.dao.interfaces.RoomDao;
-import ua.com.foxminded.university.exception.DaoException;
+import ua.com.foxminded.university.repository.RoomRepository;
+import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Room;
 
@@ -19,7 +19,7 @@ class RoomServiceTest {
     private static final String EMPTY_STRING = "";
     private RoomService roomService;
     @Mock
-    private RoomDao roomDao;
+    private RoomRepository roomDao;
 
 
     @BeforeEach
@@ -73,7 +73,7 @@ class RoomServiceTest {
 
     @Test
     void whenCreateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException(EMPTY_STRING)).when(roomDao).create(any(Room.class));
+        doThrow(new RepositoryException(EMPTY_STRING)).when(roomDao).create(any(Room.class));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             roomService.create(new Room());
         });
@@ -81,7 +81,7 @@ class RoomServiceTest {
     
     @Test
     void whenGetAllCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException(EMPTY_STRING)).when(roomDao).getAll();
+        doThrow(new RepositoryException(EMPTY_STRING)).when(roomDao).getAll();
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             roomService.getAll();
         });    
@@ -89,7 +89,7 @@ class RoomServiceTest {
     
     @Test
     void whenGetByIdCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException(EMPTY_STRING)).when(roomDao).getById(anyInt());
+        doThrow(new RepositoryException(EMPTY_STRING)).when(roomDao).getById(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             roomService.getById(1);
         });
@@ -97,7 +97,7 @@ class RoomServiceTest {
     
     @Test
     void whenUpdateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException(EMPTY_STRING)).when(roomDao).update(any(Room.class));
+        doThrow(new RepositoryException(EMPTY_STRING)).when(roomDao).update(any(Room.class));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             roomService.update(new Room());
         });
@@ -105,7 +105,7 @@ class RoomServiceTest {
     
     @Test
     void whenDeactivateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException(EMPTY_STRING)).when(roomDao).deactivate(anyInt());
+        doThrow(new RepositoryException(EMPTY_STRING)).when(roomDao).deactivate(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             roomService.deactivate(1);
         });
@@ -113,7 +113,7 @@ class RoomServiceTest {
     
     @Test
     void whenActivateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException(EMPTY_STRING)).when(roomDao).activate(anyInt());
+        doThrow(new RepositoryException(EMPTY_STRING)).when(roomDao).activate(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             roomService.activate(1);
         });

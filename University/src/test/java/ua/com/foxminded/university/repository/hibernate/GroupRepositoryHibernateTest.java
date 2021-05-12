@@ -1,18 +1,17 @@
-package ua.com.foxminded.university.dao.hibernate;
+package ua.com.foxminded.university.repository.hibernate;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import ua.com.foxminded.university.SpringConfigTest;
-import ua.com.foxminded.university.dao.interfaces.LessonDao;
-import ua.com.foxminded.university.dao.interfaces.GroupDao;
-import ua.com.foxminded.university.dao.interfaces.StudentDao;
-import ua.com.foxminded.university.exception.DaoException;
+import ua.com.foxminded.university.repository.LessonRepository;
+import ua.com.foxminded.university.repository.GroupRepository;
+import ua.com.foxminded.university.repository.StudentRepository;
+import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.model.Lesson;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
@@ -20,7 +19,6 @@ import ua.com.foxminded.university.model.Student;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,14 +26,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @ContextConfiguration(classes = SpringConfigTest.class)
 @WebAppConfiguration
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class GroupRepositoryTest {
+class GroupRepositoryHibernateTest {
 
     @Autowired
-    private LessonDao lessonDao;
+    private LessonRepository lessonDao;
     @Autowired
-    private GroupDao groupDao;
+    private GroupRepository groupDao;
     @Autowired
-    private StudentDao studentDao;
+    private StudentRepository studentDao;
 
     @Test
     void getByIdAndCreateShouldInsertAndGetCorrectData() {
@@ -105,7 +103,7 @@ class GroupRepositoryTest {
 
     @Test
     void whenGetByIdGetNonexistentDataShouldThrowsDaoException() {
-        DaoException thrown = assertThrows(DaoException.class, () -> {
+        RepositoryException thrown = assertThrows(RepositoryException.class, () -> {
             groupDao.getById(1);
         });
         assertTrue(thrown.getMessage().contains("Group with such id 1 does not exist"));

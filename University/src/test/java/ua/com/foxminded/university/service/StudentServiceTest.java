@@ -6,9 +6,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.model_dto.StudentDto;
-import ua.com.foxminded.university.dao.interfaces.GroupDao;
-import ua.com.foxminded.university.dao.interfaces.StudentDao;
-import ua.com.foxminded.university.exception.DaoException;
+import ua.com.foxminded.university.repository.GroupRepository;
+import ua.com.foxminded.university.repository.StudentRepository;
+import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Student;
 
@@ -23,10 +23,10 @@ class StudentServiceTest {
     private StudentService studentService;
 
     @Mock
-    private GroupDao groupDao;
+    private GroupRepository groupDao;
     
     @Mock
-    private StudentDao studentDao;
+    private StudentRepository studentDao;
 
     @BeforeEach
     public void initMocks() {
@@ -79,7 +79,7 @@ class StudentServiceTest {
 
     @Test
     void whenGetStudentsByGroupIdCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException(EMPTY_STRING)).when(studentDao).getStudentsByGroupId(anyInt());
+        doThrow(new RepositoryException(EMPTY_STRING)).when(studentDao).getStudentsByGroupId(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {studentService.getStudentsByGroupId(1); });
     }
 
@@ -117,7 +117,7 @@ class StudentServiceTest {
 
     @Test
     void whenCreateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException(EMPTY_STRING)).when(studentDao).create(any(Student.class));
+        doThrow(new RepositoryException(EMPTY_STRING)).when(studentDao).create(any(Student.class));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             studentService.create(new Student());
         });
@@ -125,7 +125,7 @@ class StudentServiceTest {
     
     @Test
     void whenGetAllCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException(EMPTY_STRING)).when(studentDao).getAll();
+        doThrow(new RepositoryException(EMPTY_STRING)).when(studentDao).getAll();
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             studentService.getAll();
         });    
@@ -133,7 +133,7 @@ class StudentServiceTest {
     
     @Test
     void whenGetByIdCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException(EMPTY_STRING)).when(studentDao).getById(anyInt());
+        doThrow(new RepositoryException(EMPTY_STRING)).when(studentDao).getById(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             studentService.getById(1);
         });
@@ -141,7 +141,7 @@ class StudentServiceTest {
     
     @Test
     void whenUpdateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException(EMPTY_STRING)).when(studentDao).update(any(Student.class));
+        doThrow(new RepositoryException(EMPTY_STRING)).when(studentDao).update(any(Student.class));
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             studentService.update(new Student());
         });
@@ -149,7 +149,7 @@ class StudentServiceTest {
     
     @Test
     void whenDeactivateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException(EMPTY_STRING)).when(studentDao).deactivate(anyInt());
+        doThrow(new RepositoryException(EMPTY_STRING)).when(studentDao).deactivate(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             studentService.deactivate(1);
         });
@@ -157,7 +157,7 @@ class StudentServiceTest {
     
     @Test
     void whenActivateCatchDaoExceptionShouldThrowServiceException() {
-        doThrow(new DaoException(EMPTY_STRING)).when(studentDao).activate(anyInt());
+        doThrow(new RepositoryException(EMPTY_STRING)).when(studentDao).activate(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             studentService.activate(1);
         });

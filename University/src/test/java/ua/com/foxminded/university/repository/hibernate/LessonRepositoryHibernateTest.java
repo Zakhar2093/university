@@ -1,23 +1,25 @@
-package ua.com.foxminded.university.dao.hibernate;
+package ua.com.foxminded.university.repository.hibernate;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import ua.com.foxminded.university.SpringConfigTest;
-import ua.com.foxminded.university.dao.interfaces.*;
-import ua.com.foxminded.university.exception.DaoException;
+import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.model.*;
+import ua.com.foxminded.university.repository.GroupRepository;
+import ua.com.foxminded.university.repository.LessonRepository;
+import ua.com.foxminded.university.repository.RoomRepository;
+import ua.com.foxminded.university.repository.StudentRepository;
+import ua.com.foxminded.university.repository.TeacherRepository;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,21 +27,21 @@ import static org.junit.jupiter.api.Assertions.*;
 @ContextConfiguration(classes = SpringConfigTest.class)
 @WebAppConfiguration
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class LessonRepositoryTest {
+class LessonRepositoryHibernateTest {
 
     private static final String FORMAT = "yyyy.MM.dd-HH.mm.ss";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(FORMAT);
 
     @Autowired
-    private GroupDao groupDao;
+    private GroupRepository groupDao;
     @Autowired
-    private LessonDao lessonDao;
+    private LessonRepository lessonDao;
     @Autowired
-    private TeacherDao teacherDao;
+    private TeacherRepository teacherDao;
     @Autowired
-    private RoomDao roomDao;
+    private RoomRepository roomDao;
     @Autowired
-    private StudentDao studentDao;
+    private StudentRepository studentDao;
 
     @Test
     void getByIdAndCreateShouldInsertAndGetCorrectData() {
@@ -113,7 +115,7 @@ class LessonRepositoryTest {
 
     @Test
     void whenGetByIdGetNonexistentDataShouldThrowsDaoException() {
-        DaoException thrown = assertThrows(DaoException.class, () -> {
+        RepositoryException thrown = assertThrows(RepositoryException.class, () -> {
             lessonDao.getById(1);
         });
         assertTrue(thrown.getMessage().contains("Lesson with such id 1 does not exist"));
