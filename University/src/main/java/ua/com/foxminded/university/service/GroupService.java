@@ -2,100 +2,79 @@ package ua.com.foxminded.university.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import ua.com.foxminded.university.dao.interfaces.GroupDao;
-import ua.com.foxminded.university.exception.DaoException;
+import ua.com.foxminded.university.repository.GroupRepository;
+import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Group;
-import ua.com.foxminded.university.model.Lesson;
-import ua.com.foxminded.university.model.Teacher;
 
 import java.util.List;
 
 @Component
 public class GroupService implements GenericService<Group, Integer>{
 
-    private GroupDao groupDao;
+    private GroupRepository groupRepository;
 
     @Autowired
-    public GroupService(GroupDao groupDao) {
+    public GroupService(GroupRepository groupRepository) {
         super();
-        this.groupDao = groupDao;
+        this.groupRepository = groupRepository;
     }
 
     public void create(Group group) {
         try {
-            groupDao.create(group);
-        } catch (DaoException e) {
+            groupRepository.create(group);
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
 
     public List<Group> getAll() {
         try {
-            return groupDao.getAll();
-        } catch (DaoException e) {
+            return groupRepository.getAll();
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
 
     public List<Group> getAllActivated() {
         try {
-            List<Group> groups = groupDao.getAll();
+            List<Group> groups = groupRepository.getAll();
             groups.removeIf(p -> (p.isGroupInactive()));
             return groups;
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
 
     public Group getById(Integer groupId) {
         try {
-            return groupDao.getById(groupId);
-        } catch (DaoException e) {
+            return groupRepository.getById(groupId);
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
 
     public void update(Group group) {
         try {
-            groupDao.update(group);
-        } catch (DaoException e) {
+            groupRepository.update(group);
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
 
-    @Transactional
+
     public void deactivate(Integer groupId) {
         try {
-            groupDao.removeGroupFromAllLessons(groupId);
-            groupDao.removeGroupFromAllStudents(groupId);
-            groupDao.deactivate(groupId);
-        } catch (DaoException e) {
+            groupRepository.deactivate(groupId);
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
 
     public void activate(Integer groupId) {
         try {
-            groupDao.activate(groupId);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public void getGroupByLesson(Integer lessonId) {
-        try {
-            groupDao.getGroupByLesson(lessonId);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public void getGroupByStudent(Integer studentId) {
-        try {
-            groupDao.getGroupByStudent(studentId);
-        } catch (DaoException e) {
+            groupRepository.activate(groupId);
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }

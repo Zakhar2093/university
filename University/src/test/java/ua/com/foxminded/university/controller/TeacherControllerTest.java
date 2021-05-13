@@ -6,18 +6,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import ua.com.foxminded.university.model.Group;
-import ua.com.foxminded.university.model.Student;
-import ua.com.foxminded.university.model.Teacher;
+import ua.com.foxminded.university.model.*;
 import ua.com.foxminded.university.model.model_dto.StudentDto;
-import ua.com.foxminded.university.service.GroupService;
-import ua.com.foxminded.university.service.StudentService;
-import ua.com.foxminded.university.service.TeacherService;
+import ua.com.foxminded.university.service.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +29,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @ExtendWith(MockitoExtension.class)
+@SpringJUnitConfig(TestData.class)
 public class TeacherControllerTest {
+
+    @Autowired
+    private TestData testData;
 
     @Mock
     private TeacherService teacherService;
@@ -46,11 +50,11 @@ public class TeacherControllerTest {
 
     @Test
     void getAllShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        when(teacherService.getAllActivated()).thenReturn(getTestTeachers());
+        when(teacherService.getAllActivated()).thenReturn(testData.getTestTeachers());
 
         mockMvc.perform(get("/teachers/"))
                 .andExpect(view().name("teachers/index"))
-                .andExpect(model().attribute("teachers", getTestTeachers()));
+                .andExpect(model().attribute("teachers", testData.getTestTeachers()));
     }
 
     @Test
@@ -92,14 +96,5 @@ public class TeacherControllerTest {
                 .andExpect(view().name("redirect:/teachers"));
 
         verify(teacherService, only()).deactivate(anyInt());
-    }
-
-
-    private List<Teacher> getTestTeachers() {
-        List<Teacher> teachers = new ArrayList<>();
-        teachers.add(new Teacher(1, "one", "one", false));
-        teachers.add(new Teacher(2, "two", "two", false));
-        teachers.add(new Teacher(3, "Three", "Three", false));
-        return teachers;
     }
 }

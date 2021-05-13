@@ -6,13 +6,19 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ua.com.foxminded.university.model.Room;
+import ua.com.foxminded.university.service.GroupService;
+import ua.com.foxminded.university.service.LessonService;
 import ua.com.foxminded.university.service.RoomService;
+import ua.com.foxminded.university.service.TeacherService;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +30,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @ExtendWith(MockitoExtension.class)
+@SpringJUnitConfig(TestData.class)
 public class RoomControllerTest {
+
+    @Autowired
+    private TestData testData;
 
     @Mock
     private RoomService roomService;
@@ -41,11 +51,11 @@ public class RoomControllerTest {
 
     @Test
     void getAllShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        when(roomService.getAllActivated()).thenReturn(getTestRooms());
+        when(roomService.getAllActivated()).thenReturn(testData.getTestRooms());
 
         mockMvc.perform(get("/rooms/"))
                 .andExpect(view().name("rooms/index"))
-                .andExpect(model().attribute("rooms", getTestRooms()));
+                .andExpect(model().attribute("rooms", testData.getTestRooms()));
     }
 
     @Test
@@ -87,14 +97,5 @@ public class RoomControllerTest {
                 .andExpect(view().name("redirect:/rooms"));
 
         verify(roomService, only()).deactivate(anyInt());
-    }
-
-
-    private List<Room> getTestRooms() {
-        List<Room> rooms = new ArrayList<>();
-        rooms.add(new Room(1, 101));
-        rooms.add(new Room(2, 102));
-        rooms.add(new Room(3, 103));
-        return rooms;
     }
 }

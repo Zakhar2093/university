@@ -1,11 +1,23 @@
 package ua.com.foxminded.university.model;
 
+import javax.persistence.*;
 import java.util.List;
 
+@Entity
+@Table(name="rooms", schema = "university")
 public class Room {
+    @Id
+    @Column(name="room_id")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int roomId;
+
+    @Column(name="room_number")
     private int roomNumber;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "room", fetch = FetchType.LAZY)
     private List<Lesson> lessons;
+
+    @Column(name="room_inactive")
     private boolean roomInactive;
     
     public Room() {
@@ -13,9 +25,15 @@ public class Room {
     }
 
     public Room(int roomId, int roomNumber) {
+        this.roomId = roomId;
+        this.roomNumber = roomNumber;
+    }
+
+    public Room(int roomId, int roomNumber, boolean roomInactive) {
         super();
         this.roomId = roomId;
         this.roomNumber = roomNumber;
+        this.roomInactive = roomInactive;
     }
 
     public Room(int roomId, int roomNumber, List<Lesson> lessons, boolean roomInactive) {
@@ -81,8 +99,7 @@ public class Room {
         if (lessons == null) {
             if (other.lessons != null)
                 return false;
-        } else if (!lessons.equals(other.lessons))
-            return false;
+        }
         if (roomId != other.roomId)
             return false;
         if (roomInactive != other.roomInactive)

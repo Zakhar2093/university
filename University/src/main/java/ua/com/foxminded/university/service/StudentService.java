@@ -2,12 +2,10 @@ package ua.com.foxminded.university.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.model_dto.StudentDto;
-import ua.com.foxminded.university.dao.interfaces.GroupDao;
-import ua.com.foxminded.university.dao.interfaces.StudentDao;
-import ua.com.foxminded.university.exception.DaoException;
+import ua.com.foxminded.university.repository.GroupRepository;
+import ua.com.foxminded.university.repository.StudentRepository;
+import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
@@ -17,20 +15,20 @@ import java.util.List;
 @Component
 public class StudentService implements GenericService<Student, Integer>{
     
-    private StudentDao studentDao;
-    private GroupDao groupDao;
+    private StudentRepository studentRepository;
+    private GroupRepository groupRepository;
     
     @Autowired
-    public StudentService(StudentDao studentDao, GroupDao groupDao) {
+    public StudentService(StudentRepository studentRepository, GroupRepository groupRepository) {
         super();
-        this.studentDao = studentDao;
-        this.groupDao = groupDao;
+        this.studentRepository = studentRepository;
+        this.groupRepository = groupRepository;
     }
     
     public void create(Student student) {
         try {
-            studentDao.create(student);
-        } catch (DaoException e) {
+            studentRepository.create(student);
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
@@ -38,50 +36,50 @@ public class StudentService implements GenericService<Student, Integer>{
     public void create(StudentDto studentDto) {
         try {
             Student student = mapDtoToStudent(studentDto);
-            studentDao.create(student);
-        } catch (DaoException e) {
+            studentRepository.create(student);
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
     
     public List<Student> getAll(){
         try {
-            return studentDao.getAll();
-        } catch (DaoException e) {
+            return studentRepository.getAll();
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
 
     public List<Student> getAllActivated(){
         try {
-            List<Student> students = studentDao.getAll();
+            List<Student> students = studentRepository.getAll();
             students.removeIf(p -> (p.isStudentInactive()));
             return students;
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
 
     public Student getById(Integer studentId) {
         try {
-            return studentDao.getById(studentId);
-        } catch (DaoException e) {
+            return studentRepository.getById(studentId);
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
 
     public StudentDto getDtoById(Integer studentId) {
         try {
-            return mapStudentToDto(studentDao.getById(studentId));
-        } catch (DaoException e) {
+            return mapStudentToDto(studentRepository.getById(studentId));
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
 
     public void update(Student student) {
         try {
-            studentDao.update(student);
-        } catch (DaoException e) {
+            studentRepository.update(student);
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
@@ -89,50 +87,32 @@ public class StudentService implements GenericService<Student, Integer>{
     public void update(StudentDto studentDto) {
         try {
             Student student = mapDtoToStudent(studentDto);
-            studentDao.update(student);
-        } catch (DaoException e) {
+            studentRepository.update(student);
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
-    
-    @Transactional
+
     public void deactivate(Integer studentId) {
         try {
-            studentDao.removeStudentFromGroup(studentId);
-            studentDao.deactivate(studentId);
-        } catch (DaoException e) {
+            studentRepository.deactivate(studentId);
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
     
     public void activate(Integer studentId) {
         try {
-            studentDao.activate(studentId);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-    
-    public void addStudentToGroup(Integer groupId, Integer studentId) {
-        try {
-            studentDao.addStudentToGroup(groupId, studentId);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-    
-    public void removeStudentFromGroup(Integer studentId) {
-        try {
-            studentDao.removeStudentFromGroup(studentId);
-        } catch (DaoException e) {
+            studentRepository.activate(studentId);
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
 
     public List<Student> getStudentsByGroupId(Integer groupId) {
         try {
-            return studentDao.getStudentsByGroupId(groupId);
-        } catch (DaoException e) {
+            return studentRepository.getStudentsByGroupId(groupId);
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
@@ -142,7 +122,7 @@ public class StudentService implements GenericService<Student, Integer>{
         student.setStudentId(dto.getStudentId());
         student.setFirstName(dto.getFirstName());
         student.setLastName(dto.getLastName());
-        Group group = groupDao.getById(dto.getGroupId());
+        Group group = groupRepository.getById(dto.getGroupId());
         student.setGroup(group);
         student.setStudentInactive(dto.isStudentInactive());
         return student;

@@ -2,11 +2,9 @@ package ua.com.foxminded.university.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import ua.com.foxminded.university.dao.interfaces.TeacherDao;
-import ua.com.foxminded.university.exception.DaoException;
+import ua.com.foxminded.university.repository.TeacherRepository;
+import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.Room;
 import ua.com.foxminded.university.model.Teacher;
 
 import java.util.List;
@@ -14,78 +12,68 @@ import java.util.List;
 @Component
 public class TeacherService implements GenericService<Teacher, Integer>{
 
-    private TeacherDao teacherDao;
+    private TeacherRepository teacherRepository;
 
     @Autowired
-    public TeacherService(TeacherDao teacherDao) {
+    public TeacherService(TeacherRepository teacherRepository) {
         super();
-        this.teacherDao = teacherDao;
+        this.teacherRepository = teacherRepository;
     }
 
     public void create(Teacher teacher) {
         try {
-            teacherDao.create(teacher);
-        } catch (DaoException e) {
+            teacherRepository.create(teacher);
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
 
     public List<Teacher> getAll() {
         try {
-            return teacherDao.getAll();
-        } catch (DaoException e) {
+            return teacherRepository.getAll();
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
 
     public List<Teacher> getAllActivated() {
         try {
-            List<Teacher> teachers = teacherDao.getAll();
+            List<Teacher> teachers = teacherRepository.getAll();
             teachers.removeIf(p -> (p.isTeacherInactive()));
             return teachers;
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
 
     public Teacher getById(Integer teacherId) {
         try {
-            return teacherDao.getById(teacherId);
-        } catch (DaoException e) {
+            return teacherRepository.getById(teacherId);
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
 
     public void update(Teacher teacher) {
         try {
-            teacherDao.update(teacher);
-        } catch (DaoException e) {
+            teacherRepository.update(teacher);
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
 
-    @Transactional
     public void deactivate(Integer teacherId) {
         try {
-            teacherDao.removeTeacherFromAllLessons(teacherId);
-            teacherDao.deactivate(teacherId);
-        } catch (DaoException e) {
+            teacherRepository.deactivate(teacherId);
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
 
     public void activate(Integer teacherId) {
         try {
-            teacherDao.activate(teacherId);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public void getTeacherByLesson(Integer lessonId) {
-        try {
-            teacherDao.getTeacherByLesson(lessonId);
-        } catch (DaoException e) {
+            teacherRepository.activate(teacherId);
+        } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }

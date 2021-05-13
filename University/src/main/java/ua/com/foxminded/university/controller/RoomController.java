@@ -22,12 +22,9 @@ public class RoomController {
     public RoomController(RoomService roomService) {
         this.roomService = roomService;
     }
-
     @GetMapping
     public String getAll(@ModelAttribute("room") Room room, Model model) {
-        List<Room> rooms = roomService.getAll();
-        rooms.removeIf(p -> (p.isRoomInactive()));
-        model.addAttribute("rooms", rooms);
+        model.addAttribute("rooms", roomService.getAllActivated());
         model.addAttribute("roomNumber", room.getRoomNumber());
         return "rooms/index";
     }

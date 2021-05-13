@@ -6,16 +6,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ua.com.foxminded.university.model.Group;
-import ua.com.foxminded.university.model.Group;
-import ua.com.foxminded.university.service.GroupService;
-
-import java.util.ArrayList;
-import java.util.List;
+import ua.com.foxminded.university.service.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -25,7 +23,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @ExtendWith(MockitoExtension.class)
+@SpringJUnitConfig(TestData.class)
 public class GroupControllerTest {
+
+    @Autowired
+    private TestData testData;
 
     @Mock
     private GroupService groupService;
@@ -42,11 +44,11 @@ public class GroupControllerTest {
 
     @Test
     void getAllShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        when(groupService.getAllActivated()).thenReturn(getTestGroups());
+        when(groupService.getAllActivated()).thenReturn(testData.getTestGroups());
 
         mockMvc.perform(get("/groups/"))
                 .andExpect(view().name("groups/index"))
-                .andExpect(model().attribute("groups", getTestGroups()));
+                .andExpect(model().attribute("groups", testData.getTestGroups()));
     }
 
     @Test
@@ -88,14 +90,5 @@ public class GroupControllerTest {
                 .andExpect(view().name("redirect:/groups"));
 
         verify(groupService, only()).deactivate(anyInt());
-    }
-
-
-    private List<Group> getTestGroups() {
-        List<Group> groups = new ArrayList<>();
-        groups.add(new Group(1, "Java", false));
-        groups.add(new Group(2, "C++", false));
-        groups.add(new Group(3, "PHP", false));
-        return groups;
     }
 }

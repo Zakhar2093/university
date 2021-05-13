@@ -1,8 +1,8 @@
-package ua.com.foxminded.university.dao.interfaces;
+package ua.com.foxminded.university.repository;
 
 import java.util.List;
 
-public interface GenericDao<T, Id> {
+public interface GenericRepository<T, Id> {
     void create(T t);
     
     List<T> getAll();

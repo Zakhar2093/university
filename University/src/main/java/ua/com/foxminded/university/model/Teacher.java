@@ -1,12 +1,26 @@
 package ua.com.foxminded.university.model;
 
+import javax.persistence.*;
 import java.util.List;
 
+@Entity
+@Table(name="teachers", schema = "university")
 public class Teacher {
+    @Id
+    @Column(name="teacher_id")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int teacherId;
+
+    @Column(name="first_name")
     private String firstName;
+
+    @Column(name="last_name")
     private String lastName;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "teacher", fetch = FetchType.LAZY)
     private List<Lesson> lessons;
+
+    @Column(name="teacher_inactive")
     private boolean teacherInactive;
     
     public Teacher() {
@@ -103,8 +117,7 @@ public class Teacher {
         if (lessons == null) {
             if (other.lessons != null)
                 return false;
-        } else if (!lessons.equals(other.lessons))
-            return false;
+        }
         if (teacherId != other.teacherId)
             return false;
         if (teacherInactive != other.teacherInactive)
@@ -114,7 +127,12 @@ public class Teacher {
 
     @Override
     public String toString() {
-        return "Teacher [teacherId=" + teacherId + ", firstName=" + firstName + ", lastName=" + lastName + ", lessons="
-                + lessons + ", teacherInactive=" + teacherInactive + "]";
+        return "Teacher{" +
+                "teacherId=" + teacherId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", lessons=" + lessons +
+                ", teacherInactive=" + teacherInactive +
+                '}';
     }
 }

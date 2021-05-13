@@ -1,14 +1,36 @@
 package ua.com.foxminded.university.model;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name="lessons", schema = "university")
 public class Lesson {
+
+    @Id
+    @Column(name="lesson_id")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int lessonId;
+
+    @Column(name = "lesson_name")
     private String lessonName;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "teacher_id")
     private Teacher teacher;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_id")
     private Group group;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_id")
     private Room room;
+
+    @Column(name = "lesson_date")
     private LocalDateTime date;
+
+    @Column(name = "lesson_inactive")
     private boolean lessonInactive;
     
     public Lesson() {
@@ -29,8 +51,18 @@ public class Lesson {
 
     @Override
     public String toString() {
-        return "Lesson [lessonId=" + lessonId + ", lessonName=" + lessonName + ", teacher=" + teacher + ", group="
-                + group + ", room=" + room + ", date=" + date + ", lessonInactive=" + lessonInactive + "]";
+        String teacherId = teacher == null ? "Without teacher" : String.valueOf(teacher.getTeacherId());
+        String groupId = group == null ? "Without group" : String.valueOf(group.getGroupId());
+        String roomId = room == null ? "Without room" : String.valueOf(room.getRoomId());
+        return "Lesson{" +
+                "lessonId=" + lessonId +
+                ", lessonName='" + lessonName + '\'' +
+                ", teacher=" + teacherId +
+                ", group=" + groupId +
+                ", room=" + roomId +
+                ", date=" + date +
+                ", lessonInactive=" + lessonInactive +
+                '}';
     }
 
     @Override
@@ -64,8 +96,10 @@ public class Lesson {
         if (group == null) {
             if (other.group != null)
                 return false;
-        } else if (!group.equals(other.group))
-            return false;
+        } else if (group != null && other.group != null){
+            if (group.getGroupId() != other.group.getGroupId())
+                return false;
+        }
         if (lessonId != other.lessonId)
             return false;
         if (lessonInactive != other.lessonInactive)
@@ -78,13 +112,17 @@ public class Lesson {
         if (room == null) {
             if (other.room != null)
                 return false;
-        } else if (!room.equals(other.room))
-            return false;
+        } else if (room != null && other.room != null){
+            if (room.getRoomId() != other.room.getRoomId())
+                return false;
+        }
         if (teacher == null) {
             if (other.teacher != null)
                 return false;
-        } else if (!teacher.equals(other.teacher))
-            return false;
+        } else if (teacher != null && other.teacher != null){
+            if (teacher.getTeacherId() != other.teacher.getTeacherId())
+                return false;
+        }
         return true;
     }
 
