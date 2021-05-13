@@ -240,4 +240,52 @@ public class LessonControllerTest {
         verify(lessonService, never()).getLessonByTeacherIdForDay(id, localDateTime);
         verify(lessonService, only()).getLessonByTeacherIdForMonth(id, localDateTime);
     }
+
+    @Test
+    void showLessonsByGroupShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
+        int id = 1;
+        when(lessonService.getLessonsByGroupId(id)).thenReturn(testData.getTestLessons());
+        when(roomService.getAllActivated()).thenReturn(testData.getTestRooms());
+        when(groupService.getById(id)).thenReturn(testData.getTestGroups().get(0));
+        when(teacherService.getAllActivated()).thenReturn(testData.getTestTeachers());
+
+        mockMvc.perform(get("/groups/{id}/lessons", id))
+                .andExpect(view().name("lessons/index"))
+                .andExpect(model().attribute("lessons", testData.getTestLessons()))
+                .andExpect(model().attribute("rooms", testData.getTestRooms()))
+                .andExpect(model().attribute("group", testData.getTestGroups().get(0)))
+                .andExpect(model().attribute("teachers", testData.getTestTeachers()));
+    }
+
+    @Test
+    void showLessonsByRoomShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
+        int id = 1;
+        when(lessonService.getLessonsByRoomId(id)).thenReturn(testData.getTestLessons());
+        when(roomService.getById(id)).thenReturn(testData.getTestRooms().get(0));
+        when(groupService.getAllActivated()).thenReturn(testData.getTestGroups());
+        when(teacherService.getAllActivated()).thenReturn(testData.getTestTeachers());
+
+        mockMvc.perform(get("/rooms/{id}/lessons", id))
+                .andExpect(view().name("lessons/index"))
+                .andExpect(model().attribute("lessons", testData.getTestLessons()))
+                .andExpect(model().attribute("room", testData.getTestRooms().get(0)))
+                .andExpect(model().attribute("groups", testData.getTestGroups()))
+                .andExpect(model().attribute("teachers", testData.getTestTeachers()));
+    }
+
+    @Test
+    void showLessonsByTeacherShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
+        int id = 1;
+        when(lessonService.getLessonsByTeacherId(id)).thenReturn(testData.getTestLessons());
+        when(roomService.getAllActivated()).thenReturn(testData.getTestRooms());
+        when(groupService.getAllActivated()).thenReturn(testData.getTestGroups());
+        when(teacherService.getById(id)).thenReturn(testData.getTestTeachers().get(0));
+
+        mockMvc.perform(get("/teachers/{id}/lessons", id))
+                .andExpect(view().name("lessons/index"))
+                .andExpect(model().attribute("lessons", testData.getTestLessons()))
+                .andExpect(model().attribute("rooms", testData.getTestRooms()))
+                .andExpect(model().attribute("groups", testData.getTestGroups()))
+                .andExpect(model().attribute("teacher", testData.getTestTeachers().get(0)));
+    }
 }

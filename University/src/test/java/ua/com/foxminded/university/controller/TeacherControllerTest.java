@@ -36,12 +36,6 @@ public class TeacherControllerTest {
     private TestData testData;
 
     @Mock
-    private LessonService lessonService;
-    @Mock
-    private RoomService roomService;
-    @Mock
-    private GroupService groupService;
-    @Mock
     private TeacherService teacherService;
 
     @InjectMocks
@@ -102,21 +96,5 @@ public class TeacherControllerTest {
                 .andExpect(view().name("redirect:/teachers"));
 
         verify(teacherService, only()).deactivate(anyInt());
-    }
-
-    @Test
-    void showLessonsByTeacherShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        int id = 1;
-        when(lessonService.getLessonsByTeacherId(id)).thenReturn(testData.getTestLessons());
-        when(roomService.getAllActivated()).thenReturn(testData.getTestRooms());
-        when(groupService.getAllActivated()).thenReturn(testData.getTestGroups());
-        when(teacherService.getById(id)).thenReturn(testData.getTestTeachers().get(0));
-
-        mockMvc.perform(get("/teachers/{id}/lessons", id))
-                .andExpect(view().name("lessons/index"))
-                .andExpect(model().attribute("lessons", testData.getTestLessons()))
-                .andExpect(model().attribute("rooms", testData.getTestRooms()))
-                .andExpect(model().attribute("groups", testData.getTestGroups()))
-                .andExpect(model().attribute("teacher", testData.getTestTeachers().get(0)));
     }
 }

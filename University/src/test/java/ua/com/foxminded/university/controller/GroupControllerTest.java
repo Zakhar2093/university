@@ -30,15 +30,7 @@ public class GroupControllerTest {
     private TestData testData;
 
     @Mock
-    private StudentService studentService;
-    @Mock
-    private LessonService lessonService;
-    @Mock
-    private RoomService roomService;
-    @Mock
     private GroupService groupService;
-    @Mock
-    private TeacherService teacherService;
 
     @InjectMocks
     private GroupController groupController;
@@ -98,33 +90,5 @@ public class GroupControllerTest {
                 .andExpect(view().name("redirect:/groups"));
 
         verify(groupService, only()).deactivate(anyInt());
-    }
-
-    @Test
-    void showLessonsByGroupShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        int id = 1;
-        when(lessonService.getLessonsByGroupId(id)).thenReturn(testData.getTestLessons());
-        when(roomService.getAllActivated()).thenReturn(testData.getTestRooms());
-        when(groupService.getById(id)).thenReturn(testData.getTestGroups().get(0));
-        when(teacherService.getAllActivated()).thenReturn(testData.getTestTeachers());
-
-        mockMvc.perform(get("/groups/{id}/lessons", id))
-                .andExpect(view().name("lessons/index"))
-                .andExpect(model().attribute("lessons", testData.getTestLessons()))
-                .andExpect(model().attribute("rooms", testData.getTestRooms()))
-                .andExpect(model().attribute("group", testData.getTestGroups().get(0)))
-                .andExpect(model().attribute("teachers", testData.getTestTeachers()));
-    }
-
-    @Test
-    void showStudentsByGroupShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        int id = 1;
-        when(studentService.getStudentsByGroupId(id)).thenReturn(testData.getTestStudent());
-        when(groupService.getById(id)).thenReturn(testData.getTestGroups().get(0));
-
-        mockMvc.perform(get("/groups/{id}/students", id))
-                .andExpect(view().name("students/index"))
-                .andExpect(model().attribute("students", testData.getTestStudent()))
-                .andExpect(model().attribute("group", testData.getTestGroups().get(0)));
     }
 }

@@ -37,13 +37,7 @@ public class RoomControllerTest {
     private TestData testData;
 
     @Mock
-    private LessonService lessonService;
-    @Mock
     private RoomService roomService;
-    @Mock
-    private GroupService groupService;
-    @Mock
-    private TeacherService teacherService;
 
     @InjectMocks
     private RoomController roomController;
@@ -103,21 +97,5 @@ public class RoomControllerTest {
                 .andExpect(view().name("redirect:/rooms"));
 
         verify(roomService, only()).deactivate(anyInt());
-    }
-
-    @Test
-    void showLessonsByRoomShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        int id = 1;
-        when(lessonService.getLessonsByRoomId(id)).thenReturn(testData.getTestLessons());
-        when(roomService.getById(id)).thenReturn(testData.getTestRooms().get(0));
-        when(groupService.getAllActivated()).thenReturn(testData.getTestGroups());
-        when(teacherService.getAllActivated()).thenReturn(testData.getTestTeachers());
-
-        mockMvc.perform(get("/rooms/{id}/lessons", id))
-                .andExpect(view().name("lessons/index"))
-                .andExpect(model().attribute("lessons", testData.getTestLessons()))
-                .andExpect(model().attribute("room", testData.getTestRooms().get(0)))
-                .andExpect(model().attribute("groups", testData.getTestGroups()))
-                .andExpect(model().attribute("teachers", testData.getTestTeachers()));
     }
 }

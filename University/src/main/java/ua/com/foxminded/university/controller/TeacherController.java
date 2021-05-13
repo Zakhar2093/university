@@ -16,16 +16,10 @@ import java.util.List;
 @RequestMapping("/teachers")
 public class TeacherController {
 
-    private LessonService lessonService;
-    private RoomService roomService;
-    private GroupService groupService;
     private TeacherService teacherService;
 
     @Autowired
-    public TeacherController(LessonService lessonService, GroupService groupService, RoomService roomService, TeacherService teacherService) {
-        this.lessonService = lessonService;
-        this.groupService = groupService;
-        this.roomService = roomService;
+    public TeacherController(TeacherService teacherService) {
         this.teacherService = teacherService;
     }
 
@@ -58,14 +52,5 @@ public class TeacherController {
     public String delete(@PathVariable("id") int id) {
         teacherService.deactivate(id);
         return "redirect:/teachers";
-    }
-
-    @GetMapping("/{id}/lessons")
-    public String showLessonsByTeacher(Model model, @PathVariable("id") int id) {
-        model.addAttribute("teacher", teacherService.getById(id));
-        model.addAttribute("lessons", lessonService.getLessonsByTeacherId(id));
-        model.addAttribute("rooms", roomService.getAllActivated());
-        model.addAttribute("groups", groupService.getAllActivated());
-        return "lessons/index";
     }
 }

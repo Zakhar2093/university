@@ -115,4 +115,16 @@ public class StudentControllerTest {
 
         verify(studentService, only()).deactivate(anyInt());
     }
+
+    @Test
+    void showStudentsByGroupShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
+        int id = 1;
+        when(studentService.getStudentsByGroupId(id)).thenReturn(testData.getTestStudent());
+        when(groupService.getById(id)).thenReturn(testData.getTestGroups().get(0));
+
+        mockMvc.perform(get("/groups/{id}/students", id))
+                .andExpect(view().name("students/index"))
+                .andExpect(model().attribute("students", testData.getTestStudent()))
+                .andExpect(model().attribute("group", testData.getTestGroups().get(0)));
+    }
 }
