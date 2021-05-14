@@ -52,7 +52,9 @@ public class LessonRepositoryHibernate implements LessonRepository {
         logger.debug("Getting all Lessons");
         Session session = sessionFactory.openSession();
         Query query = session.createQuery(env.getProperty("lesson.getAll"));
-        return query.getResultList();
+        List<Lesson> lessons = query.getResultList();
+        session.close();
+        return lessons;
     }
 
     public Lesson getById(Integer lessonId) {
@@ -61,6 +63,7 @@ public class LessonRepositoryHibernate implements LessonRepository {
         Lesson lesson = Optional.ofNullable(session.get(Lesson.class, lessonId))
                 .orElseThrow(() -> new RepositoryException(String.format("Lesson with such id %d does not exist", lessonId)))
                 ;
+        session.close();
         return lesson;
     }
 

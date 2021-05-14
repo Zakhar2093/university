@@ -46,7 +46,9 @@ public class RoomRepositoryHibernate implements ua.com.foxminded.university.repo
         logger.debug("Getting all Rooms");
         Session session = sessionFactory.openSession();
         Query query = session.createQuery(env.getProperty("room.getAll"));
-        return query.getResultList();
+        List<Room> rooms = query.getResultList();
+        session.close();
+        return rooms;
     }
 
     public Room getById(Integer roomId) {
@@ -55,6 +57,7 @@ public class RoomRepositoryHibernate implements ua.com.foxminded.university.repo
         Room room = Optional.ofNullable(session.get(Room.class, roomId))
                 .orElseThrow(() -> new RepositoryException(String.format("Room with such id %d does not exist", roomId)))
                 ;
+        session.close();
         return room;
     }
 

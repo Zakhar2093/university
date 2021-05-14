@@ -47,7 +47,9 @@ public class StudentRepositoryHibernate implements StudentRepository {
         logger.debug("Getting all Students");
         Session session = sessionFactory.openSession();
         Query query = session.createQuery(env.getProperty("student.getAll"));
-        return query.getResultList();
+        List<Student> students = query.getResultList();
+        session.close();
+        return students;
     }
 
     public Student getById(Integer studentId) {
@@ -56,6 +58,7 @@ public class StudentRepositoryHibernate implements StudentRepository {
         Student student = Optional.ofNullable(session.get(Student.class, studentId))
                 .orElseThrow(() -> new RepositoryException(String.format("Student with such id %d does not exist", studentId)))
                 ;
+        session.close();
         return student;
     }
 

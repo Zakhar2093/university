@@ -46,7 +46,9 @@ public class TeacherRepositoryHibernate implements ua.com.foxminded.university.r
         logger.debug("Getting all Teachers");
         Session session = sessionFactory.openSession();
         Query query = session.createQuery(env.getProperty("teacher.getAll"));
-        return query.getResultList();
+        List<Teacher> teachers = query.getResultList();
+        session.close();
+        return teachers;
     }
 
     public Teacher getById(Integer teacherId) {
@@ -55,6 +57,7 @@ public class TeacherRepositoryHibernate implements ua.com.foxminded.university.r
         Teacher teacher = Optional.ofNullable(session.get(Teacher.class, teacherId))
                 .orElseThrow(() -> new RepositoryException(String.format("Teacher with such id %d does not exist", teacherId)))
                 ;
+        session.close();
         return teacher;
     }
 
