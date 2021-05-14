@@ -87,7 +87,7 @@ class StudentRepositoryHibernateTest {
         Student student = createStudentWithGroup();
         studentRepository.deactivate(student.getStudentId());
         assertTrue(studentRepository.getById(1).isStudentInactive());
-        assertTrue(groupRepository.getById(1).getStudents().isEmpty());
+        assertNull(studentRepository.getById(1).getGroup());
     }
 
     @Test
