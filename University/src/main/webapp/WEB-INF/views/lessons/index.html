@@ -61,7 +61,7 @@
                 <td>
                     <a  th:if="${lesson.getRoom()}"
                         th:text="${lesson.getRoom().getRoomNumber()}"
-                        th:href="@{/lessons/getStudentsByRoom/{id}(id=${lesson.getRoom().getRoomId()})}">>
+                        th:href="@{rooms/{id}/lessons(id=${lesson.getRoom().getRoomId()})}">>
                     </a>
                     <p th:unless="${lesson.getRoom()}">
                         Without room
@@ -70,7 +70,7 @@
                 <td>
                     <a  th:if="${lesson.getGroup()}"
                         th:text="${lesson.getGroup().getGroupName()}"
-                        th:href="@{/lessons/getStudentsByGroup/{id}(id=${lesson.getGroup().getGroupId()})}">>
+                        th:href="@{/groups/{id}/lessons(id=${lesson.getGroup().getGroupId()})}">>
                     </a>
                     <p th:unless="${lesson.getGroup()}">
                         Without group
@@ -79,7 +79,7 @@
                 <td>
                     <a  th:if="${lesson.getTeacher()}"
                         th:text="${lesson.getTeacher().getFirstName()} + ' ' + ${lesson.getTeacher().getLastName()}"
-                        th:href="@{/lessons/getStudentsByTeacher/{id}(id=${lesson.getTeacher().getTeacherId()})}">
+                        th:href="@{/teachers/{id}/lessons(id=${lesson.getTeacher().getTeacherId()})}">
                     </a>
                     <p th:unless="${lesson.getTeacher()}">
                         Without teacher

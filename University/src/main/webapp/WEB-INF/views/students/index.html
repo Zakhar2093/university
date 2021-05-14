@@ -57,7 +57,7 @@
                 <td>
                     <a  th:if="${student.getGroup()}"
                         th:text="${student.getGroup().getGroupName()}"
-                        th:href="@{/students/getStudentsByGroup/{id}(id=${student.getGroup().getGroupId()})}">
+                        th:href="@{/groups/{id}/students(id=${student.getGroup().getGroupId()})}">
                     </a>
                     <p th:unless="${student.getGroup()}">
                         Without group

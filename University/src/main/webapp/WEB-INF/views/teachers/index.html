@@ -59,7 +59,7 @@
                         <form style="margin-left: .75rem;" th:method="DELETE" th:action="@{/teachers/{id}(id=${teacher.getTeacherId()})}">
                             <input class="btn btn-outline-primary" type="submit" value="Delete"/>
                         </form>
-                        <a class="btn btn-outline-primary" style="margin-left: .75rem;" th:href="@{/lessons/getStudentsByTeacher/{id}(id=${teacher.getTeacherId()})}" >
+                        <a class="btn btn-outline-primary" style="margin-left: .75rem;" th:href="@{/teachers/{id}/lessons(id=${teacher.getTeacherId()})}" >
                             Show lessons by teacher
                         </a>
                     </div>

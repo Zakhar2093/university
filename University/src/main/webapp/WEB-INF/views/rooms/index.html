@@ -57,7 +57,7 @@
                         <form style="margin-left: .75rem;" th:method="DELETE" th:action="@{/rooms/{id}(id=${room.getRoomId()})}">
                             <input class="btn btn-outline-primary" type="submit" value="Delete"/>
                         </form>
-                        <a class="btn btn-outline-primary" style="margin-left: .75rem;" th:href="@{/lessons/getStudentsByRoom/{id}(id=${room.getRoomId()})}" >
+                        <a class="btn btn-outline-primary" style="margin-left: .75rem;" th:href="@{/rooms/{id}/lessons(id=${room.getRoomId()})}" >
                             Show lessons in this room
                         </a>
                     </div>

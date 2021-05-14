@@ -57,10 +57,10 @@
                         <form style="margin-left: .75rem;" th:method="DELETE" th:action="@{/groups/{id}(id=${group.getGroupId()})}">
                             <input class="btn btn-outline-primary" type="submit" value="Delete"/>
                         </form>
-                        <a class="btn btn-outline-primary" style="margin-left: .75rem;" th:href="@{/students/getStudentsByGroup/{id}(id=${group.getGroupId()})}" >
+                        <a class="btn btn-outline-primary" style="margin-left: .75rem;" th:href="@{/groups/{id}/students(id=${group.getGroupId()})}" >
                             Show students in this group
                         </a>
-                        <a class="btn btn-outline-primary" style="margin-left: .75rem;" th:href="@{/lessons/getStudentsByGroup/{id}(id=${group.getGroupId()})}" >
+                        <a class="btn btn-outline-primary" style="margin-left: .75rem;" th:href="@{/groups/{id}/lessons(id=${group.getGroupId()})}" >
                             Show lessons by group
                         </a>
                     </div>
