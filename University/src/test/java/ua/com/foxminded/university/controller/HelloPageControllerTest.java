@@ -2,10 +2,9 @@ package ua.com.foxminded.university.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ua.com.foxminded.university.model.Group;
@@ -22,13 +21,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 public class HelloPageControllerTest {
 
     @Mock
     private StudentService studentService;
+
     @Mock
     private TeacherService teacherService;
+
     @InjectMocks
     private HelloPageController helloPageController;
 
@@ -39,6 +40,7 @@ public class HelloPageControllerTest {
     public void setMocks() {
         mockMvc = MockMvcBuilders.standaloneSetup(helloPageController).build();
     }
+
     @Test
     void getAllShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
         when(studentService.getAllActivated()).thenReturn(getTestStudent());
