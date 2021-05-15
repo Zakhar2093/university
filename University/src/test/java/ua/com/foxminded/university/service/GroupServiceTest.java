@@ -2,8 +2,15 @@ package ua.com.foxminded.university.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+//import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringRunner;
+import ua.com.foxminded.university.Application;
 import ua.com.foxminded.university.repository.GroupRepository;
 import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
@@ -14,19 +21,16 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
+@SpringBootTest(classes = Application.class)
 class GroupServiceTest {
     
     private static final String EMPTY_STRING = "";
+
+    @InjectMocks
     private GroupService groupService;
+
     @Mock
     private GroupRepository groupRepository;
-
-
-    @BeforeEach
-    public void initMocks() {
-        MockitoAnnotations.initMocks(this);
-        groupService = new GroupService(groupRepository);
-    }
 
     @Test
     void createShouldInvokeOnlyOnce() {
