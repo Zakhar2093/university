@@ -2,10 +2,10 @@ package ua.com.foxminded.university.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ua.com.foxminded.university.repository.GroupRepository;
 import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Group;
+import ua.com.foxminded.university.repository.GroupRepository;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class GroupService implements GenericService<Group, Integer>{
 
     public void create(Group group) {
         try {
-            groupRepository.create(group);
+            groupRepository.save(group);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -30,7 +30,7 @@ public class GroupService implements GenericService<Group, Integer>{
 
     public List<Group> getAll() {
         try {
-            return groupRepository.getAll();
+            return groupRepository.findAll();
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -38,7 +38,7 @@ public class GroupService implements GenericService<Group, Integer>{
 
     public List<Group> getAllActivated() {
         try {
-            List<Group> groups = groupRepository.getAll();
+            List<Group> groups = groupRepository.findAll();
             groups.removeIf(p -> (p.isGroupInactive()));
             return groups;
         } catch (RepositoryException e) {
@@ -48,7 +48,10 @@ public class GroupService implements GenericService<Group, Integer>{
 
     public Group getById(Integer groupId) {
         try {
-            return groupRepository.getById(groupId);
+            return groupRepository.findById(groupId)
+                    .orElseThrow(() -> new ServiceException(
+                            String.format("Group with such id %d does not exist", groupId)
+                    ));
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -56,16 +59,17 @@ public class GroupService implements GenericService<Group, Integer>{
 
     public void update(Group group) {
         try {
-            groupRepository.update(group);
+            groupRepository.save(group);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
 
-
     public void deactivate(Integer groupId) {
         try {
-            groupRepository.deactivate(groupId);
+            Group group = getById(groupId);
+            group.setGroupInactive(true);
+            groupRepository.save(group);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -73,7 +77,9 @@ public class GroupService implements GenericService<Group, Integer>{
 
     public void activate(Integer groupId) {
         try {
-            groupRepository.activate(groupId);
+            Group group = getById(groupId);
+            group.setGroupInactive(false);
+            groupRepository.save(group);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }

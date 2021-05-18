@@ -2,14 +2,14 @@ package ua.com.foxminded.university.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ua.com.foxminded.university.repository.GroupRepository;
-import ua.com.foxminded.university.repository.LessonRepository;
-import ua.com.foxminded.university.repository.RoomRepository;
-import ua.com.foxminded.university.repository.TeacherRepository;
 import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.*;
+import ua.com.foxminded.university.model.Group;
+import ua.com.foxminded.university.model.Lesson;
+import ua.com.foxminded.university.model.Room;
+import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.model_dto.LessonDto;
+import ua.com.foxminded.university.repository.LessonRepository;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -22,21 +22,27 @@ public class LessonService implements GenericService<Lesson, Integer>{
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(FORMAT);
 
     private LessonRepository lessonRepository;
-    private GroupRepository groupRepository;
-    private TeacherRepository teacherRepository;
-    private RoomRepository roomRepository;
+    private GroupService groupService;
+    private TeacherService teacherService;
+    private RoomService roomService;
+    private StudentService studentService;
 
     @Autowired
-    public LessonService(LessonRepository lessonRepository, GroupRepository groupRepository, TeacherRepository teacherRepository, RoomRepository roomRepository) {
+    public LessonService(LessonRepository lessonRepository,
+                         GroupService groupService,
+                         TeacherService teacherService,
+                         RoomService roomService,
+                         StudentService studentService) {
         this.lessonRepository = lessonRepository;
-        this.groupRepository = groupRepository;
-        this.teacherRepository = teacherRepository;
-        this.roomRepository = roomRepository;
+        this.groupService = groupService;
+        this.teacherService = teacherService;
+        this.roomService = roomService;
+        this.studentService = studentService;
     }
 
     public void create(Lesson lesson) {
         try {
-            lessonRepository.create(lesson);
+            lessonRepository.save(lesson);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -45,15 +51,15 @@ public class LessonService implements GenericService<Lesson, Integer>{
     public void create(LessonDto lessonDto) {
         try {
             Lesson lesson = mapDtoToLesson(lessonDto);
-            lessonRepository.create(lesson);
+            lessonRepository.save(lesson);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
 
-    public List<Lesson> getAll() {
+    public List<Lesson> getAll(){
         try {
-            return lessonRepository.getAll();
+            return lessonRepository.findAll();
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -61,7 +67,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
 
     public List<Lesson> getAllActivated(){
         try {
-            List<Lesson> lessons = lessonRepository.getAll();
+            List<Lesson> lessons = lessonRepository.findAll();
             lessons.removeIf(p -> (p.isLessonInactive()));
             return lessons;
         } catch (RepositoryException e) {
@@ -71,7 +77,10 @@ public class LessonService implements GenericService<Lesson, Integer>{
 
     public Lesson getById(Integer lessonId) {
         try {
-            return lessonRepository.getById(lessonId);
+            return lessonRepository.findById(lessonId)
+                    .orElseThrow(() -> new ServiceException(
+                            String.format("Lesson with such id %d does not exist", lessonId)
+                    ));
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -79,7 +88,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
 
     public LessonDto getDtoById(Integer lessonId) {
         try {
-            return mapLessonToDto(lessonRepository.getById(lessonId));
+            return mapLessonToDto(getById(lessonId));
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -87,7 +96,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
 
     public void update(Lesson lesson) {
         try {
-            lessonRepository.update(lesson);
+            lessonRepository.save(lesson);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -96,7 +105,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
     public void update(LessonDto lessonDto) {
         try {
             Lesson lesson = mapDtoToLesson(lessonDto);
-            lessonRepository.update(lesson);
+            lessonRepository.save(lesson);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -104,7 +113,8 @@ public class LessonService implements GenericService<Lesson, Integer>{
 
     public void deactivate(Integer lessonId) {
         try {
-            lessonRepository.deactivate(lessonId);
+            Lesson lesson = getById(lessonId);
+            lessonRepository.save(lesson);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -112,7 +122,9 @@ public class LessonService implements GenericService<Lesson, Integer>{
 
     public void activate(Integer lessonId) {
         try {
-            lessonRepository.activate(lessonId);
+            Lesson lesson = getById(lessonId);
+            lesson.setLessonInactive(false);
+            lessonRepository.save(lesson);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -120,7 +132,11 @@ public class LessonService implements GenericService<Lesson, Integer>{
 
     public List<Lesson> getLessonByTeacherIdForDay(int teacherId, LocalDateTime date) {
         try {
-            return lessonRepository.getLessonByTeacherIdForDay(teacherId, date);
+            return lessonRepository.getLessonByTeacherIdForDay(
+                    teacherId,
+                    date.getYear(),
+                    date.getMonthValue(),
+                    date.getDayOfMonth());
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -128,7 +144,10 @@ public class LessonService implements GenericService<Lesson, Integer>{
 
     public List<Lesson> getLessonByTeacherIdForMonth(int teacherId, LocalDateTime date) {
         try {
-            return lessonRepository.getLessonByTeacherIdForMonth(teacherId, date);
+            return lessonRepository.getLessonByTeacherIdForMonth(
+                    teacherId,
+                    date.getYear(),
+                    date.getMonthValue());
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -136,7 +155,12 @@ public class LessonService implements GenericService<Lesson, Integer>{
 
     public List<Lesson> getLessonByStudentIdForDay(int studentId, LocalDateTime date) {
         try {
-            return lessonRepository.getLessonByStudentIdForDay(studentId, date);
+            Group group = studentService.getById(studentId).getGroup();
+            return lessonRepository.getLessonByStudentIdForDay(
+                    group,
+                    date.getYear(),
+                    date.getMonthValue(),
+                    date.getDayOfMonth());
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -144,7 +168,11 @@ public class LessonService implements GenericService<Lesson, Integer>{
 
     public List<Lesson> getLessonByStudentIdForMonth(int studentId, LocalDateTime date) {
         try {
-            return lessonRepository.getLessonByStudentIdForMonth(studentId, date);
+            Group group = studentService.getById(studentId).getGroup();
+            return lessonRepository.getLessonByStudentIdForMonth(
+                    group,
+                    date.getYear(),
+                    date.getMonthValue());
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -152,7 +180,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
 
     public List<Lesson> getLessonsByGroupId(Integer groupId) {
         try {
-            return lessonRepository.getLessonsByGroupId(groupId);
+            return lessonRepository.findByGroupGroupId(groupId);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -160,7 +188,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
 
     public List<Lesson> getLessonsByTeacherId(Integer teacherId) {
         try {
-            return lessonRepository.getLessonsByTeacherId(teacherId);
+            return lessonRepository.findByTeacherTeacherId(teacherId);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -168,7 +196,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
 
     public List<Lesson> getLessonsByRoomId(Integer roomId) {
         try {
-            return lessonRepository.getLessonsByRoomId(roomId);
+            return lessonRepository.findByRoomRoomId(roomId);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -178,11 +206,11 @@ public class LessonService implements GenericService<Lesson, Integer>{
         Lesson lesson = new Lesson();
         lesson.setLessonId(dto.getLessonId());
         lesson.setLessonName(dto.getLessonName());
-        Group group = groupRepository.getById(dto.getGroupId());
+        Group group = groupService.getById(dto.getGroupId());
         lesson.setGroup(group);
-        Teacher teacher = teacherRepository.getById(dto.getTeacherId());
+        Teacher teacher = teacherService.getById(dto.getTeacherId());
         lesson.setTeacher(teacher);
-        Room room = roomRepository.getById(dto.getRoomId());
+        Room room = roomService.getById(dto.getRoomId());
         lesson.setRoom(room);
         lesson.setLessonInactive(dto.isLessonInactive());
         lesson.setDate(LocalDateTime.parse(dto.getDate(), FORMATTER));

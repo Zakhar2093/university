@@ -2,13 +2,12 @@ package ua.com.foxminded.university.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ua.com.foxminded.university.model.model_dto.StudentDto;
-import ua.com.foxminded.university.repository.GroupRepository;
-import ua.com.foxminded.university.repository.StudentRepository;
 import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
+import ua.com.foxminded.university.model.model_dto.StudentDto;
+import ua.com.foxminded.university.repository.StudentRepository;
 
 import java.util.List;
 
@@ -16,18 +15,18 @@ import java.util.List;
 public class StudentService implements GenericService<Student, Integer>{
     
     private StudentRepository studentRepository;
-    private GroupRepository groupRepository;
+    private GroupService groupService;
     
     @Autowired
-    public StudentService(StudentRepository studentRepository, GroupRepository groupRepository) {
+    public StudentService(StudentRepository studentRepository, GroupService groupService) {
         super();
         this.studentRepository = studentRepository;
-        this.groupRepository = groupRepository;
+        this.groupService = groupService;
     }
     
     public void create(Student student) {
         try {
-            studentRepository.create(student);
+            studentRepository.save(student);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -36,7 +35,7 @@ public class StudentService implements GenericService<Student, Integer>{
     public void create(StudentDto studentDto) {
         try {
             Student student = mapDtoToStudent(studentDto);
-            studentRepository.create(student);
+            studentRepository.save(student);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -44,7 +43,7 @@ public class StudentService implements GenericService<Student, Integer>{
     
     public List<Student> getAll(){
         try {
-            return studentRepository.getAll();
+            return studentRepository.findAll();
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -52,7 +51,7 @@ public class StudentService implements GenericService<Student, Integer>{
 
     public List<Student> getAllActivated(){
         try {
-            List<Student> students = studentRepository.getAll();
+            List<Student> students = studentRepository.findAll();
             students.removeIf(p -> (p.isStudentInactive()));
             return students;
         } catch (RepositoryException e) {
@@ -62,7 +61,10 @@ public class StudentService implements GenericService<Student, Integer>{
 
     public Student getById(Integer studentId) {
         try {
-            return studentRepository.getById(studentId);
+            return studentRepository.findById(studentId)
+                    .orElseThrow(() -> new ServiceException(
+                            String.format("Student with such id %d does not exist", studentId)
+                    ));
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -70,7 +72,7 @@ public class StudentService implements GenericService<Student, Integer>{
 
     public StudentDto getDtoById(Integer studentId) {
         try {
-            return mapStudentToDto(studentRepository.getById(studentId));
+            return mapStudentToDto(getById(studentId));
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -78,7 +80,7 @@ public class StudentService implements GenericService<Student, Integer>{
 
     public void update(Student student) {
         try {
-            studentRepository.update(student);
+            studentRepository.save(student);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -87,7 +89,7 @@ public class StudentService implements GenericService<Student, Integer>{
     public void update(StudentDto studentDto) {
         try {
             Student student = mapDtoToStudent(studentDto);
-            studentRepository.update(student);
+            studentRepository.save(student);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -95,15 +97,18 @@ public class StudentService implements GenericService<Student, Integer>{
 
     public void deactivate(Integer studentId) {
         try {
-            studentRepository.deactivate(studentId);
+            Student student = getById(studentId);
+            studentRepository.save(student);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
     }
-    
+
     public void activate(Integer studentId) {
         try {
-            studentRepository.activate(studentId);
+            Student student = getById(studentId);
+            student.setStudentInactive(false);
+            studentRepository.save(student);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -111,7 +116,7 @@ public class StudentService implements GenericService<Student, Integer>{
 
     public List<Student> getStudentsByGroupId(Integer groupId) {
         try {
-            return studentRepository.getStudentsByGroupId(groupId);
+            return studentRepository.findByGroupGroupId(groupId);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -122,7 +127,7 @@ public class StudentService implements GenericService<Student, Integer>{
         student.setStudentId(dto.getStudentId());
         student.setFirstName(dto.getFirstName());
         student.setLastName(dto.getLastName());
-        Group group = groupRepository.getById(dto.getGroupId());
+        Group group = groupService.getById(dto.getGroupId());
         student.setGroup(group);
         student.setStudentInactive(dto.isStudentInactive());
         return student;
