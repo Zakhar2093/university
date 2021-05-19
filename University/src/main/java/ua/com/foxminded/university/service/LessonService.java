@@ -113,8 +113,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
 
     public void deactivate(Integer lessonId) {
         try {
-            Lesson lesson = getById(lessonId);
-            lessonRepository.save(lesson);
+            lessonRepository.deactivate(1);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -156,7 +155,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
     public List<Lesson> getLessonByStudentIdForDay(int studentId, LocalDateTime date) {
         try {
             Group group = studentService.getById(studentId).getGroup();
-            return lessonRepository.getLessonByStudentIdForDay(
+            return lessonRepository.getLessonByGroupIdForDay(
                     group,
                     date.getYear(),
                     date.getMonthValue(),
@@ -169,7 +168,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
     public List<Lesson> getLessonByStudentIdForMonth(int studentId, LocalDateTime date) {
         try {
             Group group = studentService.getById(studentId).getGroup();
-            return lessonRepository.getLessonByStudentIdForMonth(
+            return lessonRepository.getLessonByGroupIdForMonth(
                     group,
                     date.getYear(),
                     date.getMonthValue());
