@@ -2,6 +2,7 @@ package ua.com.foxminded.university.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Room;
@@ -65,11 +66,11 @@ public class RoomService implements GenericService<Room, Integer>{
         }
     }
 
+    @Transactional
     public void deactivate(Integer roomId) {
         try {
-            Room room = getById(roomId);
-            room.setRoomInactive(true);
-            roomRepository.save(room);
+            roomRepository.deactivate(roomId);
+            roomRepository.removeRoomFromAllLessons(roomId);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
