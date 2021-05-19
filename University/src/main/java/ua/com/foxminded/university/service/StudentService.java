@@ -97,8 +97,7 @@ public class StudentService implements GenericService<Student, Integer>{
 
     public void deactivate(Integer studentId) {
         try {
-            Student student = getById(studentId);
-            studentRepository.save(student);
+            studentRepository.deactivate(studentId);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
