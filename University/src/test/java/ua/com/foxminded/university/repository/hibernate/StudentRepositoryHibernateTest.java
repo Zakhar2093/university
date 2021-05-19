@@ -1,27 +1,25 @@
 package ua.com.foxminded.university.repository.hibernate;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
-import ua.com.foxminded.university.SpringConfigTest;
-import ua.com.foxminded.university.repository.GroupRepository;
-import ua.com.foxminded.university.repository.StudentRepository;
+import org.springframework.test.context.TestPropertySource;
+import ua.com.foxminded.university.Application;
+import ua.com.foxminded.university.DataSourceTestConfig;
 import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
+import ua.com.foxminded.university.repository.GroupRepository;
+import ua.com.foxminded.university.repository.StudentRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = SpringConfigTest.class)
-@WebAppConfiguration
+@SpringBootTest(classes = {Application.class, DataSourceTestConfig.class})
+@TestPropertySource(locations = "classpath:testApplication.properties")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class StudentRepositoryHibernateTest {
 
@@ -87,7 +85,7 @@ class StudentRepositoryHibernateTest {
         Student student = createStudentWithGroup();
         studentRepository.deactivate(student.getStudentId());
         assertTrue(studentRepository.getById(1).isStudentInactive());
-        assertTrue(groupRepository.getById(1).getStudents().isEmpty());
+        assertNull(studentRepository.getById(1).getGroup());
     }
 
     @Test

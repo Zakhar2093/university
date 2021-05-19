@@ -1,20 +1,15 @@
 package ua.com.foxminded.university.repository.hibernate;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
-import ua.com.foxminded.university.SpringConfigTest;
+import org.springframework.test.context.TestPropertySource;
+import ua.com.foxminded.university.Application;
+import ua.com.foxminded.university.DataSourceTestConfig;
 import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.model.*;
-import ua.com.foxminded.university.repository.GroupRepository;
-import ua.com.foxminded.university.repository.LessonRepository;
-import ua.com.foxminded.university.repository.RoomRepository;
-import ua.com.foxminded.university.repository.StudentRepository;
-import ua.com.foxminded.university.repository.TeacherRepository;
+import ua.com.foxminded.university.repository.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -23,9 +18,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = SpringConfigTest.class)
-@WebAppConfiguration
+@SpringBootTest(classes = {Application.class, DataSourceTestConfig.class})
+@TestPropertySource(locations = "classpath:testApplication.properties")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class LessonRepositoryHibernateTest {
 
@@ -56,23 +50,7 @@ class LessonRepositoryHibernateTest {
 
     @Test
     void getAllAndCreateShouldInsertAndGetCorrectData() {
-        Group group = new Group(1, "any", false);
-        groupRepository.create(group);
-        Room room = new Room(1, 1, false);
-        roomRepository.create(room);
-        Teacher teacher = new Teacher(1, "one", "one", false);
-        teacherRepository.create(teacher);
-
-
-        List<Lesson> lessons = new ArrayList<>();
-        lessons.add(new Lesson(1, "one", teacher, group, room, LocalDateTime.now(), false));
-        lessons.add(new Lesson(2, "two", teacher, group, room, LocalDateTime.now(), false));
-        lessons.add(new Lesson(3, "three", teacher, group, room, LocalDateTime.now(), false));
-        lessonRepository.create(lessons.get(0));
-        lessonRepository.create(lessons.get(1));
-        lessonRepository.create(lessons.get(2));
-
-        List<Lesson> expected = lessons;
+        List<Lesson> expected = createTestData();
         List<Lesson> actual = lessonRepository.getAll();
         assertEquals(expected, actual);
     }
@@ -85,9 +63,10 @@ class LessonRepositoryHibernateTest {
         roomRepository.create(room);
         Teacher teacher = new Teacher(1, "one", "one", false);
         teacherRepository.create(teacher);
+        LocalDateTime date = LocalDateTime.parse("2021.01.20-23.55.11", FORMATTER);
 
-        Lesson groupBeforeUpdating = new Lesson(1, "one", teacher, group, room, LocalDateTime.now(), false);
-        Lesson groupAfterUpdating = new Lesson(1, "one", teacher, group, room, LocalDateTime.now(), false);
+        Lesson groupBeforeUpdating = new Lesson(1, "one", teacher, group, room, date, false);
+        Lesson groupAfterUpdating = new Lesson(1, "one", teacher, group, room, date, false);
         lessonRepository.create(groupBeforeUpdating);
         lessonRepository.update(groupAfterUpdating);
         Lesson expected = groupAfterUpdating;
@@ -103,9 +82,9 @@ class LessonRepositoryHibernateTest {
         Lesson lesson = createLesson();
         lessonRepository.deactivate(lesson.getLessonId());
         assertTrue(lessonRepository.getById(lesson.getLessonId()).isLessonInactive());
-        assertTrue(teacherRepository.getById(1).getLessons().isEmpty());
-        assertTrue(roomRepository.getById(1).getLessons().isEmpty());
-        assertTrue(groupRepository.getById(1).getLessons().isEmpty());
+        assertNull(lessonRepository.getById(1).getRoom());
+        assertNull(lessonRepository.getById(1).getTeacher());
+        assertNull(lessonRepository.getById(1).getGroup());
     }
 
     @Test
@@ -127,151 +106,54 @@ class LessonRepositoryHibernateTest {
 
     @Test
     void getLessonByTeacherForDayShouldReturnCorrectData() {
-        Group group = new Group(1, "any name", false);
-        groupRepository.create(group);
-        Teacher teacher = new Teacher(1, "one", "one", false);
-        Teacher teacher2 = new Teacher(2, "two", "two", false);
-        teacherRepository.create(teacher);
-        teacherRepository.create(teacher2);
-        Room room = new Room(1, 101);
-        roomRepository.create(room);
+        LocalDateTime date = LocalDateTime.parse("2021.01.20-23.55.11", FORMATTER);
+        List<Lesson> allLessons = createTestData();
 
-        LocalDateTime date1 = LocalDateTime.parse("2021.01.20-23.55.11", FORMATTER);
-        LocalDateTime date2 = LocalDateTime.parse("2021.01.21-03.00.00", FORMATTER);
-        LocalDateTime date3 = LocalDateTime.parse("2021.01.21-23.55.11", FORMATTER);
-        LocalDateTime date4 = LocalDateTime.parse("2021.02.11-23.55.11", FORMATTER);
-
-        Lesson lesson1 = new Lesson(1, "Math", teacher, group, room, date1, false);
-        Lesson lesson2 = new Lesson(2, "bio", teacher, group, room, date2, false);
-        Lesson lesson3 = new Lesson(3, "bio", teacher2, group, room, date2, false);
-        Lesson lesson4 = new Lesson(4, "history", teacher, group, room, date3, false);
-        Lesson lesson5 = new Lesson(5, "english", teacher, group, room, date4, false);
-
-        lessonRepository.create(lesson1);
-        lessonRepository.create(lesson2);
-        lessonRepository.create(lesson3);
-        lessonRepository.create(lesson4);
-        lessonRepository.create(lesson5);
-
-        List<Lesson> actual = lessonRepository.getLessonByTeacherIdForDay(teacher.getTeacherId(), date2);
         List<Lesson> expected = new ArrayList<>();
-        expected.add(lesson2);
-        expected.add(lesson4);
+        expected.add(allLessons.get(0));
+        expected.add(allLessons.get(3));
 
+        List<Lesson> actual = lessonRepository.getLessonByTeacherIdForDay(1, date);
         assertEquals(expected, actual);
     }
 
     @Test
     void getLessonByTeacherForMonthShouldReturnCorrectData() {
-        Group group = new Group(1, "any name", false);
-        groupRepository.create(group);
-        Teacher teacher = new Teacher(1, "one", "one", false);
-        Teacher teacher2 = new Teacher(2, "two", "two", false);
-        teacherRepository.create(teacher);
-        teacherRepository.create(teacher2);
-        Room room = new Room(1, 101);
-        roomRepository.create(room);
+        LocalDateTime date = LocalDateTime.parse("2021.01.20-23.55.11", FORMATTER);
+        List<Lesson> allLessons = createTestData();
 
-        LocalDateTime date1 = LocalDateTime.parse("2021.01.20-23.55.11", FORMATTER);
-        LocalDateTime date2 = LocalDateTime.parse("2021.01.21-03.00.00", FORMATTER);
-        LocalDateTime date3 = LocalDateTime.parse("2021.01.21-23.55.11", FORMATTER);
-        LocalDateTime date4 = LocalDateTime.parse("2021.02.11-23.55.11", FORMATTER);
-
-        Lesson lesson1 = new Lesson(1, "Math", teacher, group, room, date1, false);
-        Lesson lesson2 = new Lesson(2, "bio", teacher, group, room, date2, false);
-        Lesson lesson3 = new Lesson(3, "bio", teacher2, group, room, date2, false);
-        Lesson lesson4 = new Lesson(4, "history", teacher, group, room, date3, false);
-        Lesson lesson5 = new Lesson(5, "english", teacher, group, room, date4, false);
-
-        lessonRepository.create(lesson1);
-        lessonRepository.create(lesson2);
-        lessonRepository.create(lesson3);
-        lessonRepository.create(lesson4);
-        lessonRepository.create(lesson5);
-
-        List<Lesson> actual = lessonRepository.getLessonByTeacherIdForMonth(teacher.getTeacherId(), date2);
         List<Lesson> expected = new ArrayList<>();
-        expected.add(lesson1);
-        expected.add(lesson2);
-        expected.add(lesson4);
+        expected.add(allLessons.get(0));
+        expected.add(allLessons.get(2));
+        expected.add(allLessons.get(3));
+        expected.add(allLessons.get(4));
 
+        List<Lesson> actual = lessonRepository.getLessonByTeacherIdForMonth(1, date);
         assertEquals(expected, actual);
     }
 
     @Test
     void getLessonByStudentForDayShouldReturnCorrectData() {
-        Group group = new Group(1, "any name", false);
-        groupRepository.create(group);
-        Teacher teacher = new Teacher(1, "one", "one", false);
-        Teacher teacher2 = new Teacher(2, "two", "two", false);
-        teacherRepository.create(teacher);
-        teacherRepository.create(teacher2);
-        Room room = new Room(1, 101);
-        roomRepository.create(room);
-        Student student1 = new Student(1, "student1", "student1", group, false);
-        Student student2 = new Student(2, "student2", "student2", group, false);
-        studentRepository.create(student1);
-        studentRepository.create(student2);
+        LocalDateTime date = LocalDateTime.parse("2021.01.20-23.55.11", FORMATTER);
+        List<Lesson> allLessons = createTestData();
 
-        LocalDateTime date1 = LocalDateTime.parse("2021.01.20-23.55.11", FORMATTER);
-        LocalDateTime date2 = LocalDateTime.parse("2021.01.21-03.00.00", FORMATTER);
-        LocalDateTime date3 = LocalDateTime.parse("2021.01.21-23.55.11", FORMATTER);
-        LocalDateTime date4 = LocalDateTime.parse("2021.02.11-23.55.11", FORMATTER);
-
-        Lesson lesson1 = new Lesson(1, "Math", teacher, group, room, date1, false);
-        Lesson lesson2 = new Lesson(2, "bio", teacher, group, room, date2, false);
-        Lesson lesson3 = new Lesson(3, "history", teacher, group, room, date3, false);
-        Lesson lesson4 = new Lesson(4, "english", teacher, group, room, date4, false);
-
-        lessonRepository.create(lesson1);
-        lessonRepository.create(lesson2);
-        lessonRepository.create(lesson3);
-        lessonRepository.create(lesson4);
-
-        List<Lesson> actual = lessonRepository.getLessonByStudentIdForDay(student1.getStudentId(), date2);
         List<Lesson> expected = new ArrayList<>();
-        expected.add(lesson2);
-        expected.add(lesson3);
+        expected.add(allLessons.get(0));
 
+        List<Lesson> actual = lessonRepository.getLessonByStudentIdForDay(1, date);
         assertEquals(expected, actual);
     }
 
     @Test
     void getLessonByStudentForMonthShouldReturnCorrectData() {
-        Group group = new Group(1, "any name", false);
-        groupRepository.create(group);
-        Teacher teacher = new Teacher(1, "one", "one", false);
-        Teacher teacher2 = new Teacher(2, "two", "two", false);
-        teacherRepository.create(teacher);
-        teacherRepository.create(teacher2);
-        Room room = new Room(1, 101);
-        roomRepository.create(room);
-        Student student1 = new Student(1, "student1", "student1", group, false);
-        Student student2 = new Student(2, "student2", "student2", group, false);
-        studentRepository.create(student1);
-        studentRepository.create(student2);
+        LocalDateTime date = LocalDateTime.parse("2021.01.20-23.55.11", FORMATTER);
+        List<Lesson> allLessons = createTestData();
 
-        LocalDateTime date1 = LocalDateTime.parse("2021.01.20-23.55.11", FORMATTER);
-        LocalDateTime date2 = LocalDateTime.parse("2021.01.21-03.00.00", FORMATTER);
-        LocalDateTime date3 = LocalDateTime.parse("2021.01.21-23.55.11", FORMATTER);
-        LocalDateTime date4 = LocalDateTime.parse("2021.02.11-23.55.11", FORMATTER);
-
-        Lesson lesson1 = new Lesson(1, "Math", teacher, group, room, date1, false);
-        Lesson lesson2 = new Lesson(2, "bio", teacher, group, room, date2, false);
-        Lesson lesson3 = new Lesson(3, "history", teacher, group, room, date3, false);
-        Lesson lesson4 = new Lesson(4, "english", teacher, group, room, date4, false);
-
-        lessonRepository.create(lesson1);
-        lessonRepository.create(lesson2);
-        lessonRepository.create(lesson3);
-        lessonRepository.create(lesson4);
-
-        List<Lesson> actual = lessonRepository.getLessonByStudentIdForMonth(student1.getStudentId(), date2);
         List<Lesson> expected = new ArrayList<>();
-        expected.add(lesson1);
-        expected.add(lesson2);
-        expected.add(lesson3);
+        expected.add(allLessons.get(0));
+        expected.add(allLessons.get(8));
 
+        List<Lesson> actual = lessonRepository.getLessonByStudentIdForMonth(1, date);
         assertEquals(expected, actual);
     }
 
@@ -279,8 +161,10 @@ class LessonRepositoryHibernateTest {
     void getLessonsByGroupIdShouldReturnCorrectData() {
         List<Lesson> lessons = createTestData();
         List<Lesson> expected = new ArrayList<>();
+        expected.add(lessons.get(0));
         expected.add(lessons.get(1));
-        expected.add(lessons.get(3));
+        expected.add(lessons.get(7));
+        expected.add(lessons.get(8));
         List<Lesson> actual = lessonRepository.getLessonsByGroupId(1);
         assertEquals(expected, actual);
     }
@@ -289,9 +173,11 @@ class LessonRepositoryHibernateTest {
     void getLessonsByRoomIdShouldReturnCorrectData() {
         List<Lesson> lessons = createTestData();
         List<Lesson> expected = new ArrayList<>();
+        expected.add(lessons.get(0));
         expected.add(lessons.get(2));
-        expected.add(lessons.get(3));
         expected.add(lessons.get(4));
+        expected.add(lessons.get(6));
+        expected.add(lessons.get(8));
         List<Lesson> actual = lessonRepository.getLessonsByRoomId(1);
         assertEquals(expected, actual);
     }
@@ -303,6 +189,8 @@ class LessonRepositoryHibernateTest {
         expected.add(lessons.get(0));
         expected.add(lessons.get(1));
         expected.add(lessons.get(2));
+        expected.add(lessons.get(3));
+        expected.add(lessons.get(4));
         List<Lesson> actual = lessonRepository.getLessonsByTeacherId(1);
         assertEquals(expected, actual);
     }
@@ -320,18 +208,28 @@ class LessonRepositoryHibernateTest {
         Room room2 = new Room(2, 102);
         roomRepository.create(room1);
         roomRepository.create(room2);
+        Student student1 = new Student(1, "student1", "student1", group1, false);
+        Student student2 = new Student(2, "student2", "student2", group2, false);
+        studentRepository.create(student1);
+        studentRepository.create(student2);
+
+        LocalDateTime date1 = LocalDateTime.parse("2021.01.20-23.55.11", FORMATTER);
+        LocalDateTime date2 = LocalDateTime.parse("2021.02.21-03.00.00", FORMATTER);
+        LocalDateTime date3 = LocalDateTime.parse("2021.01.21-23.55.11", FORMATTER);
 
         List<Lesson> lessons = new ArrayList<>();
-        lessons.add(new Lesson(1, "Math", teacher1, group2, room2, LocalDateTime.now(), false));
-        lessons.add(new Lesson(2, "History", teacher1, group1, room2, LocalDateTime.now(), false));
-        lessons.add(new Lesson(3, "English", teacher1, group2, room1, LocalDateTime.now(), false));
-        lessons.add(new Lesson(4, "Math", teacher2, group1, room1, LocalDateTime.now(), false));
-        lessons.add(new Lesson(5, "Bio", teacher2, group2, room1, LocalDateTime.now(), false));
-        lessonRepository.create(lessons.get(0));
-        lessonRepository.create(lessons.get(1));
-        lessonRepository.create(lessons.get(2));
-        lessonRepository.create(lessons.get(3));
-        lessonRepository.create(lessons.get(4));
+        lessons.add(new Lesson(1, "Math", teacher1, group1, room1, date1, false));
+        lessons.add(new Lesson(2, "History", teacher1, group1, room2, date2, false));
+        lessons.add(new Lesson(3, "English", teacher1, group2, room1, date3, false));
+        lessons.add(new Lesson(4, "Math", teacher1, group2, room2, date1, false));
+        lessons.add(new Lesson(5, "Bio", teacher1, group2, room1, date3, false));
+        lessons.add(new Lesson(6, "History", teacher2, group2, room2, date3, false));
+        lessons.add(new Lesson(7, "English", teacher2, group2, room1, date1, false));
+        lessons.add(new Lesson(8, "Math", teacher2, group1, room2, date2, false));
+        lessons.add(new Lesson(9, "Bio", teacher2, group1, room1, date3, false));
+        lessons.add(new Lesson(10, "Math", teacher2, group2, room2, date2, false));
+
+        lessons.stream().forEach(p -> lessonRepository.create(p));
         return lessons;
     }
 
@@ -342,7 +240,8 @@ class LessonRepositoryHibernateTest {
         roomRepository.create(room);
         Teacher teacher = new Teacher(1, "one", "one", false);
         teacherRepository.create(teacher);
-        Lesson lesson = new Lesson(1, "one", teacher, group, room, LocalDateTime.now(), false);
+        LocalDateTime date = LocalDateTime.parse("2021.01.20-23.55.11", FORMATTER);
+        Lesson lesson = new Lesson(1, "one", teacher, group, room, date, false);
         lessonRepository.create(lesson);
         return lesson;
     }

@@ -2,8 +2,11 @@ package ua.com.foxminded.university.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
+import ua.com.foxminded.university.Application;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.model_dto.StudentDto;
 import ua.com.foxminded.university.repository.GroupRepository;
@@ -17,22 +20,19 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
+@SpringBootTest(classes = Application.class)
 class StudentServiceTest {
 
     private static final String EMPTY_STRING = "";
-    private StudentService studentService;
 
     @Mock
     private GroupRepository groupRepository;
-    
+
     @Mock
     private StudentRepository studentRepository;
 
-    @BeforeEach
-    public void initMocks() {
-        MockitoAnnotations.initMocks(this);
-        studentService = new StudentService(studentRepository, groupRepository);
-    }
+    @InjectMocks
+    private StudentService studentService;
 
     @Test
     void createShouldInvokeOnlyOnceWhenTakesStudent() {

@@ -47,14 +47,18 @@ public class GroupRepositoryHibernate implements GroupRepository {
         logger.debug("Getting all Groups");
         Session session = sessionFactory.openSession();
         Query query = session.createQuery(env.getProperty("group.getAll"));
-        return query.getResultList();
+        List<Group> groups = query.getResultList();
+        session.close();
+        return groups;
     }
 
     public Group getById(Integer groupId) {
         logger.debug("Getting group by id = {}", groupId);
         Session session = sessionFactory.openSession();
-        return Optional.ofNullable(session.get(Group.class, groupId))
+        Group group = Optional.ofNullable(session.get(Group.class, groupId))
                 .orElseThrow(() -> new RepositoryException(String.format("Group with such id %d does not exist", groupId)));
+        session.close();
+        return group;
 
     }
 

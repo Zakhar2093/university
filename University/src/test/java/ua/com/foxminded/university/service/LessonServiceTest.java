@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
+import ua.com.foxminded.university.Application;
 import ua.com.foxminded.university.repository.GroupRepository;
 import ua.com.foxminded.university.repository.LessonRepository;
 import ua.com.foxminded.university.repository.RoomRepository;
@@ -21,6 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
+@SpringBootTest(classes = Application.class)
 class LessonServiceTest {
 
     private static final String EMPTY_STRING = "";
@@ -40,13 +43,6 @@ class LessonServiceTest {
 
     @InjectMocks
     private LessonService lessonService;
-
-
-    @BeforeEach
-    void initMocks() {
-        MockitoAnnotations.initMocks(this);
-        lessonService = new LessonService(lessonRepository, groupRepository, teacherRepository, roomRepository);
-    }
 
     @Test
     void createShouldInvokeOnlyOnceWhenTakesLesson() {

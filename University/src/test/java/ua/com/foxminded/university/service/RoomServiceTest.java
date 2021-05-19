@@ -2,8 +2,11 @@ package ua.com.foxminded.university.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
+import ua.com.foxminded.university.Application;
 import ua.com.foxminded.university.repository.RoomRepository;
 import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
@@ -14,19 +17,16 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
+@SpringBootTest(classes = Application.class)
 class RoomServiceTest {
     
     private static final String EMPTY_STRING = "";
-    private RoomService roomService;
+
     @Mock
     private RoomRepository roomRepository;
 
-
-    @BeforeEach
-    public void initMocks() {
-        MockitoAnnotations.initMocks(this);
-        roomService = new RoomService(roomRepository);
-    }
+    @InjectMocks
+    private RoomService roomService;
 
     @Test
     void createShouldInvokeOnlyOnce() {
