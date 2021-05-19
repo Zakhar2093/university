@@ -2,6 +2,7 @@ package ua.com.foxminded.university.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Group;
@@ -65,11 +66,12 @@ public class GroupService implements GenericService<Group, Integer>{
         }
     }
 
+    @Transactional
     public void deactivate(Integer groupId) {
         try {
-            Group group = getById(groupId);
-            group.setGroupInactive(true);
-            groupRepository.save(group);
+            groupRepository.deactivate(groupId);
+            groupRepository.removeGroupFromAllLessons(groupId);
+            groupRepository.removeGroupFromAllStudents(groupId);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
