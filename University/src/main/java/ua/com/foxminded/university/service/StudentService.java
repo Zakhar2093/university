@@ -7,6 +7,7 @@ import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.model.model_dto.StudentDto;
+import ua.com.foxminded.university.repository.GroupRepository;
 import ua.com.foxminded.university.repository.StudentRepository;
 
 import java.util.List;
@@ -16,13 +17,13 @@ import java.util.List;
 public class StudentService implements GenericService<Student, Integer>{
     
     private StudentRepository studentRepository;
-    private GroupService groupService;
+    private GroupRepository groupRepository;
     
     @Autowired
-    public StudentService(StudentRepository studentRepository, GroupService groupService) {
+    public StudentService(StudentRepository studentRepository, GroupRepository groupRepository) {
         super();
         this.studentRepository = studentRepository;
-        this.groupService = groupService;
+        this.groupRepository = groupRepository;
     }
     
     public void create(Student student) {
@@ -85,7 +86,9 @@ public class StudentService implements GenericService<Student, Integer>{
         student.setStudentId(dto.getStudentId());
         student.setFirstName(dto.getFirstName());
         student.setLastName(dto.getLastName());
-        Group group = groupService.getById(dto.getGroupId());
+        Group group = groupRepository.findById(dto.getGroupId())
+                .orElseThrow(() -> new ServiceException(
+                    String.format("Group with such id %d does not exist", dto.getGroupId())));
         student.setGroup(group);
         student.setStudentInactive(dto.isStudentInactive());
         return student;

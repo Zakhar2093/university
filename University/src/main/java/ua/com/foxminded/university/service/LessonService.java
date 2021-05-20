@@ -9,7 +9,7 @@ import ua.com.foxminded.university.model.Lesson;
 import ua.com.foxminded.university.model.Room;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.model_dto.LessonDto;
-import ua.com.foxminded.university.repository.LessonRepository;
+import ua.com.foxminded.university.repository.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -23,27 +23,26 @@ public class LessonService implements GenericService<Lesson, Integer>{
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(FORMAT);
 
     private LessonRepository lessonRepository;
-    private GroupService groupService;
-    private TeacherService teacherService;
-    private RoomService roomService;
-    private StudentService studentService;
+    private GroupRepository groupRepository;
+    private TeacherRepository teacherRepository;
+    private RoomRepository roomRepository;
+    private StudentRepository studentRepository;
 
     @Autowired
     public LessonService(LessonRepository lessonRepository,
-                         GroupService groupService,
-                         TeacherService teacherService,
-                         RoomService roomService,
-                         StudentService studentService) {
+                         GroupRepository groupRepository,
+                         TeacherRepository teacherRepository,
+                         RoomRepository roomRepository,
+                         StudentRepository studentRepository) {
         this.lessonRepository = lessonRepository;
-        this.groupService = groupService;
-        this.teacherService = teacherService;
-        this.roomService = roomService;
-        this.studentService = studentService;
+        this.groupRepository = groupRepository;
+        this.teacherRepository = teacherRepository;
+        this.roomRepository = roomRepository;
+        this.studentRepository = studentRepository;
     }
 
     public void create(Lesson lesson) {
         lessonRepository.save(lesson);
-
     }
 
     public void create(LessonDto lessonDto) {
@@ -111,7 +110,9 @@ public class LessonService implements GenericService<Lesson, Integer>{
     }
 
     public List<Lesson> getLessonByStudentIdForDay(int studentId, LocalDateTime date) {
-        Group group = studentService.getById(studentId).getGroup();
+        Group group = studentRepository.findById(studentId)
+                .orElseThrow(() -> new ServiceException(
+                        String.format("Student with such id %d does not exist", studentId))).getGroup();
         return lessonRepository.getLessonByGroupIdForDay(
                 group,
                 date.getYear(),
@@ -120,7 +121,9 @@ public class LessonService implements GenericService<Lesson, Integer>{
     }
 
     public List<Lesson> getLessonByStudentIdForMonth(int studentId, LocalDateTime date) {
-        Group group = studentService.getById(studentId).getGroup();
+        Group group = studentRepository.findById(studentId)
+                .orElseThrow(() -> new ServiceException(
+                        String.format("Student with such id %d does not exist", studentId))).getGroup();
         return lessonRepository.getLessonByGroupIdForMonth(
                 group,
                 date.getYear(),
@@ -143,12 +146,22 @@ public class LessonService implements GenericService<Lesson, Integer>{
         Lesson lesson = new Lesson();
         lesson.setLessonId(dto.getLessonId());
         lesson.setLessonName(dto.getLessonName());
-        Group group = groupService.getById(dto.getGroupId());
+
+        Group group = groupRepository.findById(dto.getGroupId())
+                .orElseThrow(() -> new ServiceException(
+                    String.format("Group with such id %d does not exist", dto.getGroupId())));
         lesson.setGroup(group);
-        Teacher teacher = teacherService.getById(dto.getTeacherId());
+
+        Teacher teacher = teacherRepository.findById(dto.getTeacherId())
+                .orElseThrow(() -> new ServiceException(
+                    String.format("Teacher with such id %d does not exist", dto.getTeacherId())));
         lesson.setTeacher(teacher);
-        Room room = roomService.getById(dto.getRoomId());
+
+        Room room = roomRepository.findById(dto.getRoomId())
+                .orElseThrow(() -> new ServiceException(
+                    String.format("Room with such id %d does not exist", dto.getRoomId())));
         lesson.setRoom(room);
+
         lesson.setLessonInactive(dto.isLessonInactive());
         lesson.setDate(LocalDateTime.parse(dto.getDate(), FORMATTER));
         return lesson;
