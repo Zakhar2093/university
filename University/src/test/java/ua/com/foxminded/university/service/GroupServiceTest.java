@@ -6,7 +6,6 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import ua.com.foxminded.university.Application;
-import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.repository.GroupRepository;
@@ -14,6 +13,7 @@ import ua.com.foxminded.university.repository.GroupRepository;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
@@ -63,8 +63,8 @@ class GroupServiceTest {
 
     @Test
     void deactivateShouldInvokeOnlyOnce() {
+        when(groupRepository.findById(1)).thenReturn(Optional.of(new Group()));
         groupService.deactivate(1);
-        verify(groupRepository, times(1)).deactivate(anyInt());
         verify(groupRepository, times(1)).removeGroupFromAllStudents(anyInt());
         verify(groupRepository, times(1)).removeGroupFromAllLessons(anyInt());
     }
@@ -77,50 +77,10 @@ class GroupServiceTest {
     }
 
     @Test
-    void whenCreateCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(groupRepository).save(any(Group.class));
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            groupService.create(new Group());
-        });
-    }
-
-    @Test
-    void whenGetAllCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(groupRepository).findAll();
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            groupService.getAll();
-        });
-    }
-
-    @Test
-    void whenGetByIdCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(groupRepository).findById(anyInt());
+    void whenGetByIdTakesUnexcitedIdShouldThrowServiceException() {
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             groupService.getById(1);
         });
-    }
-
-    @Test
-    void whenUpdateCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(groupRepository).save(any(Group.class));
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            groupService.update(new Group());
-        });
-    }
-
-    @Test
-    void whenDeactivateCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(groupRepository).deactivate(anyInt());
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            groupService.deactivate(1);
-        });
-    }
-
-    @Test
-    void whenActivateCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(groupRepository).save(any(Group.class));
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            groupService.activate(1);
-        });
+        assertTrue(thrown.getMessage().contains("Group with such id 1 does not exist"));
     }
 }

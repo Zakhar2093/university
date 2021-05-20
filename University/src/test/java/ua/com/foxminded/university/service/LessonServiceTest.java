@@ -6,22 +6,19 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import ua.com.foxminded.university.Application;
-import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lesson;
 import ua.com.foxminded.university.model.Room;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.model_dto.LessonDto;
-import ua.com.foxminded.university.repository.GroupRepository;
-import ua.com.foxminded.university.repository.LessonRepository;
-import ua.com.foxminded.university.repository.RoomRepository;
-import ua.com.foxminded.university.repository.TeacherRepository;
+import ua.com.foxminded.university.repository.*;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
@@ -45,6 +42,9 @@ class LessonServiceTest {
     @Mock
     private LessonRepository lessonRepository;
 
+    @Mock
+    private StudentRepository studentRepository;
+
     @InjectMocks
     private LessonService lessonService;
 
@@ -56,19 +56,16 @@ class LessonServiceTest {
 
     @Test
     void createShouldInvokeOnlyOnceWhenTakesLessonDto() {
-        lessonService.create(mockRepository());
-        verify(lessonRepository, only()).save(any(Lesson.class));
+        lessonService.create(createLessonDto());
+        verify(lessonRepository, times(1)).save(any(Lesson.class));
     }
 
-    private LessonDto mockRepository(){
-        LessonDto lessonDto = new LessonDto();
+    private LessonDto createLessonDto(){
+        LessonDto lessonDto = new LessonDto(1, "1", 1, 1, 1, "1", true);
         lessonDto.setDate("11 04 2021 12:44 AM");
-        Group group = new Group(1, "Math", false);
-        Room room = new Room(1, 101);
-        Teacher teacher = new Teacher(1, "one", "two", false);
-        when(groupRepository.findById(anyInt())).thenReturn(Optional.of(group));
-        when(roomRepository.findById(anyInt())).thenReturn(Optional.of(room));
-        when(teacherRepository.findById(anyInt())).thenReturn(Optional.of(teacher));
+        when(groupRepository.findById(1)).thenReturn(Optional.of(new Group()));
+        when(roomRepository.findById(1)).thenReturn(Optional.of(new Room()));
+        when(teacherRepository.findById(1)).thenReturn(Optional.of(new Teacher()));
         return lessonDto;
     }
 
@@ -86,6 +83,7 @@ class LessonServiceTest {
 
     @Test
     void getByIdShouldInvokeOnlyOnce() {
+        when(lessonRepository.findById(1)).thenReturn(Optional.of(new Lesson()));
         lessonService.getById(1);
         verify(lessonRepository, only()).findById(anyInt());
     }
@@ -107,14 +105,15 @@ class LessonServiceTest {
     @Test
     void updateShouldInvokeOnlyOnceWhenTakesLessonDto() {
         when(lessonRepository.findById(1)).thenReturn(Optional.of(new Lesson()));
-        lessonService.update(mockRepository());
+        lessonService.update(createLessonDto());
         verify(lessonRepository, times(1)).save(any(Lesson.class));
     }
 
     @Test
     void deactivateShouldInvokeOnlyOnce() {
+        when(lessonRepository.findById(1)).thenReturn(Optional.of(new Lesson()));
         lessonService.deactivate(1);
-        verify(lessonRepository, times(1)).deactivate(anyInt());
+        verify(lessonRepository, times(1)).save(any(Lesson.class));
     }
 
     @Test
@@ -149,86 +148,6 @@ class LessonServiceTest {
     }
 
     @Test
-    void whenCreateCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(lessonRepository).save(any(Lesson.class));
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            lessonService.create(new Lesson());
-        });
-    }
-
-    @Test
-    void whenGetAllCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(lessonRepository).findAll();
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            lessonService.getAll();
-        });
-    }
-
-    @Test
-    void whenGetByIdCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(lessonRepository).findById(anyInt());
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            lessonService.getById(1);
-        });
-    }
-
-    @Test
-    void whenUpdateCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(lessonRepository).save(any(Lesson.class));
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            lessonService.update(new Lesson());
-        });
-    }
-
-    @Test
-    void whenDeactivateCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(lessonRepository).deactivate(anyInt());
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            lessonService.deactivate(1);
-        });
-    }
-
-    @Test
-    void whenActivateCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(lessonRepository).save(any(Lesson.class));
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            lessonService.activate(1);
-        });
-    }
-
-    @Test
-    void whenGetLessonByTeacherForDayCatchRepositoryExceptionShouldThrowServiceException(){
-        doThrow(new RepositoryException(EMPTY_STRING)).when(lessonRepository).getLessonByTeacherIdForDay(anyInt(), anyInt(), anyInt(), anyInt());
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            lessonService.getLessonByTeacherIdForDay(1, TIME);
-        });
-    }
-
-    @Test
-    void whenGetLessonByTeacherForMonthCatchRepositoryExceptionShouldThrowServiceException(){
-        doThrow(new RepositoryException(EMPTY_STRING)).when(lessonRepository).getLessonByTeacherIdForMonth(anyInt(), anyInt(), anyInt());
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            lessonService.getLessonByTeacherIdForMonth(1, TIME);
-        });
-    }
-// todo tests
-//    @Test
-//    void whenGetLessonByStudentForDayCatchRepositoryExceptionShouldThrowServiceException(){
-//        doThrow(new RepositoryException(EMPTY_STRING)).when(lessonRepository).getLessonByGroupIdForDay(any(Group.class), anyInt(), anyInt(), anyInt());
-//        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-//            lessonService.getLessonByStudentIdForDay(1, TIME);
-//        });
-//    }
-//
-//    @Test
-//    void whenGetLessonByStudentForMonthCatchRepositoryExceptionShouldThrowServiceException(){
-//        doThrow(new RepositoryException(EMPTY_STRING)).when(lessonRepository).getLessonByGroupIdForMonth(any(Group.class), anyInt(), anyInt());
-//        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-//            lessonService.getLessonByStudentIdForMonth(1, TIME);
-//        });
-//    }
-
-    @Test
     void getLessonsByGroupIdShouldInvokeOnlyOnce(){
         lessonService.getLessonsByGroupId(1);
         verify(lessonRepository, only()).findByGroupGroupId(anyInt());
@@ -247,20 +166,26 @@ class LessonServiceTest {
     }
 
     @Test
-    void whenGetLessonsByTeacherIdCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(lessonRepository).findByTeacherTeacherId(anyInt());
-        assertThrows(ServiceException.class, () -> {lessonService.getLessonsByTeacherId(1);});
+    void whenGetByIdTakesUnexcitedIdShouldThrowServiceException() {
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            lessonService.getById(1);
+        });
+        assertTrue(thrown.getMessage().contains("Lesson with such id 1 does not exist"));
     }
 
     @Test
-    void whenGetLessonsByGroupIdCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(lessonRepository).findByGroupGroupId(anyInt());
-        assertThrows(ServiceException.class, () -> {lessonService.getLessonsByGroupId(1);});
+    void whenGetLessonByStudentIdForDayTakesUnexcitedIdShouldThrowServiceException() {
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            lessonService.getLessonByStudentIdForDay(1, eq(TIME));
+        });
+        assertTrue(thrown.getMessage().contains("Student with such id 1 does not exist"));
     }
 
     @Test
-    void whenGetLessonsByRoomIdCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(lessonRepository).findByRoomRoomId(anyInt());
-        assertThrows(ServiceException.class, () -> { lessonService.getLessonsByRoomId(1);});
+    void whenGetLessonByStudentIdForMonthTakesUnexcitedIdShouldThrowServiceException() {
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            lessonService.getLessonByStudentIdForMonth(1, eq(TIME));
+        });
+        assertTrue(thrown.getMessage().contains("Student with such id 1 does not exist"));
     }
 }
