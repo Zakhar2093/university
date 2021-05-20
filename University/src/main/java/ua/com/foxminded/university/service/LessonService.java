@@ -3,7 +3,6 @@ package ua.com.foxminded.university.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lesson;
@@ -43,164 +42,96 @@ public class LessonService implements GenericService<Lesson, Integer>{
     }
 
     public void create(Lesson lesson) {
-        try {
-            lessonRepository.save(lesson);
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        lessonRepository.save(lesson);
+
     }
 
     public void create(LessonDto lessonDto) {
-        try {
-            Lesson lesson = mapDtoToLesson(lessonDto);
-            lessonRepository.save(lesson);
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        Lesson lesson = mapDtoToLesson(lessonDto);
+        lessonRepository.save(lesson);
     }
 
     public List<Lesson> getAll(){
-        try {
-            return lessonRepository.findAll();
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        return lessonRepository.findAll();
     }
 
     public List<Lesson> getAllActivated(){
-        try {
-            List<Lesson> lessons = lessonRepository.findAll();
-            lessons.removeIf(p -> (p.isLessonInactive()));
-            return lessons;
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        List<Lesson> lessons = lessonRepository.findAll();
+        lessons.removeIf(p -> (p.isLessonInactive()));
+        return lessons;
     }
 
     public Lesson getById(Integer lessonId) {
-        try {
-            return lessonRepository.findById(lessonId)
-                    .orElseThrow(() -> new ServiceException(
-                            String.format("Lesson with such id %d does not exist", lessonId)
-                    ));
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        return lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new ServiceException(
+                        String.format("Lesson with such id %d does not exist", lessonId)));
     }
 
     public LessonDto getDtoById(Integer lessonId) {
-        try {
-            return mapLessonToDto(getById(lessonId));
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        return mapLessonToDto(getById(lessonId));
     }
 
     public void update(Lesson lesson) {
-        try {
-            lessonRepository.save(lesson);
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        lessonRepository.save(lesson);
     }
 
     public void update(LessonDto lessonDto) {
-        try {
-            Lesson lesson = mapDtoToLesson(lessonDto);
-            lessonRepository.save(lesson);
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        Lesson lesson = mapDtoToLesson(lessonDto);
+        lessonRepository.save(lesson);
     }
 
     public void deactivate(Integer lessonId) {
-        try {
-            lessonRepository.deactivate(1);
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        lessonRepository.deactivate(1);
     }
 
     public void activate(Integer lessonId) {
-        try {
-            Lesson lesson = getById(lessonId);
-            lesson.setLessonInactive(false);
-            lessonRepository.save(lesson);
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        Lesson lesson = getById(lessonId);
+        lesson.setLessonInactive(false);
+        lessonRepository.save(lesson);
     }
 
     public List<Lesson> getLessonByTeacherIdForDay(int teacherId, LocalDateTime date) {
-        try {
-            return lessonRepository.getLessonByTeacherIdForDay(
-                    teacherId,
-                    date.getYear(),
-                    date.getMonthValue(),
-                    date.getDayOfMonth());
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        return lessonRepository.getLessonByTeacherIdForDay(
+                teacherId,
+                date.getYear(),
+                date.getMonthValue(),
+                date.getDayOfMonth());
     }
 
     public List<Lesson> getLessonByTeacherIdForMonth(int teacherId, LocalDateTime date) {
-        try {
-            return lessonRepository.getLessonByTeacherIdForMonth(
-                    teacherId,
-                    date.getYear(),
-                    date.getMonthValue());
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        return lessonRepository.getLessonByTeacherIdForMonth(
+                teacherId,
+                date.getYear(),
+                date.getMonthValue());
     }
 
     public List<Lesson> getLessonByStudentIdForDay(int studentId, LocalDateTime date) {
-        try {
-            Group group = studentService.getById(studentId).getGroup();
-            return lessonRepository.getLessonByGroupIdForDay(
-                    group,
-                    date.getYear(),
-                    date.getMonthValue(),
-                    date.getDayOfMonth());
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        Group group = studentService.getById(studentId).getGroup();
+        return lessonRepository.getLessonByGroupIdForDay(
+                group,
+                date.getYear(),
+                date.getMonthValue(),
+                date.getDayOfMonth());
     }
 
     public List<Lesson> getLessonByStudentIdForMonth(int studentId, LocalDateTime date) {
-        try {
-            Group group = studentService.getById(studentId).getGroup();
-            return lessonRepository.getLessonByGroupIdForMonth(
-                    group,
-                    date.getYear(),
-                    date.getMonthValue());
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        Group group = studentService.getById(studentId).getGroup();
+        return lessonRepository.getLessonByGroupIdForMonth(
+                group,
+                date.getYear(),
+                date.getMonthValue());
     }
 
     public List<Lesson> getLessonsByGroupId(Integer groupId) {
-        try {
-            return lessonRepository.findByGroupGroupId(groupId);
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        return lessonRepository.findByGroupGroupId(groupId);
     }
 
     public List<Lesson> getLessonsByTeacherId(Integer teacherId) {
-        try {
-            return lessonRepository.findByTeacherTeacherId(teacherId);
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        return lessonRepository.findByTeacherTeacherId(teacherId);
     }
 
     public List<Lesson> getLessonsByRoomId(Integer roomId) {
-        try {
-            return lessonRepository.findByRoomRoomId(roomId);
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        return lessonRepository.findByRoomRoomId(roomId);
     }
 
     private Lesson mapDtoToLesson(LessonDto dto){

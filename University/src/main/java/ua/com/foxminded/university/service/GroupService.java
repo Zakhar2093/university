@@ -3,7 +3,6 @@ package ua.com.foxminded.university.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.repository.GroupRepository;
@@ -23,67 +22,38 @@ public class GroupService implements GenericService<Group, Integer>{
     }
 
     public void create(Group group) {
-        try {
-            groupRepository.save(group);
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        groupRepository.save(group);
     }
 
     public List<Group> getAll() {
-        try {
-            return groupRepository.findAll();
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        return groupRepository.findAll();
     }
 
     public List<Group> getAllActivated() {
-        try {
-            List<Group> groups = groupRepository.findAll();
-            groups.removeIf(p -> (p.isGroupInactive()));
-            return groups;
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        List<Group> groups = groupRepository.findAll();
+        groups.removeIf(p -> (p.isGroupInactive()));
+        return groups;
     }
 
     public Group getById(Integer groupId) {
-        try {
-            return groupRepository.findById(groupId)
-                    .orElseThrow(() -> new ServiceException(
-                            String.format("Group with such id %d does not exist", groupId)
-                    ));
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        return groupRepository.findById(groupId)
+                .orElseThrow(() -> new ServiceException(
+                        String.format("Group with such id %d does not exist", groupId)));
     }
 
     public void update(Group group) {
-        try {
-            groupRepository.save(group);
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        groupRepository.save(group);
     }
 
     public void deactivate(Integer groupId) {
-        try {
-            groupRepository.deactivate(groupId);
-            groupRepository.removeGroupFromAllLessons(groupId);
-            groupRepository.removeGroupFromAllStudents(groupId);
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        groupRepository.deactivate(groupId);
+        groupRepository.removeGroupFromAllLessons(groupId);
+        groupRepository.removeGroupFromAllStudents(groupId);
     }
 
     public void activate(Integer groupId) {
-        try {
-            Group group = getById(groupId);
-            group.setGroupInactive(false);
-            groupRepository.save(group);
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        Group group = getById(groupId);
+        group.setGroupInactive(false);
+        groupRepository.save(group);
     }
 }

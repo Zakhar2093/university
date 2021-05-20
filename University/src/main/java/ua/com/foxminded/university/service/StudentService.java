@@ -3,7 +3,6 @@ package ua.com.foxminded.university.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
@@ -27,100 +26,55 @@ public class StudentService implements GenericService<Student, Integer>{
     }
     
     public void create(Student student) {
-        try {
-            studentRepository.save(student);
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        studentRepository.save(student);
     }
 
     public void create(StudentDto studentDto) {
-        try {
-            Student student = mapDtoToStudent(studentDto);
-            studentRepository.save(student);
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        Student student = mapDtoToStudent(studentDto);
+        studentRepository.save(student);
     }
     
     public List<Student> getAll(){
-        try {
-            return studentRepository.findAll();
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        return studentRepository.findAll();
     }
 
     public List<Student> getAllActivated(){
-        try {
-            List<Student> students = studentRepository.findAll();
-            students.removeIf(p -> (p.isStudentInactive()));
-            return students;
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        List<Student> students = studentRepository.findAll();
+        students.removeIf(p -> (p.isStudentInactive()));
+        return students;
     }
 
     public Student getById(Integer studentId) {
-        try {
-            return studentRepository.findById(studentId)
-                    .orElseThrow(() -> new ServiceException(
-                            String.format("Student with such id %d does not exist", studentId)
-                    ));
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        return studentRepository.findById(studentId)
+                .orElseThrow(() -> new ServiceException(
+                        String.format("Student with such id %d does not exist", studentId)));
     }
 
     public StudentDto getDtoById(Integer studentId) {
-        try {
-            return mapStudentToDto(getById(studentId));
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        return mapStudentToDto(getById(studentId));
     }
 
     public void update(Student student) {
-        try {
-            studentRepository.save(student);
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        studentRepository.save(student);
     }
 
     public void update(StudentDto studentDto) {
-        try {
-            Student student = mapDtoToStudent(studentDto);
-            studentRepository.save(student);
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        Student student = mapDtoToStudent(studentDto);
+        studentRepository.save(student);
     }
 
     public void deactivate(Integer studentId) {
-        try {
-            studentRepository.deactivate(studentId);
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        studentRepository.deactivate(studentId);
     }
 
     public void activate(Integer studentId) {
-        try {
-            Student student = getById(studentId);
-            student.setStudentInactive(false);
-            studentRepository.save(student);
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        Student student = getById(studentId);
+        student.setStudentInactive(false);
+        studentRepository.save(student);
     }
 
     public List<Student> getStudentsByGroupId(Integer groupId) {
-        try {
-            return studentRepository.findByGroupGroupId(groupId);
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
+        return studentRepository.findByGroupGroupId(groupId);
     }
 
     private Student mapDtoToStudent(StudentDto dto){
