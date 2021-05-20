@@ -4,13 +4,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lesson;
 
 import java.util.List;
 
-@Transactional
 public interface LessonRepository extends JpaRepository<Lesson, Integer> {
     @Modifying
     @Query("UPDATE Lesson L SET L.lessonInactive = true, L.group = null, L.room = null, L.teacher = null WHERE L.lessonId = :lessonId")

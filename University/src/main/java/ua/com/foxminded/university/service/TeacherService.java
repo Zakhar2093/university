@@ -11,6 +11,7 @@ import ua.com.foxminded.university.repository.TeacherRepository;
 import java.util.List;
 
 @Component
+@Transactional
 public class TeacherService implements GenericService<Teacher, Integer>{
 
     private TeacherRepository teacherRepository;
@@ -66,7 +67,6 @@ public class TeacherService implements GenericService<Teacher, Integer>{
         }
     }
 
-    @Transactional
     public void deactivate(Integer teacherId) {
         try {
             teacherRepository.deactivate(teacherId);

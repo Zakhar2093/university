@@ -11,6 +11,7 @@ import ua.com.foxminded.university.repository.RoomRepository;
 import java.util.List;
 
 @Component
+@Transactional
 public class RoomService implements GenericService<Room, Integer>{
 
     private RoomRepository roomRepository;
@@ -66,7 +67,6 @@ public class RoomService implements GenericService<Room, Integer>{
         }
     }
 
-    @Transactional
     public void deactivate(Integer roomId) {
         try {
             roomRepository.deactivate(roomId);

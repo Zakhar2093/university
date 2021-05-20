@@ -2,6 +2,7 @@ package ua.com.foxminded.university.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Group;
@@ -12,6 +13,7 @@ import ua.com.foxminded.university.repository.StudentRepository;
 import java.util.List;
 
 @Component
+@Transactional
 public class StudentService implements GenericService<Student, Integer>{
     
     private StudentRepository studentRepository;

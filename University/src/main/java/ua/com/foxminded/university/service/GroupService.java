@@ -11,6 +11,7 @@ import ua.com.foxminded.university.repository.GroupRepository;
 import java.util.List;
 
 @Component
+@Transactional
 public class GroupService implements GenericService<Group, Integer>{
 
     private GroupRepository groupRepository;
@@ -66,7 +67,6 @@ public class GroupService implements GenericService<Group, Integer>{
         }
     }
 
-    @Transactional
     public void deactivate(Integer groupId) {
         try {
             groupRepository.deactivate(groupId);
