@@ -46,9 +46,11 @@ public class GroupService implements GenericService<Group, Integer>{
     }
 
     public void deactivate(Integer groupId) {
-        groupRepository.deactivate(groupId);
         groupRepository.removeGroupFromAllLessons(groupId);
         groupRepository.removeGroupFromAllStudents(groupId);
+        Group group = getById(groupId);
+        group.setGroupInactive(true);
+        groupRepository.save(group);
     }
 
     public void activate(Integer groupId) {

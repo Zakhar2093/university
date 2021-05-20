@@ -12,7 +12,8 @@ import ua.com.foxminded.university.model.Teacher;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest(classes = {Application.class, DataSourceTestConfig.class})
 @TestPropertySource(locations = "classpath:testApplication.properties")
@@ -25,13 +26,6 @@ public class TeacherRepositoryTest {
     public TeacherRepositoryTest(LessonRepository lessonRepository, TeacherRepository teacherRepository) {
         this.lessonRepository = lessonRepository;
         this.teacherRepository = teacherRepository;
-    }
-
-    @Test
-    void deactivateShouldSetTrueInTeacherInactive() {
-        teacherRepository.save(new Teacher(1, "one", "one", false));
-        teacherRepository.deactivate(1);
-        assertTrue(teacherRepository.findById(1).get().isTeacherInactive());
     }
 
     @Test

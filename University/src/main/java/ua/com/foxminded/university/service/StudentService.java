@@ -64,7 +64,10 @@ public class StudentService implements GenericService<Student, Integer>{
     }
 
     public void deactivate(Integer studentId) {
-        studentRepository.deactivate(studentId);
+        Student student = getById(studentId);
+        student.setGroup(null);
+        student.setStudentInactive(true);
+        studentRepository.save(student);
     }
 
     public void activate(Integer studentId) {

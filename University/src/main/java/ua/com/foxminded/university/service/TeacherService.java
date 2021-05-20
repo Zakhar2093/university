@@ -46,8 +46,10 @@ public class TeacherService implements GenericService<Teacher, Integer>{
     }
 
     public void deactivate(Integer teacherId) {
-        teacherRepository.deactivate(teacherId);
         teacherRepository.removeTeacherFromAllLessons(teacherId);
+        Teacher teacher = getById(teacherId);
+        teacher.setTeacherInactive(true);
+        teacherRepository.save(teacher);
     }
 
     public void activate(Integer teacherId) {

@@ -46,8 +46,10 @@ public class RoomService implements GenericService<Room, Integer>{
     }
 
     public void deactivate(Integer roomId) {
-        roomRepository.deactivate(roomId);
         roomRepository.removeRoomFromAllLessons(roomId);
+        Room room = getById(roomId);
+        room.setRoomInactive(true);
+        roomRepository.save(room);
     }
 
     public void activate(Integer roomId) {

@@ -17,7 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = {Application.class, DataSourceTestConfig.class})
 @TestPropertySource(locations = "classpath:testApplication.properties")
@@ -40,16 +40,6 @@ class LessonRepositoryTest {
         this.teacherRepository = teacherRepository;
         this.roomRepository = roomRepository;
         this.studentRepository = studentRepository;
-    }
-
-    @Test
-    void deactivateShouldSetTrueInLessonInactive() {
-        Lesson lesson = saveLesson();
-        lessonRepository.deactivate(lesson.getLessonId());
-        assertTrue(lessonRepository.findById(lesson.getLessonId()).get().isLessonInactive());
-        assertNull(lessonRepository.findById(1).get().getRoom());
-        assertNull(lessonRepository.findById(1).get().getTeacher());
-        assertNull(lessonRepository.findById(1).get().getGroup());
     }
 
     @Test
@@ -187,18 +177,5 @@ class LessonRepositoryTest {
 
         lessons.stream().forEach(p -> lessonRepository.save(p));
         return lessons;
-    }
-
-        private Lesson saveLesson() {
-        Group group = new Group(1, "any", false);
-        groupRepository.save(group);
-        Room room = new Room(1, 1, false);
-        roomRepository.save(room);
-        Teacher teacher = new Teacher(1, "one", "one", false);
-        teacherRepository.save(teacher);
-        LocalDateTime date = LocalDateTime.parse("2021.01.20-23.55.11", FORMATTER);
-        Lesson lesson = new Lesson(1, "one", teacher, group, room, date, false);
-        lessonRepository.save(lesson);
-        return lesson;
     }
 }

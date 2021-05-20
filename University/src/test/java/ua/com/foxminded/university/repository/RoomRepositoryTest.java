@@ -12,7 +12,8 @@ import ua.com.foxminded.university.model.Room;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest(classes = {Application.class, DataSourceTestConfig.class})
 @TestPropertySource(locations = "classpath:testApplication.properties")
@@ -26,13 +27,6 @@ public class RoomRepositoryTest {
     public RoomRepositoryTest(LessonRepository lessonRepository, RoomRepository roomRepository) {
         this.lessonRepository = lessonRepository;
         this.roomRepository = roomRepository;
-    }
-
-    @Test
-    void deactivateShouldSetTrueInRoomInactive() {
-        roomRepository.save(new Room(1, 1, false));
-        roomRepository.deactivate(1);
-        assertTrue(roomRepository.findById(1).get().isRoomInactive());
     }
 
     @Test

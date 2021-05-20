@@ -13,7 +13,7 @@ import ua.com.foxminded.university.model.Student;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = {Application.class, DataSourceTestConfig.class})
 @TestPropertySource(locations = "classpath:testApplication.properties")
@@ -26,14 +26,6 @@ public class StudentRepositoryTest {
     public StudentRepositoryTest(GroupRepository groupRepository, StudentRepository studentRepository) {
         this.groupRepository = groupRepository;
         this.studentRepository = studentRepository;
-    }
-
-    @Test
-    void deactivateShouldSetTrueInStudentInactive() {
-        Student student = saveStudentWithGroup();
-        studentRepository.deactivate(student.getStudentId());
-        assertTrue(studentRepository.findById(1).get().isStudentInactive());
-        assertNull(studentRepository.findById(1).get().getGroup());
     }
 
     @Test
@@ -54,13 +46,4 @@ public class StudentRepositoryTest {
         List<Student> actual = studentRepository.findByGroupGroupId(1);
         assertEquals(expected, actual);
     }
-
-    private Student saveStudentWithGroup() {
-        Group group = new Group(1, "any", false);
-        groupRepository.save(group);
-        Student student = new Student(1, "one", "one", group, false);
-        studentRepository.save(student);
-        return student;
-    }
-
 }

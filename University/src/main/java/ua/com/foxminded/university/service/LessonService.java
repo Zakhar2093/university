@@ -81,7 +81,12 @@ public class LessonService implements GenericService<Lesson, Integer>{
     }
 
     public void deactivate(Integer lessonId) {
-        lessonRepository.deactivate(1);
+        Lesson lesson = getById(lessonId);
+        lesson.setRoom(null);
+        lesson.setTeacher(null);
+        lesson.setGroup(null);
+        lesson.setLessonInactive(true);
+        lessonRepository.save(lesson);
     }
 
     public void activate(Integer lessonId) {

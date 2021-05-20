@@ -13,30 +13,23 @@ import ua.com.foxminded.university.model.Student;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest(classes = {Application.class, DataSourceTestConfig.class})
 @TestPropertySource(locations = "classpath:testApplication.properties")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class GroupRepositoryHibernateTest {
+class GroupRepositoryTest {
 
     private LessonRepository lessonRepository;
     private GroupRepository groupRepository;
     private StudentRepository studentRepository;
 
     @Autowired
-    public GroupRepositoryHibernateTest(LessonRepository lessonRepository, GroupRepository groupRepository, StudentRepository studentRepository) {
+    public GroupRepositoryTest(LessonRepository lessonRepository, GroupRepository groupRepository, StudentRepository studentRepository) {
         this.lessonRepository = lessonRepository;
         this.groupRepository = groupRepository;
         this.studentRepository = studentRepository;
-    }
-
-    @Test
-    void deactivateShouldSetTrueInGroupInactive() {
-        Group group = new Group(1, "one",  false);
-        groupRepository.save(group);
-        groupRepository.deactivate(group.getGroupId());
-        assertTrue(groupRepository.findById(group.getGroupId()).get().isGroupInactive());
     }
 
     @Test

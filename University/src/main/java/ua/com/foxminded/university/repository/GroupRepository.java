@@ -8,10 +8,6 @@ import ua.com.foxminded.university.model.Group;
 public interface GroupRepository extends JpaRepository<Group, Integer> {
 
     @Modifying
-    @Query("UPDATE Group SET groupInactive = true WHERE id = :groupId")
-    void deactivate(Integer groupId);
-
-    @Modifying
     @Query("UPDATE Lesson L SET L.group = null WHERE L.group.groupId = :groupId")
     void removeGroupFromAllLessons(Integer groupId);
 
