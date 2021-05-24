@@ -1,26 +1,26 @@
 package ua.com.foxminded.university.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import ua.com.foxminded.university.Application;
-import ua.com.foxminded.university.repository.RoomRepository;
-import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Room;
+import ua.com.foxminded.university.repository.RoomRepository;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = Application.class)
+@TestPropertySource(locations = "classpath:testApplication.properties")
 class RoomServiceTest {
-    
-    private static final String EMPTY_STRING = "";
 
     @Mock
     private RoomRepository roomRepository;
@@ -31,91 +31,54 @@ class RoomServiceTest {
     @Test
     void createShouldInvokeOnlyOnce() {
         roomService.create(new Room(1, 101));
-        verify(roomRepository, only()).create(any(Room.class));
+        verify(roomRepository, only()).save(any(Room.class));
     }
-    
+
     @Test
     void getAllShouldInvokeOnlyOnce() {
         roomService.getAll();
-        verify(roomRepository, only()).getAll();
+        verify(roomRepository, only()).findAll();
     }
 
     @Test
     void getAllActivatedShouldInvokeOnlyOnce() {
         roomService.getAllActivated();
-        verify(roomRepository, only()).getAll();
+        verify(roomRepository, only()).findAll();
     }
-    
+
     @Test
     void getByIdShouldInvokeOnlyOnce() {
+        when(roomRepository.findById(1)).thenReturn(Optional.of(new Room()));
         roomService.getById(1);
-        verify(roomRepository, only()).getById(anyInt());
+        verify(roomRepository, only()).findById(anyInt());
     }
-    
+
     @Test
     void updateShouldInvokeOnlyOnce() {
         roomService.update(new Room(1, 101));
-        verify(roomRepository, only()).update(any(Room.class));
+        verify(roomRepository, only()).save(any(Room.class));
     }
-    
-    @Test
-    void deactivateShouldInvokeOnlyOnce() {
-        roomService.deactivate(1);;
-        verify(roomRepository, times(1)).deactivate(anyInt());
-    }
-    
-    @Test
-    void activateShouldInvokeOnlyOnce() {
-        roomService.activate(1);
-        verify(roomRepository, only()).activate(anyInt());
-    }
-    
 
     @Test
-    void whenCreateCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(roomRepository).create(any(Room.class));
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            roomService.create(new Room());
-        });
+    void deactivateShouldInvokeOnlyOnce() {
+        when(roomRepository.findById(1)).thenReturn(Optional.of(new Room()));
+        roomService.deactivate(1);;
+        verify(roomRepository, times(1)).save(any(Room.class));
+        verify(roomRepository, times(1)).removeRoomFromAllLessons(anyInt());
     }
-    
+
     @Test
-    void whenGetAllCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(roomRepository).getAll();
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            roomService.getAll();
-        });    
+    void activateShouldInvokeOnlyOnce() {
+        when(roomRepository.findById(1)).thenReturn(Optional.of(new Room()));
+        roomService.activate(1);
+        verify(roomRepository, times(1)).save(any(Room.class));
     }
-    
+
     @Test
     void whenGetByIdCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(roomRepository).getById(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             roomService.getById(1);
         });
-    }
-    
-    @Test
-    void whenUpdateCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(roomRepository).update(any(Room.class));
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            roomService.update(new Room());
-        });
-    }
-    
-    @Test
-    void whenDeactivateCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(roomRepository).deactivate(anyInt());
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            roomService.deactivate(1);
-        });
-    }
-    
-    @Test
-    void whenActivateCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(roomRepository).activate(anyInt());
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            roomService.activate(1);
-        });
+        assertTrue(thrown.getMessage().contains("Room with such id 1 does not exist"));
     }
 }

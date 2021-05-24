@@ -1,21 +1,40 @@
 package ua.com.foxminded.university.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lesson;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
-public interface LessonRepository extends GenericRepository<Lesson, Integer> {
-    List<Lesson> getLessonByTeacherIdForDay(int teacherId, LocalDateTime date);
+public interface LessonRepository extends JpaRepository<Lesson, Integer> {
 
-    List<Lesson> getLessonByTeacherIdForMonth(int teacherId, LocalDateTime date);
+    @Query("FROM Lesson L WHERE L.teacher.teacherId = :teacherId AND EXTRACT(YEAR FROM L.date) = :year AND EXTRACT(MONTH FROM L.date) = :month AND EXTRACT(DAY FROM L.date) = :day")
+    List<Lesson> getLessonByTeacherIdForDay(@Param("teacherId") int teacherId,
+                                            @Param("year") int year,
+                                            @Param("month") int month,
+                                            @Param("day") int day);
 
-    List<Lesson> getLessonByStudentIdForDay(int studentId, LocalDateTime date);
+    @Query("FROM Lesson L WHERE L.teacher.teacherId = :teacherId AND EXTRACT(YEAR FROM L.date) = :year AND EXTRACT(MONTH FROM L.date) = :month")
+    List<Lesson> getLessonByTeacherIdForMonth(@Param("teacherId") int teacherId,
+                                              @Param("year") int year,
+                                              @Param("month") int month);
 
-    List<Lesson> getLessonByStudentIdForMonth(int studentId, LocalDateTime date);
-    List<Lesson> getLessonsByGroupId(Integer groupId);
+    @Query("FROM Lesson L WHERE L.group = :group AND EXTRACT(YEAR FROM L.date) = :year AND EXTRACT(MONTH FROM L.date) = :month AND EXTRACT(DAY FROM L.date) = :day")
+    List<Lesson> getLessonByGroupIdForDay(@Param("group") Group group,
+                                          @Param("year") int year,
+                                          @Param("month") int month,
+                                          @Param("day") int day);
 
-    List<Lesson> getLessonsByRoomId(Integer roomId);
+    @Query("FROM Lesson L WHERE L.group = :group AND EXTRACT(YEAR FROM L.date) = :year AND EXTRACT(MONTH FROM L.date) = :month")
+    List<Lesson> getLessonByGroupIdForMonth(@Param("group") Group group,
+                                            @Param("year") int year,
+                                            @Param("month") int month);
 
-    List<Lesson> getLessonsByTeacherId(Integer teacherId);
+    List<Lesson> findByGroupGroupId(Integer groupId);
+
+    List<Lesson> findByRoomRoomId(Integer roomId);
+
+    List<Lesson> findByTeacherTeacherId(Integer teacherId);
 }

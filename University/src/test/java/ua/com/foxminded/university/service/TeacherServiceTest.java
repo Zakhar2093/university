@@ -1,23 +1,25 @@
 package ua.com.foxminded.university.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import ua.com.foxminded.university.Application;
-import ua.com.foxminded.university.repository.TeacherRepository;
-import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Teacher;
+import ua.com.foxminded.university.repository.TeacherRepository;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = Application.class)
+@TestPropertySource(locations = "classpath:testApplication.properties")
 class TeacherServiceTest {
 
     private static final String EMPTY_STRING = "";
@@ -31,90 +33,54 @@ class TeacherServiceTest {
     @Test
     void createShouldInvokeOnlyOnce() {
         teacherService.create(new Teacher());
-        verify(teacherRepository, only()).create(any(Teacher.class));
+        verify(teacherRepository, only()).save(any(Teacher.class));
     }
-    
+
     @Test
     void getAllShouldInvokeOnlyOnce() {
         teacherService.getAll();
-        verify(teacherRepository, only()).getAll();
+        verify(teacherRepository, only()).findAll();
     }
 
     @Test
     void getAllActivatedShouldInvokeOnlyOnce() {
         teacherService.getAllActivated();
-        verify(teacherRepository, only()).getAll();
+        verify(teacherRepository, only()).findAll();
     }
-    
+
     @Test
     void getByIdShouldInvokeOnlyOnce() {
+        when(teacherRepository.findById(1)).thenReturn(Optional.of(new Teacher()));
         teacherService.getById(1);
-        verify(teacherRepository, only()).getById(anyInt());
+        verify(teacherRepository, only()).findById(anyInt());
     }
-    
+
     @Test
     void updateShouldInvokeOnlyOnce() {
         teacherService.update(new Teacher());
-        verify(teacherRepository, only()).update(any(Teacher.class));
+        verify(teacherRepository, only()).save(any(Teacher.class));
     }
-    
+
     @Test
     void deactivateShouldInvokeOnlyOnce() {
+        when(teacherRepository.findById(1)).thenReturn(Optional.of(new Teacher()));
         teacherService.deactivate(1);
-        verify(teacherRepository, times(1)).deactivate(anyInt());
+        verify(teacherRepository, times(1)).save(any(Teacher.class));
+        verify(teacherRepository, times(1)).removeTeacherFromAllLessons(anyInt());
     }
-    
+
     @Test
     void activateShouldInvokeOnlyOnce() {
+        when(teacherRepository.findById(1)).thenReturn(Optional.of(new Teacher()));
         teacherService.activate(1);
-        verify(teacherRepository, only()).activate(anyInt());
+        verify(teacherRepository, times(1)).save(any(Teacher.class));
     }
-    
-    @Test
-    void whenCreateCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(teacherRepository).create(any(Teacher.class));
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            teacherService.create(new Teacher());
-        });
-    }
-    
-    @Test
-    void whenGetAllCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(teacherRepository).getAll();
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            teacherService.getAll();
-        });    
-    }
-    
+
     @Test
     void whenGetByIdCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(teacherRepository).getById(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             teacherService.getById(1);
         });
-    }
-    
-    @Test
-    void whenUpdateCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(teacherRepository).update(any(Teacher.class));
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            teacherService.update(new Teacher());
-        });
-    }
-    
-    @Test
-    void whenDeactivateCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(teacherRepository).deactivate(anyInt());
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            teacherService.deactivate(1);
-        });
-    }
-    
-    @Test
-    void whenActivateCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(teacherRepository).activate(anyInt());
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            teacherService.activate(1);
-        });
+        assertTrue(thrown.getMessage().contains("Teacher with such id 1 does not exist"));
     }
 }

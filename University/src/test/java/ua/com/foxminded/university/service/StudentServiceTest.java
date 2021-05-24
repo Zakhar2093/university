@@ -1,26 +1,28 @@
 package ua.com.foxminded.university.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import ua.com.foxminded.university.Application;
+import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Group;
+import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.model.model_dto.StudentDto;
 import ua.com.foxminded.university.repository.GroupRepository;
 import ua.com.foxminded.university.repository.StudentRepository;
-import ua.com.foxminded.university.exception.RepositoryException;
-import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.Student;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = Application.class)
+@TestPropertySource(locations = "classpath:testApplication.properties")
 class StudentServiceTest {
 
     private static final String EMPTY_STRING = "";
@@ -37,129 +39,85 @@ class StudentServiceTest {
     @Test
     void createShouldInvokeOnlyOnceWhenTakesStudent() {
         studentService.create(new Student());
-        verify(studentRepository, only()).create(any(Student.class));
+        verify(studentRepository, only()).save(any(Student.class));
     }
 
     @Test
     void createShouldInvokeOnlyOnceWhenTakesStudentDto() {
-        studentService.create(mockGroup());
-        verify(studentRepository, only()).create(any(Student.class));
+        studentService.create(createStudentDto());
+        verify(studentRepository, only()).save(any(Student.class));
     }
 
-    private StudentDto mockGroup(){
-        StudentDto studentDto = new StudentDto();
-        Group group = new Group(1, "Math", false);
-        when(groupRepository.getById(anyInt())).thenReturn(group);
+    private StudentDto createStudentDto(){
+        StudentDto studentDto = new StudentDto(1, "1", "1", 1, true);
+        when(groupRepository.findById(1)).thenReturn(Optional.of(new Group()));
         return studentDto;
     }
 
     @Test
     void getAllShouldInvokeOnlyOnce() {
         studentService.getAll();
-        verify(studentRepository, only()).getAll();
+        verify(studentRepository, only()).findAll();
     }
 
     @Test
     void getAllActivatedShouldInvokeOnlyOnce() {
         studentService.getAllActivated();
-        verify(studentRepository, only()).getAll();
+        verify(studentRepository, only()).findAll();
     }
-    
+
     @Test
     void getByIdShouldInvokeOnlyOnce() {
+        when(studentRepository.findById(1)).thenReturn(Optional.of(new Student()));
         studentService.getById(1);
-        verify(studentRepository, only()).getById(anyInt());
-    }
-
-    @Test
-    void getStudentsByGroupIdShouldInvokeOnlyOnce() {
-        studentService.getStudentsByGroupId(1);
-        verify(studentRepository, only()).getStudentsByGroupId(anyInt());
-    }
-
-    @Test
-    void whenGetStudentsByGroupIdCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(studentRepository).getStudentsByGroupId(anyInt());
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {studentService.getStudentsByGroupId(1); });
+        verify(studentRepository, only()).findById(anyInt());
     }
 
     @Test
     void getDtoByIdShouldInvokeOnlyOnce() {
         Student student = new Student(1, "one", "two", new Group(), false);
-        when(studentRepository.getById(anyInt())).thenReturn(student);
+        when(studentRepository.findById(anyInt())).thenReturn(Optional.of(student));
         studentService.getDtoById(1);
-        verify(studentRepository, only()).getById(anyInt());
+        verify(studentRepository, only()).findById(anyInt());
     }
-    
+
     @Test
     void updateShouldInvokeOnlyOnceWhenTakesStudent() {
         studentService.update(new Student());
-        verify(studentRepository, only()).update(any(Student.class));
+        verify(studentRepository, only()).save(any(Student.class));
     }
 
     @Test
     void updateShouldInvokeOnlyOnceWhenTakesStudentDto() {
-        studentService.update(mockGroup());
-        verify(studentRepository, only()).update(any(Student.class));
-    }
-    
-    @Test
-    void deactivateShouldInvokeOnlyOnce() {
-        studentService.deactivate(1);
-        verify(studentRepository, times(1)).deactivate(anyInt());
-    }
-    
-    @Test
-    void activateShouldInvokeOnlyOnce() {
-        studentService.activate(1);
-        verify(studentRepository, only()).activate(anyInt());
+        studentService.update(createStudentDto());
+        verify(studentRepository, only()).save(any(Student.class));
     }
 
     @Test
-    void whenCreateCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(studentRepository).create(any(Student.class));
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            studentService.create(new Student());
-        });
+    void deactivateShouldInvokeOnlyOnce() {
+        when(studentRepository.findById(1)).thenReturn(Optional.of(new Student()));
+        studentService.deactivate(1);
+        verify(studentRepository, times(1)).save(any(Student.class));
     }
-    
+
     @Test
-    void whenGetAllCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(studentRepository).getAll();
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            studentService.getAll();
-        });    
+    void activateShouldInvokeOnlyOnce() {
+        when(studentRepository.findById(1)).thenReturn(Optional.of(new Student()));
+        studentService.activate(1);
+        verify(studentRepository, times(1)).save(any(Student.class));
     }
-    
+
+    @Test
+    void getStudentsByGroupIdShouldInvokeOnlyOnce() {
+        studentService.getStudentsByGroupId(1);
+        verify(studentRepository, only()).findByGroupGroupId(anyInt());
+    }
+
     @Test
     void whenGetByIdCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(studentRepository).getById(anyInt());
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             studentService.getById(1);
         });
-    }
-    
-    @Test
-    void whenUpdateCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(studentRepository).update(any(Student.class));
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            studentService.update(new Student());
-        });
-    }
-    
-    @Test
-    void whenDeactivateCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(studentRepository).deactivate(anyInt());
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            studentService.deactivate(1);
-        });
-    }
-    
-    @Test
-    void whenActivateCatchRepositoryExceptionShouldThrowServiceException() {
-        doThrow(new RepositoryException(EMPTY_STRING)).when(studentRepository).activate(anyInt());
-        ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            studentService.activate(1);
-        });
+        assertTrue(thrown.getMessage().contains("Student with such id 1 does not exist"));
     }
 }
