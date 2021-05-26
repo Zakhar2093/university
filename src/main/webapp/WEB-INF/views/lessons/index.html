@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-sm bg-primary navbar-dark fixed-top">
+    <a class="navbar-brand" th:href="@{/}">Home</a>
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/groups}">Groups</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/lessons}">Lessons</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/rooms}">Rooms</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/students}">Students</a>
+         </li>
+        <li class="nav-item">
+             <a class="nav-link" th:href="@{/teachers}">Teachers</a>
+         </li>
+    </ul>
+</nav>
+<div style="margin-top: 55px"  class="container-sm">
+    <h1 class="text-primary text-center">List of lessons</h1>
+    <div class="container">
+        <a class="btn btn-outline-primary" th:href="@{/lessons/add}">
+            Add new lesson
+        </a>
+        <a class="btn btn-outline-primary" th:href="@{/lessons}">
+            All lessons
+        </a>
+    </div>
+    <br/>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>LessonId</th>
+                <th>LessonName</th>
+                <th>Room</th>
+                <th>Group</th>
+                <th>Teacher</th>
+                <th>Date</th>
+                <th>Update</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="lesson: ${lessons}">
+                <td th:text="${lesson.getLessonId()}">id</td>
+                <td th:text="${lesson.getLessonName()}">First name</td>
+                <td>
+                    <a  th:if="${lesson.getRoom()}"
+                        th:text="${lesson.getRoom().getRoomNumber()}"
+                        th:href="@{rooms/{id}/lessons(id=${lesson.getRoom().getRoomId()})}">>
+                    </a>
+                    <p th:unless="${lesson.getRoom()}">
+                        Without room
+                    </p>
+                </td>
+                <td>
+                    <a  th:if="${lesson.getGroup()}"
+                        th:text="${lesson.getGroup().getGroupName()}"
+                        th:href="@{/groups/{id}/lessons(id=${lesson.getGroup().getGroupId()})}">>
+                    </a>
+                    <p th:unless="${lesson.getGroup()}">
+                        Without group
+                    </p>
+                </td>
+                <td>
+                    <a  th:if="${lesson.getTeacher()}"
+                        th:text="${lesson.getTeacher().getFirstName()} + ' ' + ${lesson.getTeacher().getLastName()}"
+                        th:href="@{/teachers/{id}/lessons(id=${lesson.getTeacher().getTeacherId()})}">
+                    </a>
+                    <p th:unless="${lesson.getTeacher()}">
+                        Without teacher
+                    </p>
+                </td>
+                <td>
+                    <p class="date"
+                        th:if="${lesson.getDate()}"
+                        th:text="${lesson.getDate()}">
+                    </p>
+                    <p th:unless="${lesson.getDate()}">
+                        Without date
+                    </p>
+                </td>
+                <td>
+                    <div style="display:  flex;">
+                        <a class="btn btn-outline-primary" th:href="@{/lessons/{id}/edit(id=${lesson.getLessonId()})}">Update lesson</a>
+                        <form style="margin-left: .75rem;" th:method="DELETE" th:action="@{/lessons/{id}(id=${lesson.getLessonId()})}">
+                            <input class="btn btn-outline-primary" type="submit" value="Delete"/>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<script th:src="@{/resources/js/convertDateFormat.js}"></script>
+</body>
+</html>
