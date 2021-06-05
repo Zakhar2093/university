@@ -7,10 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import ua.com.foxminded.university.Application;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.Group;
-import ua.com.foxminded.university.model.Lesson;
-import ua.com.foxminded.university.model.Room;
-import ua.com.foxminded.university.model.Teacher;
+import ua.com.foxminded.university.model.*;
 import ua.com.foxminded.university.model.model_dto.LessonDto;
 import ua.com.foxminded.university.repository.*;
 
@@ -27,7 +24,6 @@ import static org.mockito.Mockito.*;
 @TestPropertySource(locations = "classpath:testApplication.properties")
 class LessonServiceTest {
 
-    private static final String EMPTY_STRING = "";
     private static final LocalDateTime TIME = LocalDateTime.now();
 
     @Mock
@@ -137,12 +133,18 @@ class LessonServiceTest {
 
     @Test
     void getLessonByStudentForDayShouldInvokeOnlyOnce(){
+        Group group = new Group(1, "any", false);
+        Student student = new Student(1, "one", "one", group, false);
+        when(studentRepository.findById(1)).thenReturn(Optional.of(student));
         lessonService.getLessonByStudentIdForDay(1, TIME);
         verify(lessonRepository, only()).getLessonByGroupIdForDay(any(Group.class), anyInt(), anyInt(), anyInt());
     }
 
     @Test
     void getLessonByStudentForMonthShouldInvokeOnlyOnce(){
+        Group group = new Group(1, "any", false);
+        Student student = new Student(1, "one", "one", group, false);
+        when(studentRepository.findById(1)).thenReturn(Optional.of(student));
         lessonService.getLessonByStudentIdForMonth(1, TIME);
         verify(lessonRepository, only()).getLessonByGroupIdForMonth(any(Group.class), anyInt(), anyInt());
     }

@@ -7,10 +7,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import ua.com.foxminded.university.Application;
 import ua.com.foxminded.university.DataSourceTestConfig;
-import ua.com.foxminded.university.model.Group;
-import ua.com.foxminded.university.model.Lesson;
-import ua.com.foxminded.university.model.Room;
-import ua.com.foxminded.university.model.Teacher;
+import ua.com.foxminded.university.model.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -81,7 +78,8 @@ class LessonRepositoryTest {
         List<Lesson> allLessons = saveTestData();
 
         List<Lesson> expected = new ArrayList<>();
-        expected.add(allLessons.get(0));
+        expected.add(allLessons.get(3));
+        expected.add(allLessons.get(6));
 
         Group group = studentRepository.findById(1).get().getGroup();
 
@@ -98,8 +96,11 @@ class LessonRepositoryTest {
         List<Lesson> allLessons = saveTestData();
 
         List<Lesson> expected = new ArrayList<>();
-        expected.add(allLessons.get(0));
-        expected.add(allLessons.get(8));
+        expected.add(allLessons.get(2));
+        expected.add(allLessons.get(3));
+        expected.add(allLessons.get(4));
+        expected.add(allLessons.get(5));
+        expected.add(allLessons.get(6));
 
         Group group = studentRepository.findById(1).get().getGroup();
 
@@ -152,30 +153,36 @@ class LessonRepositoryTest {
         Group group2 = new Group(2, "C++", false);
         groupRepository.save(group1);
         groupRepository.save(group2);
+        Student student1 = new Student(1, "one", "one", group1,false);
+        Student student2 = new Student(1, "one", "one", group2,false);
+        studentRepository.save(student1);
+        studentRepository.save(student2);
         Teacher teacher1 = new Teacher(1, "one", "one", false);
         Teacher teacher2 = new Teacher(2, "two", "two", false);
         teacherRepository.save(teacher1);
         teacherRepository.save(teacher2);
-        Room room = new Room(1, 101);
-        roomRepository.save(room);
+        Room room1 = new Room(1, 101);
+        Room room2 = new Room(2, 102);
+        roomRepository.save(room1);
+        roomRepository.save(room2);
 
         LocalDateTime date1 = LocalDateTime.parse("2021.01.20-23.55.11", FORMATTER);
         LocalDateTime date2 = LocalDateTime.parse("2021.02.21-03.00.00", FORMATTER);
         LocalDateTime date3 = LocalDateTime.parse("2021.01.21-23.55.11", FORMATTER);
 
         List<Lesson> lessons = new ArrayList<>();
-        lessons.add(new Lesson(1, "Math", teacher1, group1, room, date1, false));
-        lessons.add(new Lesson(2, "History", teacher1, group1, room, date2, false));
-        lessons.add(new Lesson(3, "English", teacher1, group2, room, date3, false));
-        lessons.add(new Lesson(4, "Math", teacher1, group2, room, date1, false));
-        lessons.add(new Lesson(5, "Bio", teacher1, group2, room, date3, false));
-        lessons.add(new Lesson(6, "History", teacher2, group2, room, date3, false));
-        lessons.add(new Lesson(7, "English", teacher2, group2, room, date1, false));
-        lessons.add(new Lesson(8, "Math", teacher2, group1, room, date2, false));
-        lessons.add(new Lesson(9, "Bio", teacher2, group1, room, date3, false));
-        lessons.add(new Lesson(10, "Math", teacher2, group2, room, date2, false));
+        lessons.add(new Lesson(1, "Math", teacher1, group1, room1, date1, false));
+        lessons.add(new Lesson(2, "History", teacher1, group1, room2, date2, false));
+        lessons.add(new Lesson(3, "English", teacher1, group2, room1, date3, false));
+        lessons.add(new Lesson(4, "Math", teacher1, group2, room2, date1, false));
+        lessons.add(new Lesson(5, "Bio", teacher1, group2, room1, date3, false));
+        lessons.add(new Lesson(6, "History", teacher2, group2, room2, date3, false));
+        lessons.add(new Lesson(7, "English", teacher2, group2, room1, date1, false));
+        lessons.add(new Lesson(8, "Math", teacher2, group1, room2, date2, false));
+        lessons.add(new Lesson(9, "Bio", teacher2, group1, room1, date3, false));
+        lessons.add(new Lesson(10, "Math", teacher2, group2, room2, date2, false));
 
-        lessons.stream().forEach(p -> lessonRepository.save(p));
+        lessons.forEach(p -> lessonRepository.save(p));
         return lessons;
     }
 }
