@@ -1,14 +1,27 @@
 package ua.com.foxminded.university.model.model_dto;
 
-import java.time.LocalDateTime;
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 public class LessonDto {
     private int lessonId;
+
+    @NotBlank(message = "Lesson name is mandatory")
+    @Size(min = 2, max = 12, message = "Lesson name size must be between 2 and 12")
+    @Pattern(regexp = "[a-zA-Z0-9]+", message = "Lesson name must not contain special characters")
     private String lessonName;
+
     private Integer teacherId;
+
     private Integer groupId;
+
     private Integer roomId;
+
+    @FutureOrPresent(message = "Lesson date can not be past")
     private String date;
+
     private boolean lessonInactive;
 
     public LessonDto() {

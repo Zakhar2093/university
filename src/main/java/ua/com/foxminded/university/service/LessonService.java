@@ -147,17 +147,17 @@ public class LessonService implements GenericService<Lesson, Integer>{
         lesson.setLessonId(dto.getLessonId());
         lesson.setLessonName(dto.getLessonName());
 
-        Group group = groupRepository.findById(dto.getGroupId())
+        Group group = dto.getGroupId() == null ? null : groupRepository.findById(dto.getGroupId())
                 .orElseThrow(() -> new ServiceException(
                     String.format("Group with such id %d does not exist", dto.getGroupId())));
         lesson.setGroup(group);
 
-        Teacher teacher = teacherRepository.findById(dto.getTeacherId())
+        Teacher teacher = dto.getTeacherId() == null ? null : teacherRepository.findById(dto.getTeacherId())
                 .orElseThrow(() -> new ServiceException(
                     String.format("Teacher with such id %d does not exist", dto.getTeacherId())));
         lesson.setTeacher(teacher);
 
-        Room room = roomRepository.findById(dto.getRoomId())
+        Room room = dto.getRoomId() == null ? null : roomRepository.findById(dto.getRoomId())
                 .orElseThrow(() -> new ServiceException(
                     String.format("Room with such id %d does not exist", dto.getRoomId())));
         lesson.setRoom(room);

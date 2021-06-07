@@ -86,7 +86,7 @@ public class StudentService implements GenericService<Student, Integer>{
         student.setStudentId(dto.getStudentId());
         student.setFirstName(dto.getFirstName());
         student.setLastName(dto.getLastName());
-        Group group = groupRepository.findById(dto.getGroupId())
+        Group group = dto.getGroupId() == null ? null : groupRepository.findById(dto.getGroupId())
                 .orElseThrow(() -> new ServiceException(
                     String.format("Group with such id %d does not exist", dto.getGroupId())));
         student.setGroup(group);

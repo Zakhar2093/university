@@ -3,14 +3,13 @@ package ua.com.foxminded.university.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ua.com.foxminded.university.model.Room;
-import ua.com.foxminded.university.service.GroupService;
-import ua.com.foxminded.university.service.LessonService;
 import ua.com.foxminded.university.service.RoomService;
-import ua.com.foxminded.university.service.TeacherService;
 
-import java.util.List;
+import javax.validation.Valid;
+import javax.validation.ValidationException;
 
 @Controller
 @RequestMapping("/rooms")
@@ -30,7 +29,10 @@ public class RoomController {
     }
 
     @PostMapping
-    public String create(@ModelAttribute("room") Room room) {
+    public String create(@Valid @ModelAttribute("room") Room room, BindingResult result) {
+        if(result.hasErrors()){
+            throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
+        }
         roomService.create(room);
         return "redirect:/rooms";
     }
@@ -42,7 +44,10 @@ public class RoomController {
     }
 
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("room") Room room, @PathVariable("id") int id) {
+    public String update(@Valid @ModelAttribute("room") Room room, BindingResult result, @PathVariable("id") int id) {
+        if(result.hasErrors()){
+            throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
+        }
         room.setRoomId(id);
         roomService.update(room);
         return "redirect:/rooms";

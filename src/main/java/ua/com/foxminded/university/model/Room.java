@@ -1,6 +1,7 @@
 package ua.com.foxminded.university.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 @Entity
@@ -11,6 +12,7 @@ public class Room {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int roomId;
 
+    @Positive(message = "Room number must be positive")
     @Column(name="room_number")
     private int roomNumber;
 

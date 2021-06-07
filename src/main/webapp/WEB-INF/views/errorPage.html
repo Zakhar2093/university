@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-sm bg-primary navbar-dark fixed-top">
+    <a class="navbar-brand" th:href="@{/}">Home</a>
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/groups}">Groups</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/lessons}">Lessons</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/rooms}">Rooms</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/students}">Students</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/teachers}">Teachers</a>
+        </li>
+    </ul>
+</nav>
+
+<div style="margin-top: 55px" class="container-sm text-center">
+    <h1 class="text-primary text-center">Sorry, something went wrong :(</h1>
+    <h5 class="text-danger text-center"th:text="${title}"></h5>
+    <h5 class="text-danger text-center"th:text="${message}"></h5>
+</div>
+
+</body>
+</html>

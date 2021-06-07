@@ -1,6 +1,9 @@
 package ua.com.foxminded.university.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
@@ -11,9 +14,15 @@ public class Teacher {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int teacherId;
 
+    @NotBlank(message = "Teacher first name is mandatory")
+    @Size(min = 2, max = 12, message = "Teacher first name size must be between 2 and 12")
+    @Pattern(regexp = "[a-zA-Z0-9]+", message = "Teacher first name must not contain special characters")
     @Column(name="first_name")
     private String firstName;
 
+    @NotBlank(message = "Teacher last name is mandatory")
+    @Size(min = 2, max = 12, message = "Teacher last name size must be between 2 and 12")
+    @Pattern(regexp = "[a-zA-Z0-9]+", message = "Teacher last name must not contain special characters")
     @Column(name="last_name")
     private String lastName;
 

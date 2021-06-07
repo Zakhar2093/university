@@ -3,6 +3,7 @@ package ua.com.foxminded.university.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ua.com.foxminded.university.model.Lesson;
 import ua.com.foxminded.university.model.model_dto.LessonDto;
@@ -11,6 +12,8 @@ import ua.com.foxminded.university.service.LessonService;
 import ua.com.foxminded.university.service.RoomService;
 import ua.com.foxminded.university.service.TeacherService;
 
+import javax.validation.Valid;
+import javax.validation.ValidationException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -55,7 +58,10 @@ public class LessonController {
     }
 
     @PostMapping("/lessons")
-    public String submitCreate(@ModelAttribute("lessonDto") LessonDto lessonDto) {
+    public String submitCreate(@Valid @ModelAttribute("lessonDto") LessonDto lessonDto, BindingResult result) {
+        if(result.hasErrors()){
+            throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
+        }
         lessonService.create(lessonDto);
         return "redirect:/lessons";
     }
@@ -70,7 +76,10 @@ public class LessonController {
     }
 
     @PatchMapping("/lessons/{id}")
-    public String submitUpdate(@ModelAttribute("lessonDto") LessonDto lessonDto, @PathVariable("id") int id) {
+    public String submitUpdate(@Valid @ModelAttribute("lessonDto") LessonDto lessonDto, @PathVariable("id") int id, BindingResult result) {
+        if(result.hasErrors()){
+            throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
+        }
         lessonDto.setLessonId(id);
         lessonService.update(lessonDto);
         return "redirect:/lessons";

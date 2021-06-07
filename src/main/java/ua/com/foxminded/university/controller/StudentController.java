@@ -3,11 +3,14 @@ package ua.com.foxminded.university.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ua.com.foxminded.university.model.model_dto.StudentDto;
-import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.StudentService;
+
+import javax.validation.Valid;
+import javax.validation.ValidationException;
 
 @Controller
 public class StudentController {
@@ -34,7 +37,10 @@ public class StudentController {
     }
 
     @PostMapping("/students")
-    public String submitCreate(@ModelAttribute("studentDto") StudentDto studentDto) {
+    public String submitCreate(@Valid @ModelAttribute("studentDto") StudentDto studentDto, BindingResult result) {
+        if(result.hasErrors()){
+            throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
+        }
         studentService.create(studentDto);
         return "redirect:/students";
     }
@@ -47,7 +53,10 @@ public class StudentController {
     }
 
     @PatchMapping("/students/{id}")
-    public String submitUpdate(@ModelAttribute("studentDto") StudentDto studentDto, @PathVariable("id") int id) {
+    public String submitUpdate(@Valid @ModelAttribute("studentDto") StudentDto studentDto, BindingResult result, @PathVariable("id") int id) {
+        if(result.hasErrors()){
+            throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
+        }
         studentDto.setStudentId(id);
         studentService.update(studentDto);
         return "redirect:/students";
