@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.controller;
+package ua.com.foxminded.university.controller.exception_handler;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

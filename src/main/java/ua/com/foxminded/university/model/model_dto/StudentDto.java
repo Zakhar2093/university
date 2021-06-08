@@ -1,24 +1,15 @@
 package ua.com.foxminded.university.model.model_dto;
 
-import javax.persistence.Column;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import ua.com.foxminded.university.annotation.NameConstraint;
 
 public class StudentDto {
 
     private int studentId;
 
-    @NotBlank(message = "Student first name is mandatory")
-    @Size(min = 2, max = 12, message = "Student first name size must be between 2 and 12")
-    @Pattern(regexp = "[a-zA-Z0-9]+", message = "Student first name must not contain special characters")
-    @Column(name="first_name")
+    @NameConstraint
     private String firstName;
 
-    @NotBlank(message = "Student last name is mandatory")
-    @Size(min = 2, max = 12, message = "Student last name size must be between 2 and 12")
-    @Pattern(regexp = "[a-zA-Z0-9]+", message = "Student last name must not contain special characters")
-    @Column(name="last_name")
+    @NameConstraint
     private String lastName;
 
     private Integer groupId;
