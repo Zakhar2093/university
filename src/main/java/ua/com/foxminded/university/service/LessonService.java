@@ -11,6 +11,7 @@ import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.model_dto.LessonDto;
 import ua.com.foxminded.university.repository.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.List;
 @Transactional
 public class LessonService implements GenericService<Lesson, Integer>{
 
-    private static final String FORMAT = "dd MM yyyy hh:mm a";
+    private static final String FORMAT = "yyyy-MM-dd";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(FORMAT);
 
     private LessonRepository lessonRepository;
@@ -94,6 +95,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
         lessonRepository.save(lesson);
     }
 
+    //todo fix it
     public List<Lesson> getLessonByTeacherIdForDay(int teacherId, LocalDateTime date) {
         return lessonRepository.getLessonByTeacherIdForDay(
                 teacherId,
@@ -163,7 +165,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
         lesson.setRoom(room);
 
         lesson.setLessonInactive(dto.isLessonInactive());
-        lesson.setDate(LocalDateTime.parse(dto.getDate(), FORMATTER));
+        lesson.setDate(LocalDate.parse(dto.getDate(), FORMATTER));
         return lesson;
     }
 

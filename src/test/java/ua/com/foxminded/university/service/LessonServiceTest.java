@@ -11,6 +11,7 @@ import ua.com.foxminded.university.model.*;
 import ua.com.foxminded.university.model.model_dto.LessonDto;
 import ua.com.foxminded.university.repository.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -57,8 +58,8 @@ class LessonServiceTest {
     }
 
     private LessonDto createLessonDto(){
-        LessonDto lessonDto = new LessonDto(1, "1", 1, 1, 1, "1", true);
-        lessonDto.setDate("11 04 2021 12:44 AM");
+        LessonDto lessonDto = new LessonDto(1, "1", 1, 1, 1, "1", 1);
+        lessonDto.setDate("2021-04-11");
         when(groupRepository.findById(1)).thenReturn(Optional.of(new Group()));
         when(roomRepository.findById(1)).thenReturn(Optional.of(new Room()));
         when(teacherRepository.findById(1)).thenReturn(Optional.of(new Teacher()));
@@ -86,7 +87,7 @@ class LessonServiceTest {
 
     @Test
     void getDtoByIdShouldInvokeOnlyOnce() {
-        Lesson lesson = new Lesson(1, "Math", null, null, null, LocalDateTime.now(), false);
+        Lesson lesson = new Lesson(1, "Math", null, null, null, LocalDate.now(), 1);
         when(lessonRepository.findById(anyInt())).thenReturn(Optional.of(lesson));
         lessonService.getDtoById(1);
         verify(lessonRepository, only()).findById(anyInt());

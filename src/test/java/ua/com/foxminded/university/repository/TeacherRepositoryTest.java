@@ -10,7 +10,7 @@ import ua.com.foxminded.university.DataSourceTestConfig;
 import ua.com.foxminded.university.model.Lesson;
 import ua.com.foxminded.university.model.Teacher;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -34,11 +34,11 @@ public class TeacherRepositoryTest {
         teacherRepository.save(teacher1);
         Teacher teacher2 = new Teacher(2, "one", "one", false);
         teacherRepository.save(teacher2);
-        Lesson lesson1 = new Lesson(1, "Math", teacher1, null, null, LocalDateTime.now(), false);
+        Lesson lesson1 = new Lesson(1, "Math", teacher1, null, null, LocalDate.now(), 1);
         lessonRepository.save(lesson1);
-        Lesson lesson2 = new Lesson(2, "Bio", teacher2, null, null, LocalDateTime.now(), false);
+        Lesson lesson2 = new Lesson(2, "Bio", teacher2, null, null, LocalDate.now(), 1);
         lessonRepository.save(lesson2);
-        Lesson lesson3 = new Lesson(3, "History", teacher1, null, null, LocalDateTime.now(), false);
+        Lesson lesson3 = new Lesson(3, "History", teacher1, null, null, LocalDate.now(), 1);
         lessonRepository.save(lesson3);
 
         teacherRepository.removeTeacherFromAllLessons(teacher1.getTeacherId());

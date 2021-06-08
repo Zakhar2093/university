@@ -10,7 +10,7 @@ import ua.com.foxminded.university.DataSourceTestConfig;
 import ua.com.foxminded.university.model.Lesson;
 import ua.com.foxminded.university.model.Room;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -35,11 +35,11 @@ public class RoomRepositoryTest {
         roomRepository.save(room1);
         Room room2 = new Room(2, 102, 30,false);
         roomRepository.save(room2);
-        Lesson lesson1 = new Lesson(1, "Math", null, null, room1, LocalDateTime.now(), false);
+        Lesson lesson1 = new Lesson(1, "Math", null, null, room1, LocalDate.now(), 1);
         lessonRepository.save(lesson1);
-        Lesson lesson2 = new Lesson(2, "Bio", null, null, room2, LocalDateTime.now(), false);
+        Lesson lesson2 = new Lesson(2, "Bio", null, null, room2, LocalDate.now(), 1);
         lessonRepository.save(lesson2);
-        Lesson lesson3 = new Lesson(3, "History", null, null, room1, LocalDateTime.now(), false);
+        Lesson lesson3 = new Lesson(3, "History", null, null, room1, LocalDate.now(), 1);
         lessonRepository.save(lesson3);
 
         roomRepository.removeRoomFromAllLessons(room1.getRoomId());

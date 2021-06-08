@@ -21,19 +21,21 @@ public class LessonDto {
 //    @FutureOrPresent(message = "Lesson date can not be past")
     private String date;
 
+    private int lessonNumber;
+
     private boolean lessonInactive;
 
     public LessonDto() {
     }
 
-    public LessonDto(int lessonId, String lessonName, int teacherId, int groupId, int roomId, String date, boolean lessonInactive) {
+    public LessonDto(int lessonId, String lessonName, int teacherId, int groupId, int roomId, String date, int lessonNumber) {
         this.lessonId = lessonId;
         this.lessonName = lessonName;
         this.teacherId = teacherId;
         this.groupId = groupId;
         this.roomId = roomId;
         this.date = date;
-        this.lessonInactive = lessonInactive;
+        this.lessonNumber = lessonNumber;
     }
 
     public int getLessonId() {
@@ -92,6 +94,13 @@ public class LessonDto {
         this.lessonInactive = lessonInactive;
     }
 
+    public int getLessonNumber() {
+        return lessonNumber;
+    }
+
+    public void setLessonNumber(int lessonNumber) {
+        this.lessonNumber = lessonNumber;
+    }
 }
 
 

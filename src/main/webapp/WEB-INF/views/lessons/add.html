@@ -8,6 +8,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script th:src="@{/resources/js/selectDate.js}"></script>
     <title></title>
 </head>
 <body>
@@ -56,15 +60,36 @@
             </datalist>
             <br/>
 
-            <label>Select Date and Time: </label>
-            <input type="datetime" class="form-control" id="datePicker"  th:field="*{date}">
-
+            <label>Select Date: </label>
+            <input type="text" class="form-control" id="datepicker" th:field="*{date}">
             <br/>
+
+            <label>Select Number: </label>
+            <select th:field="*{lessonNumber}" class="form-control" name="select" size="3" multiple>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+            </select>
+            <br/>
+
             <input class="btn btn-primary" type="submit" value="Update!"/>
         </div>
     </form>
 </div>
-<script th:src="@{/resources/js/simplepicker.js}"></script>
-<script th:src="@{/resources/js/selectDate.js}"></script>
+<script>
+    $(function(){
+	$("#datepicker").datepicker({
+		minDate: 0
+	});
+});
+
+$.datepicker.regional['ru'] = {
+	dateFormat: 'yy-mm-dd'
+};
+$.datepicker.setDefaults($.datepicker.regional['ru']);
+</script>
 </body>
 </html>
