@@ -161,8 +161,8 @@ class LessonRepositoryTest {
         Teacher teacher2 = new Teacher(2, "two", "two", false);
         teacherRepository.save(teacher1);
         teacherRepository.save(teacher2);
-        Room room1 = new Room(1, 101);
-        Room room2 = new Room(2, 102);
+        Room room1 = new Room(1, 101, 10, false);
+        Room room2 = new Room(2, 102, 10, false);
         roomRepository.save(room1);
         roomRepository.save(room2);
 

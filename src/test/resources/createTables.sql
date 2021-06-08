@@ -58,3 +58,5 @@ ALTER TABLE university.rooms
   ADD COLUMN room_inactive BOOLEAN DEFAULT FALSE;
 ALTER TABLE university.lessons
   ADD COLUMN lesson_inactive BOOLEAN DEFAULT FALSE;
+ALTER TABLE university.rooms
+  ADD COLUMN room_capacity INTEGER NOT NULL;

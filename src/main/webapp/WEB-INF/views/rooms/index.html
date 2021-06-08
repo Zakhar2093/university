@@ -42,8 +42,9 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>RoomId</th>
-                <th>RoomNumber</th>
+                <th>Room id</th>
+                <th>Room number</th>
+                <th>Room capacity</th>
                 <th>Update</th>
             </tr>
         </thead>
@@ -51,6 +52,7 @@
             <tr th:each="room: ${rooms}">
                 <td th:text="${room.getRoomId()}">id</td>
                 <td th:text="${room.getRoomNumber()}">number</td>
+                <td th:text="${room.getRoomCapacity()}">capacity</td>
                 <td>
                     <div style="display:  flex;">
                         <a class="btn btn-outline-primary" th:href="@{/rooms/{id}/edit(id=${room.getRoomId()})}">Update room</a>
@@ -77,6 +79,9 @@
                     <form class="form-group" th:method="POST" th:action="@{/rooms}" th:object="${room}">
                         <label for="roomNumberUpdate">Enter number of room: </label>
                         <input type="text" class="form-control" th:field="*{roomNumber}" id="roomNumberUpdate"/>
+                        <br/>
+                        <label for="roomCapacityUpdate">Enter capacity of room: </label>
+                        <input type="text" class="form-control" th:field="*{roomCapacity}" id="roomCapacityUpdate"/>
                         <br/>
                         <input type="submit" class="btn btn-primary" value="Create!"/>
                     </form>

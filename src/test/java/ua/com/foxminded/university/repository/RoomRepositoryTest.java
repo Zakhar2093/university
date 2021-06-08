@@ -31,9 +31,9 @@ public class RoomRepositoryTest {
 
     @Test
     void removeRoomFromAllLessonsShouldSetNullInLessonRoom(){
-        Room room1 = new Room(1, 101, false);
+        Room room1 = new Room(1, 101, 30,false);
         roomRepository.save(room1);
-        Room room2 = new Room(2, 102, false);
+        Room room2 = new Room(2, 102, 30,false);
         roomRepository.save(room2);
         Lesson lesson1 = new Lesson(1, "Math", null, null, room1, LocalDateTime.now(), false);
         lessonRepository.save(lesson1);

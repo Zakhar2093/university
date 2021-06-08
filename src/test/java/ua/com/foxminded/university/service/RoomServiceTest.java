@@ -30,7 +30,7 @@ class RoomServiceTest {
 
     @Test
     void createShouldInvokeOnlyOnce() {
-        roomService.create(new Room(1, 101));
+        roomService.create(new Room(1, 101, 10, false));
         verify(roomRepository, only()).save(any(Room.class));
     }
 
@@ -55,7 +55,7 @@ class RoomServiceTest {
 
     @Test
     void updateShouldInvokeOnlyOnce() {
-        roomService.update(new Room(1, 101));
+        roomService.update(new Room(1, 101, 10, false));
         verify(roomRepository, only()).save(any(Room.class));
     }
 

@@ -15,9 +15,9 @@ public class TestData {
 
     protected List<Room> getTestRooms() {
         List<Room> rooms = new ArrayList<>();
-        rooms.add(new Room(1, 101));
-        rooms.add(new Room(2, 102));
-        rooms.add(new Room(3, 103));
+        rooms.add(new Room(1, 101, 10, false));
+        rooms.add(new Room(2, 102, 10, false));
+        rooms.add(new Room(3, 103, 10, false));
         return rooms;
     }
 
