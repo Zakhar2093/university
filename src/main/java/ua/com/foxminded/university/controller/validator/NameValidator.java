@@ -8,14 +8,14 @@ import javax.validation.ConstraintValidatorContext;
 public class NameValidator implements ConstraintValidator<NameConstraint, String> {
 
     @Override
-    public void initialize(NameConstraint contactNumber) {
+    public void initialize(NameConstraint name) {
     }
 
     @Override
-    public boolean isValid(String contactField, ConstraintValidatorContext cxt) {
-            return contactField != null
-                    && contactField != ""
-                    && contactField.matches("[a-zA-Z]+")
-                    && (contactField.length() > 2)
-                    && (contactField.length() < 12); }
+    public boolean isValid(String name, ConstraintValidatorContext cxt) {
+            return name != null
+                    && name != ""
+                    && name.matches("[a-zA-Z]+")
+                    && (name.length() > 2)
+                    && (name.length() < 12); }
 }

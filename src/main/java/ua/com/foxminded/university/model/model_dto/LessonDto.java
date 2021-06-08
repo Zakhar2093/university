@@ -1,9 +1,11 @@
 package ua.com.foxminded.university.model.model_dto;
 
 import ua.com.foxminded.university.annotation.NameConstraint;
+import ua.com.foxminded.university.annotation.RoomCapacityConstraint;
 
-import javax.validation.constraints.FutureOrPresent;
-
+@RoomCapacityConstraint(
+        groupId = "groupId",
+        roomId = "roomId")
 public class LessonDto {
     private int lessonId;
 
@@ -16,7 +18,7 @@ public class LessonDto {
 
     private Integer roomId;
 
-    @FutureOrPresent(message = "Lesson date can not be past")
+//    @FutureOrPresent(message = "Lesson date can not be past")
     private String date;
 
     private boolean lessonInactive;
