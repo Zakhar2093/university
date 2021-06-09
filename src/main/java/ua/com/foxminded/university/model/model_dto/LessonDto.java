@@ -1,11 +1,29 @@
 package ua.com.foxminded.university.model.model_dto;
 
+import ua.com.foxminded.university.annotation.Free;
 import ua.com.foxminded.university.annotation.NameConstraint;
 import ua.com.foxminded.university.annotation.RoomCapacityConstraint;
 
 @RoomCapacityConstraint(
         groupId = "groupId",
         roomId = "roomId")
+@Free.List({
+        @Free(
+                id = "groupId",
+                date = "date",
+                number = "lessonNumber",
+                message = "The group has already been busy in another lesson. Please choose another day or lesson number."),
+        @Free(
+                id = "groupId",
+                date = "date",
+                number = "lessonNumber",
+                message = "The group has already been busy in another lesson. Please choose another day or lesson number."),
+        @Free(
+                id = "groupId",
+                date = "date",
+                number = "lessonNumber",
+                message = "The group has already been busy in another lesson. Please choose another day or lesson number.")
+})
 public class LessonDto {
     private int lessonId;
 

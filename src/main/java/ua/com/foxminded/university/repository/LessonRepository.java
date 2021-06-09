@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lesson;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface LessonRepository extends JpaRepository<Lesson, Integer> {
@@ -37,4 +38,11 @@ public interface LessonRepository extends JpaRepository<Lesson, Integer> {
     List<Lesson> findByRoomRoomId(Integer roomId);
 
     List<Lesson> findByTeacherTeacherId(Integer teacherId);
+
+    // todo make tests
+    List<Lesson> findByGroupGroupIdAndDateAndLessonNumberAndLessonInactiveFalse(int groupId, LocalDate date, int number);
+
+    List<Lesson> findByTeacherTeacherIdAndDateAndLessonNumberAndLessonInactiveFalse(int teacherId, LocalDate date, int number);
+
+    List<Lesson> findByRoomRoomIdAndDateAndLessonNumberAndLessonInactiveFalse(int roomId, LocalDate date, int number);
 }

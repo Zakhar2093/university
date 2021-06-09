@@ -14,14 +14,14 @@ import ua.com.foxminded.university.service.TeacherService;
 
 import javax.validation.Valid;
 import javax.validation.ValidationException;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Controller
 public class LessonController {
 
-    private static final String FORMAT = "dd MM yyyy hh:mm a";
+    private static final String FORMAT = "yyyy-MM-dd";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(FORMAT);
 
     private LessonService lessonService;
@@ -97,16 +97,16 @@ public class LessonController {
                               @RequestParam("duration") String duration,
                               @RequestParam("id") int id,
                               @RequestParam("date") String date){
-        LocalDateTime localDateTime = LocalDateTime.parse(date, FORMATTER);
+        LocalDate localDate = LocalDate.parse(date, FORMATTER);
         List<Lesson> lessons = null;
         if (entity.equals("Student") && duration.equals("Day")){
-            lessons = lessonService.getLessonByStudentIdForDay(id, localDateTime);
+            lessons = lessonService.getLessonByStudentIdForDay(id, localDate);
         } else if (entity.equals("Student") && duration.equals("Month")){
-            lessons = lessonService.getLessonByStudentIdForMonth(id, localDateTime);
+            lessons = lessonService.getLessonByStudentIdForMonth(id, localDate);
         } else if (entity.equals("Teacher") && duration.equals("Day")){
-            lessons = lessonService.getLessonByTeacherIdForDay(id, localDateTime);
+            lessons = lessonService.getLessonByTeacherIdForDay(id, localDate);
         } else if (entity.equals("Teacher") && duration.equals("Month")){
-            lessons = lessonService.getLessonByTeacherIdForMonth(id, localDateTime);
+            lessons = lessonService.getLessonByTeacherIdForMonth(id, localDate);
         }
         model.addAttribute("lessons", lessons);
         return "lessons/index";

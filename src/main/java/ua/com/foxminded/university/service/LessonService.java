@@ -12,7 +12,6 @@ import ua.com.foxminded.university.model.model_dto.LessonDto;
 import ua.com.foxminded.university.repository.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -96,7 +95,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
     }
 
     //todo fix it
-    public List<Lesson> getLessonByTeacherIdForDay(int teacherId, LocalDateTime date) {
+    public List<Lesson> getLessonByTeacherIdForDay(int teacherId, LocalDate date) {
         return lessonRepository.getLessonByTeacherIdForDay(
                 teacherId,
                 date.getYear(),
@@ -104,14 +103,14 @@ public class LessonService implements GenericService<Lesson, Integer>{
                 date.getDayOfMonth());
     }
 
-    public List<Lesson> getLessonByTeacherIdForMonth(int teacherId, LocalDateTime date) {
+    public List<Lesson> getLessonByTeacherIdForMonth(int teacherId, LocalDate date) {
         return lessonRepository.getLessonByTeacherIdForMonth(
                 teacherId,
                 date.getYear(),
                 date.getMonthValue());
     }
 
-    public List<Lesson> getLessonByStudentIdForDay(int studentId, LocalDateTime date) {
+    public List<Lesson> getLessonByStudentIdForDay(int studentId, LocalDate date) {
         Group group = studentRepository.findById(studentId)
                 .orElseThrow(() -> new ServiceException(
                         String.format("Student with such id %d does not exist", studentId))).getGroup();
@@ -122,7 +121,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
                 date.getDayOfMonth());
     }
 
-    public List<Lesson> getLessonByStudentIdForMonth(int studentId, LocalDateTime date) {
+    public List<Lesson> getLessonByStudentIdForMonth(int studentId, LocalDate date) {
         Group group = studentRepository.findById(studentId)
                 .orElseThrow(() -> new ServiceException(
                         String.format("Student with such id %d does not exist", studentId))).getGroup();
@@ -166,6 +165,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
 
         lesson.setLessonInactive(dto.isLessonInactive());
         lesson.setDate(LocalDate.parse(dto.getDate(), FORMATTER));
+        lesson.setLessonNumber(dto.getLessonNumber());
         return lesson;
     }
 
@@ -178,6 +178,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
         dto.setRoomId(lesson.getRoom() == null ? null : lesson.getRoom().getRoomId());
         dto.setTeacherId(lesson.getTeacher() == null ? null : lesson.getTeacher().getTeacherId());
         dto.setDate(lesson.getDate().toString());
+        dto.setLessonNumber(lesson.getLessonNumber());
         return dto;
     }
 }

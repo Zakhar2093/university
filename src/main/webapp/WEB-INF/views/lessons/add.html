@@ -64,16 +64,18 @@
             <input type="text" class="form-control" id="datepicker" th:field="*{date}">
             <br/>
 
-            <label>Select Number: </label>
-            <select th:field="*{lessonNumber}" class="form-control" name="select" size="3" multiple>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-            </select>
-            <br/>
+            <div class="form-group">
+                <label for="sel1" >Select Number: </label>
+                <select th:field="*{lessonNumber}" class="form-control" size="3" id="sel1">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                </select>
+                <br/>
+            </div>
 
             <input class="btn btn-primary" type="submit" value="Update!"/>
         </div>
