@@ -45,6 +45,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
 
     public void save(Lesson lesson) {
         try {
+            validate(lesson);
             lessonRepository.save(lesson);
         } catch (ConstraintViolationException e) {
             throw new ValidationException(e.getConstraintViolations().stream().findFirst().get().getMessage());
@@ -173,5 +174,23 @@ public class LessonService implements GenericService<Lesson, Integer>{
         dto.setDate(lesson.getDate().toString());
         dto.setLessonNumber(lesson.getLessonNumber());
         return dto;
+    }
+
+    private void validate(Lesson lesson){
+        int roomId = lesson.getRoom() == null ? 0 : lesson.getRoom().getRoomId();
+        int groupId = lesson.getGroup() == null ? 0 : lesson.getGroup().getGroupId();
+        int teacherId = lesson.getTeacher() == null ? 0 : lesson.getTeacher().getTeacherId();
+        int number = lesson.getLessonNumber();
+        LocalDate date = lesson.getDate();
+
+        if (!lessonRepository.findByGroupGroupIdAndDateAndLessonNumberAndLessonInactiveFalse(groupId, date, number).isEmpty()){
+            throw new ValidationException("The group has already been busy in another lesson. Please choose another day or lesson number.");
+        }
+        if (!lessonRepository.findByRoomRoomIdAndDateAndLessonNumberAndLessonInactiveFalse(roomId, date, number).isEmpty()){
+            throw new ValidationException("The room has already been busy in another lesson. Please choose another day or lesson number.");
+        }
+        if (!lessonRepository.findByTeacherTeacherIdAndDateAndLessonNumberAndLessonInactiveFalse(teacherId, date, number).isEmpty()){
+            throw new ValidationException("The teacher has already been busy in another lesson. Please choose another day or lesson number.");
+        }
     }
 }

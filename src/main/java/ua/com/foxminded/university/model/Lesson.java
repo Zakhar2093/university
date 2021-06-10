@@ -1,8 +1,11 @@
 package ua.com.foxminded.university.model;
 
+import ua.com.foxminded.university.annotation.NameConstraint;
 import ua.com.foxminded.university.annotation.RoomCapacityConstraint;
 
 import javax.persistence.*;
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 
 
@@ -18,6 +21,7 @@ public class Lesson {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int lessonId;
 
+    @NameConstraint
     @Column(name = "lesson_name")
     private String lessonName;
 
@@ -33,9 +37,11 @@ public class Lesson {
     @JoinColumn(name = "room_id")
     private Room room;
 
+    @FutureOrPresent(message = "Lesson date can not be past")
     @Column(name = "lesson_date")
     private LocalDate date;
 
+    @Positive(message = "Lesson number must be positive")
     @Column(name = "lesson_number")
     private int lessonNumber;
 

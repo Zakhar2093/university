@@ -1,11 +1,10 @@
 package ua.com.foxminded.university.controller.validator;
 
 import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.com.foxminded.university.annotation.RoomCapacityConstraint;
-import ua.com.foxminded.university.service.RoomService;
-import ua.com.foxminded.university.service.StudentService;
+import ua.com.foxminded.university.model.Group;
+import ua.com.foxminded.university.model.Room;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -13,29 +12,29 @@ import javax.validation.ConstraintValidatorContext;
 @Component
 public class RoomCapacityValidator implements ConstraintValidator<RoomCapacityConstraint, Object> {
 
-    private String group;
-    private String room;
-    @Autowired
-    private RoomService roomService;
-    @Autowired
-    private StudentService studentService;
+    private String groupString;
+    private String roomString;
 
     public RoomCapacityValidator() {
     }
 
     public void initialize(RoomCapacityConstraint constraintAnnotation) {
-        this.group = constraintAnnotation.groupId();
-        this.room = constraintAnnotation.roomId();
+        this.groupString = constraintAnnotation.group();
+        this.roomString = constraintAnnotation.room();
     }
 
     @Override
     public boolean isValid(Object lesson, ConstraintValidatorContext cxt) {
 
-        int groupId = (int) new BeanWrapperImpl(lesson).getPropertyValue(group);
-        int roomId = (int) new BeanWrapperImpl(lesson).getPropertyValue(room);
+        Group group = (Group) new BeanWrapperImpl(lesson).getPropertyValue(groupString);
+        Room room = (Room) new BeanWrapperImpl(lesson).getPropertyValue(roomString);
 
-        int roomCapacity = roomService.getById(roomId).getRoomCapacity();
-        int groupSize = studentService.getStudentsByGroupId(groupId).size();
+        if (room == null || group == null){
+            return true;
+        }
+
+        int roomCapacity = room.getRoomCapacity();
+        int groupSize = group.getStudents().size();
 
         return roomCapacity >= groupSize;
     }

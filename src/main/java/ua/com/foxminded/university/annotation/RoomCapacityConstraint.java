@@ -13,9 +13,9 @@ import java.lang.annotation.*;
 public @interface RoomCapacityConstraint {
     String message() default "Group size grater than room capacity";
 
-    String groupId();
+    String group();
 
-    String roomId();
+    String room();
 
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
