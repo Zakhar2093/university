@@ -24,7 +24,7 @@ public class TeacherController {
 
     @GetMapping
     public String getAll(@ModelAttribute("teacher") Teacher teacher, Model model) {
-        model.addAttribute("teachers", teacherService.getAllActivated());
+        model.addAttribute("teachers", teacherService.findAll());
         return "teachers/index";
     }
 
@@ -33,13 +33,13 @@ public class TeacherController {
         if(result.hasErrors()){
             throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
         }
-        teacherService.create(teacher);
+        teacherService.save(teacher);
         return "redirect:/teachers";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
-        model.addAttribute("teacher", teacherService.getById(id));
+        model.addAttribute("teacher", teacherService.findById(id));
         return "teachers/update";
     }
 
@@ -49,7 +49,7 @@ public class TeacherController {
             throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
         }
         teacher.setTeacherId(id);
-        teacherService.update(teacher);
+        teacherService.save(teacher);
         return "redirect:/teachers";
     }
 

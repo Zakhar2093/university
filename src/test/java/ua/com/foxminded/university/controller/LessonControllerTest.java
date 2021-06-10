@@ -3,9 +3,9 @@ package ua.com.foxminded.university.controller;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -16,7 +16,10 @@ import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Room;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.model_dto.LessonDto;
-import ua.com.foxminded.university.service.*;
+import ua.com.foxminded.university.service.GroupService;
+import ua.com.foxminded.university.service.LessonService;
+import ua.com.foxminded.university.service.RoomService;
+import ua.com.foxminded.university.service.TeacherService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -37,20 +40,17 @@ public class LessonControllerTest {
     @Autowired
     private TestData testData;
 
-    @MockBean
+    @Mock
     private LessonService lessonService;
 
-    @MockBean
+    @Mock
     private RoomService roomService;
 
-    @MockBean
+    @Mock
     private GroupService groupService;
 
-    @MockBean
+    @Mock
     private TeacherService teacherService;
-
-    @MockBean
-    private StudentService studentService;
 
     @InjectMocks
     private LessonController lessonController;
@@ -63,10 +63,21 @@ public class LessonControllerTest {
     }
 
     @Test
+    void submitCreateShouldReturnCorrectPageAndModelWithCorrectAttributes1() throws Exception {
+        LessonDto lessonDto = new LessonDto();
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/lessons/").flashAttr("lessonDto", lessonDto);
+        mockMvc.perform(request)
+                .andExpect(view().name("redirect:/lessons"));
+
+        verify(lessonService, only()).save(lessonDto);
+    }
+
+
+    @Test
     void submitCreateShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        roomService.create(new Room(1, 1, 10, false));
-        groupService.create(new Group(1, "Java", false));
-        teacherService.create(new Teacher(1, "Jack", "Smith", false));
+        roomService.save(new Room(1, 1, 10, false));
+        groupService.save(new Group(1, "Java", false));
+        teacherService.save(new Teacher(1, "Jack", "Smith", false));
         LessonDto lessonDto = new LessonDto(1, "Bio", 1, 1, 1, "2021-06-11", 1);
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
@@ -76,15 +87,15 @@ public class LessonControllerTest {
         mockMvc.perform(request)
                 .andExpect(view().name("redirect:/lessons"));
 
-        verify(lessonService, only()).create(lessonDto);
+        verify(lessonService, only()).save(lessonDto);
     }
 
     @Test
     void getAllShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        when(lessonService.getAllActivated()).thenReturn(testData.getTestLessons());
-        when(roomService.getAllActivated()).thenReturn(testData.getTestRooms());
-        when(groupService.getAllActivated()).thenReturn(testData.getTestGroups());
-        when(teacherService.getAllActivated()).thenReturn(testData.getTestTeachers());
+        when(lessonService.findAll()).thenReturn(testData.getTestLessons());
+        when(roomService.findAll()).thenReturn(testData.getTestRooms());
+        when(groupService.findAll()).thenReturn(testData.getTestGroups());
+        when(teacherService.findAll()).thenReturn(testData.getTestTeachers());
 
         mockMvc.perform(get("/lessons/"))
                 .andExpect(view().name("lessons/index"))
@@ -96,9 +107,9 @@ public class LessonControllerTest {
 
     @Test
     void createShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        when(roomService.getAllActivated()).thenReturn(testData.getTestRooms());
-        when(groupService.getAllActivated()).thenReturn(testData.getTestGroups());
-        when(teacherService.getAllActivated()).thenReturn(testData.getTestTeachers());
+        when(roomService.findAll()).thenReturn(testData.getTestRooms());
+        when(groupService.findAll()).thenReturn(testData.getTestGroups());
+        when(teacherService.findAll()).thenReturn(testData.getTestTeachers());
 
         LessonDto lessonDto = new LessonDto();
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/lessons/add").flashAttr("lessonDto", lessonDto);
@@ -112,10 +123,10 @@ public class LessonControllerTest {
     @Test
     void updateShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
         LessonDto lessonDto = new LessonDto();
-        when(lessonService.getDtoById(anyInt())).thenReturn(lessonDto);
-        when(roomService.getAllActivated()).thenReturn(testData.getTestRooms());
-        when(groupService.getAllActivated()).thenReturn(testData.getTestGroups());
-        when(teacherService.getAllActivated()).thenReturn(testData.getTestTeachers());
+        when(lessonService.findDtoById(anyInt())).thenReturn(lessonDto);
+        when(roomService.findAll()).thenReturn(testData.getTestRooms());
+        when(groupService.findAll()).thenReturn(testData.getTestGroups());
+        when(teacherService.findAll()).thenReturn(testData.getTestTeachers());
 
         mockMvc.perform(get("/lessons/{id}/edit", 2))
                 .andExpect(view().name("lessons/update"))
@@ -133,7 +144,7 @@ public class LessonControllerTest {
         mockMvc.perform(request)
                 .andExpect(view().name("redirect:/lessons"));
 
-        verify(lessonService, only()).update(lessonDto);
+        verify(lessonService, only()).save(lessonDto);
         int actualLessonDtoId = lessonDto.getLessonId();
         assertEquals(expectedLessonDtoId, actualLessonDtoId);
     }
@@ -250,9 +261,9 @@ public class LessonControllerTest {
     void showLessonsByGroupShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
         int id = 1;
         when(lessonService.getLessonsByGroupId(id)).thenReturn(testData.getTestLessons());
-        when(roomService.getAllActivated()).thenReturn(testData.getTestRooms());
-        when(groupService.getById(id)).thenReturn(testData.getTestGroups().get(0));
-        when(teacherService.getAllActivated()).thenReturn(testData.getTestTeachers());
+        when(roomService.findAll()).thenReturn(testData.getTestRooms());
+        when(groupService.findById(id)).thenReturn(testData.getTestGroups().get(0));
+        when(teacherService.findAll()).thenReturn(testData.getTestTeachers());
 
         mockMvc.perform(get("/groups/{id}/lessons", id))
                 .andExpect(view().name("lessons/index"))
@@ -266,9 +277,9 @@ public class LessonControllerTest {
     void showLessonsByRoomShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
         int id = 1;
         when(lessonService.getLessonsByRoomId(id)).thenReturn(testData.getTestLessons());
-        when(roomService.getById(id)).thenReturn(testData.getTestRooms().get(0));
-        when(groupService.getAllActivated()).thenReturn(testData.getTestGroups());
-        when(teacherService.getAllActivated()).thenReturn(testData.getTestTeachers());
+        when(roomService.findById(id)).thenReturn(testData.getTestRooms().get(0));
+        when(groupService.findAll()).thenReturn(testData.getTestGroups());
+        when(teacherService.findAll()).thenReturn(testData.getTestTeachers());
 
         mockMvc.perform(get("/rooms/{id}/lessons", id))
                 .andExpect(view().name("lessons/index"))
@@ -282,9 +293,9 @@ public class LessonControllerTest {
     void showLessonsByTeacherShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
         int id = 1;
         when(lessonService.getLessonsByTeacherId(id)).thenReturn(testData.getTestLessons());
-        when(roomService.getAllActivated()).thenReturn(testData.getTestRooms());
-        when(groupService.getAllActivated()).thenReturn(testData.getTestGroups());
-        when(teacherService.getById(id)).thenReturn(testData.getTestTeachers().get(0));
+        when(roomService.findAll()).thenReturn(testData.getTestRooms());
+        when(groupService.findAll()).thenReturn(testData.getTestGroups());
+        when(teacherService.findById(id)).thenReturn(testData.getTestTeachers().get(0));
 
         mockMvc.perform(get("/teachers/{id}/lessons", id))
                 .andExpect(view().name("lessons/index"))

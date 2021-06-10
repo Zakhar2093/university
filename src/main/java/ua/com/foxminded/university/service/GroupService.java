@@ -21,40 +21,32 @@ public class GroupService implements GenericService<Group, Integer>{
         this.groupRepository = groupRepository;
     }
 
-    public void create(Group group) {
+    public void save(Group group) {
         groupRepository.save(group);
     }
 
-    public List<Group> getAll() {
-        return groupRepository.findAll();
-    }
-
-    public List<Group> getAllActivated() {
+    public List<Group> findAll() {
         List<Group> groups = groupRepository.findAll();
         groups.removeIf(p -> (p.isGroupInactive()));
         return groups;
     }
 
-    public Group getById(Integer groupId) {
+    public Group findById(Integer groupId) {
         return groupRepository.findById(groupId)
                 .orElseThrow(() -> new ServiceException(
                         String.format("Group with such id %d does not exist", groupId)));
     }
 
-    public void update(Group group) {
-        groupRepository.save(group);
-    }
-
     public void deactivate(Integer groupId) {
         groupRepository.removeGroupFromAllLessons(groupId);
         groupRepository.removeGroupFromAllStudents(groupId);
-        Group group = getById(groupId);
+        Group group = findById(groupId);
         group.setGroupInactive(true);
         groupRepository.save(group);
     }
 
     public void activate(Integer groupId) {
-        Group group = getById(groupId);
+        Group group = findById(groupId);
         group.setGroupInactive(false);
         groupRepository.save(group);
     }

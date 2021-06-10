@@ -4,15 +4,11 @@ import java.util.List;
 
 public interface GenericService<T, Id> {
 
-    void create(T t);
+    void save(T t);
 
-    List<T> getAll();
+    List<T> findAll();
 
-    List<T> getAllActivated();
-
-    T getById(Id id);
-
-    void update(T t);
+    T findById(Id id);
 
     void deactivate(Id id);
 

@@ -22,8 +22,6 @@ import static org.mockito.Mockito.*;
 @TestPropertySource(locations = "classpath:testApplication.properties")
 class TeacherServiceTest {
 
-    private static final String EMPTY_STRING = "";
-
     @Mock
     private TeacherRepository teacherRepository;
 
@@ -31,34 +29,22 @@ class TeacherServiceTest {
     private TeacherService teacherService;
 
     @Test
-    void createShouldInvokeOnlyOnce() {
-        teacherService.create(new Teacher());
+    void saveShouldInvokeOnlyOnce() {
+        teacherService.save(new Teacher());
         verify(teacherRepository, only()).save(any(Teacher.class));
     }
 
     @Test
-    void getAllShouldInvokeOnlyOnce() {
-        teacherService.getAll();
+    void findAllActivatedShouldInvokeOnlyOnce() {
+        teacherService.findAll();
         verify(teacherRepository, only()).findAll();
     }
 
     @Test
-    void getAllActivatedShouldInvokeOnlyOnce() {
-        teacherService.getAllActivated();
-        verify(teacherRepository, only()).findAll();
-    }
-
-    @Test
-    void getByIdShouldInvokeOnlyOnce() {
+    void findByIdShouldInvokeOnlyOnce() {
         when(teacherRepository.findById(1)).thenReturn(Optional.of(new Teacher()));
-        teacherService.getById(1);
+        teacherService.findById(1);
         verify(teacherRepository, only()).findById(anyInt());
-    }
-
-    @Test
-    void updateShouldInvokeOnlyOnce() {
-        teacherService.update(new Teacher());
-        verify(teacherRepository, only()).save(any(Teacher.class));
     }
 
     @Test
@@ -79,7 +65,7 @@ class TeacherServiceTest {
     @Test
     void whenGetByIdCatchRepositoryExceptionShouldThrowServiceException() {
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            teacherService.getById(1);
+            teacherService.findById(1);
         });
         assertTrue(thrown.getMessage().contains("Teacher with such id 1 does not exist"));
     }

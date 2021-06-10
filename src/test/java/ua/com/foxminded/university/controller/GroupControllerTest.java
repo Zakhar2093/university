@@ -43,7 +43,7 @@ public class GroupControllerTest {
 
     @Test
     void getAllShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        when(groupService.getAllActivated()).thenReturn(testData.getTestGroups());
+        when(groupService.findAll()).thenReturn(testData.getTestGroups());
 
         mockMvc.perform(get("/groups/"))
                 .andExpect(view().name("groups/index"))
@@ -57,13 +57,13 @@ public class GroupControllerTest {
         mockMvc.perform(request)
                 .andExpect(view().name("redirect:/groups"));
 
-        verify(groupService, only()).create(group);
+        verify(groupService, only()).save(group);
     }
 
     @Test
     void updateShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
         Group group = createGroup();
-        when(groupService.getById(anyInt())).thenReturn(group);
+        when(groupService.findById(anyInt())).thenReturn(group);
 
         mockMvc.perform(get("/groups/{id}/edit", 2))
                 .andExpect(view().name("groups/update"))
@@ -78,7 +78,7 @@ public class GroupControllerTest {
         mockMvc.perform(request)
                 .andExpect(view().name("redirect:/groups"));
 
-        verify(groupService, only()).update(group);
+        verify(groupService, only()).save(group);
         int actualGroupId = group.getGroupId();
         assertEquals(expectedGroupId, actualGroupId);
     }

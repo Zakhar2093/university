@@ -22,8 +22,6 @@ import static org.mockito.Mockito.*;
 @TestPropertySource(locations = "classpath:testApplication.properties")
 class GroupServiceTest {
 
-    private static final String EMPTY_STRING = "";
-
     @InjectMocks
     private GroupService groupService;
 
@@ -31,34 +29,22 @@ class GroupServiceTest {
     private GroupRepository groupRepository;
 
     @Test
-    void createShouldInvokeOnlyOnce() {
-        groupService.create(new Group());
+    void saveShouldInvokeOnlyOnce() {
+        groupService.save(new Group());
         verify(groupRepository, only()).save(any(Group.class));
     }
 
     @Test
-    void getAllShouldInvokeOnlyOnce() {
-        groupService.getAll();
+    void findAllShouldInvokeOnlyOnce() {
+        groupService.findAll();
         verify(groupRepository, only()).findAll();
     }
 
     @Test
-    void getAllActivatedShouldInvokeOnlyOnce() {
-        groupService.getAllActivated();
-        verify(groupRepository, only()).findAll();
-    }
-
-    @Test
-    void getByIdShouldInvokeOnlyOnce() {
+    void findByIdShouldInvokeOnlyOnce() {
         when(groupRepository.findById(1)).thenReturn(Optional.of(new Group()));
-        groupService.getById(1);
+        groupService.findById(1);
         verify(groupRepository, only()).findById(anyInt());
-    }
-
-    @Test
-    void updateShouldInvokeOnlyOnce() {
-        groupService.update(new Group());
-        verify(groupRepository, only()).save(any(Group.class));
     }
 
     @Test
@@ -79,7 +65,7 @@ class GroupServiceTest {
     @Test
     void whenGetByIdTakesUnexcitedIdShouldThrowServiceException() {
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            groupService.getById(1);
+            groupService.findById(1);
         });
         assertTrue(thrown.getMessage().contains("Group with such id 1 does not exist"));
     }

@@ -11,6 +11,8 @@ import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.model_dto.LessonDto;
 import ua.com.foxminded.university.repository.*;
 
+import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -41,46 +43,37 @@ public class LessonService implements GenericService<Lesson, Integer>{
         this.studentRepository = studentRepository;
     }
 
-    public void create(Lesson lesson) {
-        lessonRepository.save(lesson);
+    public void save(Lesson lesson) {
+        try {
+            lessonRepository.save(lesson);
+        } catch (ConstraintViolationException e) {
+            throw new ValidationException(e.getConstraintViolations().stream().findFirst().get().getMessage());
+        }
     }
 
-    public void create(LessonDto lessonDto) {
+    public void save(LessonDto lessonDto) {
         Lesson lesson = mapDtoToLesson(lessonDto);
-        lessonRepository.save(lesson);
+        save(lesson);
     }
 
-    public List<Lesson> getAll(){
-        return lessonRepository.findAll();
-    }
-
-    public List<Lesson> getAllActivated(){
+    public List<Lesson> findAll(){
         List<Lesson> lessons = lessonRepository.findAll();
         lessons.removeIf(p -> (p.isLessonInactive()));
         return lessons;
     }
 
-    public Lesson getById(Integer lessonId) {
+    public Lesson findById(Integer lessonId) {
         return lessonRepository.findById(lessonId)
                 .orElseThrow(() -> new ServiceException(
                         String.format("Lesson with such id %d does not exist", lessonId)));
     }
 
-    public LessonDto getDtoById(Integer lessonId) {
-        return mapLessonToDto(getById(lessonId));
-    }
-
-    public void update(Lesson lesson) {
-        lessonRepository.save(lesson);
-    }
-
-    public void update(LessonDto lessonDto) {
-        Lesson lesson = mapDtoToLesson(lessonDto);
-        lessonRepository.save(lesson);
+    public LessonDto findDtoById(Integer lessonId) {
+        return mapLessonToDto(findById(lessonId));
     }
 
     public void deactivate(Integer lessonId) {
-        Lesson lesson = getById(lessonId);
+        Lesson lesson = findById(lessonId);
         lesson.setRoom(null);
         lesson.setTeacher(null);
         lesson.setGroup(null);
@@ -89,7 +82,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
     }
 
     public void activate(Integer lessonId) {
-        Lesson lesson = getById(lessonId);
+        Lesson lesson = findById(lessonId);
         lesson.setLessonInactive(false);
         lessonRepository.save(lesson);
     }

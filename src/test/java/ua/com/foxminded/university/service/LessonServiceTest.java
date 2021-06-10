@@ -45,14 +45,14 @@ class LessonServiceTest {
     private LessonService lessonService;
 
     @Test
-    void createShouldInvokeOnlyOnceWhenTakesLesson() {
-        lessonService.create(new Lesson());
+    void saveShouldInvokeOnlyOnceWhenTakesLesson() {
+        lessonService.save(new Lesson());
         verify(lessonRepository, only()).save(any(Lesson.class));
     }
 
     @Test
-    void createShouldInvokeOnlyOnceWhenTakesLessonDto() {
-        lessonService.create(createLessonDto());
+    void saveShouldInvokeOnlyOnceWhenTakesLessonDto() {
+        lessonService.save(createLessonDto());
         verify(lessonRepository, times(1)).save(any(Lesson.class));
     }
 
@@ -66,43 +66,24 @@ class LessonServiceTest {
     }
 
     @Test
-    void getAllShouldInvokeOnlyOnce() {
-        lessonService.getAll();
+    void findAllShouldInvokeOnlyOnce() {
+        lessonService.findAll();
         verify(lessonRepository, only()).findAll();
     }
 
     @Test
-    void getAllActivatedShouldInvokeOnlyOnce() {
-        lessonService.getAllActivated();
-        verify(lessonRepository, only()).findAll();
-    }
-
-    @Test
-    void getByIdShouldInvokeOnlyOnce() {
+    void findByIdShouldInvokeOnlyOnce() {
         when(lessonRepository.findById(1)).thenReturn(Optional.of(new Lesson()));
-        lessonService.getById(1);
+        lessonService.findById(1);
         verify(lessonRepository, only()).findById(anyInt());
     }
 
     @Test
-    void getDtoByIdShouldInvokeOnlyOnce() {
+    void findDtoByIdShouldInvokeOnlyOnce() {
         Lesson lesson = new Lesson(1, "Math", null, null, null, LocalDate.now(), 1);
         when(lessonRepository.findById(anyInt())).thenReturn(Optional.of(lesson));
-        lessonService.getDtoById(1);
+        lessonService.findDtoById(1);
         verify(lessonRepository, only()).findById(anyInt());
-    }
-
-    @Test
-    void updateShouldInvokeOnlyOnceWhenTakesLesson() {
-        lessonService.update(new Lesson());
-        verify(lessonRepository, only()).save(any(Lesson.class));
-    }
-
-    @Test
-    void updateShouldInvokeOnlyOnceWhenTakesLessonDto() {
-        when(lessonRepository.findById(1)).thenReturn(Optional.of(new Lesson()));
-        lessonService.update(createLessonDto());
-        verify(lessonRepository, times(1)).save(any(Lesson.class));
     }
 
     @Test
@@ -170,7 +151,7 @@ class LessonServiceTest {
     @Test
     void whenGetByIdTakesUnexcitedIdShouldThrowServiceException() {
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            lessonService.getById(1);
+            lessonService.findById(1);
         });
         assertTrue(thrown.getMessage().contains("Lesson with such id 1 does not exist"));
     }

@@ -24,7 +24,7 @@ public class GroupController {
 
     @GetMapping
     public String getAll(@ModelAttribute("group") Group group, Model model) {
-        model.addAttribute("groups", groupService.getAllActivated());
+        model.addAttribute("groups", groupService.findAll());
         return "groups/index";
     }
 
@@ -33,13 +33,13 @@ public class GroupController {
         if(result.hasErrors()){
             throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
         }
-        groupService.create(group);
+        groupService.save(group);
         return "redirect:/groups";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
-        model.addAttribute("group", groupService.getById(id));
+        model.addAttribute("group", groupService.findById(id));
         return "groups/update";
     }
 
@@ -49,7 +49,7 @@ public class GroupController {
             throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
         }
         group.setGroupId(id);
-        groupService.update(group);
+        groupService.save(group);
         return "redirect:/groups";
     }
 

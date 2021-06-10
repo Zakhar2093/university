@@ -23,7 +23,7 @@ public class RoomController {
     }
     @GetMapping
     public String getAll(@ModelAttribute("room") Room room, Model model) {
-        model.addAttribute("rooms", roomService.getAllActivated());
+        model.addAttribute("rooms", roomService.findAll());
         model.addAttribute("roomNumber", room.getRoomNumber());
         return "rooms/index";
     }
@@ -33,13 +33,13 @@ public class RoomController {
         if(result.hasErrors()){
             throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
         }
-        roomService.create(room);
+        roomService.save(room);
         return "redirect:/rooms";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
-        model.addAttribute("room", roomService.getById(id));
+        model.addAttribute("room", roomService.findById(id));
         return "rooms/update";
     }
 
@@ -49,7 +49,7 @@ public class RoomController {
             throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
         }
         room.setRoomId(id);
-        roomService.update(room);
+        roomService.save(room);
         return "redirect:/rooms";
     }
 

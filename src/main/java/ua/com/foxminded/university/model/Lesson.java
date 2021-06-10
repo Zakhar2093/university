@@ -1,8 +1,14 @@
 package ua.com.foxminded.university.model;
 
+import ua.com.foxminded.university.annotation.RoomCapacityConstraint;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
+
+@RoomCapacityConstraint(
+        group = "group",
+        room = "room")
 @Entity
 @Table(name="lessons", schema = "university")
 public class Lesson {

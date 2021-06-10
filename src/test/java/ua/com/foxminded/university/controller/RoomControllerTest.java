@@ -43,7 +43,7 @@ public class RoomControllerTest {
 
     @Test
     void getAllShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        when(roomService.getAllActivated()).thenReturn(testData.getTestRooms());
+        when(roomService.findAll()).thenReturn(testData.getTestRooms());
 
         mockMvc.perform(get("/rooms/"))
                 .andExpect(view().name("rooms/index"))
@@ -57,13 +57,13 @@ public class RoomControllerTest {
         mockMvc.perform(request)
                 .andExpect(view().name("redirect:/rooms"));
 
-        verify(roomService, only()).create(room);
+        verify(roomService, only()).save(room);
     }
 
     @Test
     void updateShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
         Room room = createRoom();
-        when(roomService.getById(anyInt())).thenReturn(room);
+        when(roomService.findById(anyInt())).thenReturn(room);
 
         mockMvc.perform(get("/rooms/{id}/edit", 2))
                 .andExpect(view().name("rooms/update"))
@@ -78,7 +78,7 @@ public class RoomControllerTest {
         mockMvc.perform(request)
                 .andExpect(view().name("redirect:/rooms"));
 
-        verify(roomService, only()).update(room);
+        verify(roomService, only()).save(room);
         int actualRoomId = room.getRoomId();
         assertEquals(expectedRoomId, actualRoomId);
     }

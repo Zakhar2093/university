@@ -26,53 +26,40 @@ public class StudentService implements GenericService<Student, Integer>{
         this.groupRepository = groupRepository;
     }
     
-    public void create(Student student) {
+    public void save(Student student) {
         studentRepository.save(student);
     }
 
-    public void create(StudentDto studentDto) {
+    public void save(StudentDto studentDto) {
         Student student = mapDtoToStudent(studentDto);
-        studentRepository.save(student);
-    }
-    
-    public List<Student> getAll(){
-        return studentRepository.findAll();
+        save(student);
     }
 
-    public List<Student> getAllActivated(){
+    public List<Student> findAll(){
         List<Student> students = studentRepository.findAll();
         students.removeIf(p -> (p.isStudentInactive()));
         return students;
     }
 
-    public Student getById(Integer studentId) {
+    public Student findById(Integer studentId) {
         return studentRepository.findById(studentId)
                 .orElseThrow(() -> new ServiceException(
                         String.format("Student with such id %d does not exist", studentId)));
     }
 
-    public StudentDto getDtoById(Integer studentId) {
-        return mapStudentToDto(getById(studentId));
-    }
-
-    public void update(Student student) {
-        studentRepository.save(student);
-    }
-
-    public void update(StudentDto studentDto) {
-        Student student = mapDtoToStudent(studentDto);
-        studentRepository.save(student);
+    public StudentDto findDtoById(Integer studentId) {
+        return mapStudentToDto(findById(studentId));
     }
 
     public void deactivate(Integer studentId) {
-        Student student = getById(studentId);
+        Student student = findById(studentId);
         student.setGroup(null);
         student.setStudentInactive(true);
         studentRepository.save(student);
     }
 
     public void activate(Integer studentId) {
-        Student student = getById(studentId);
+        Student student = findById(studentId);
         student.setStudentInactive(false);
         studentRepository.save(student);
     }

@@ -29,34 +29,22 @@ class RoomServiceTest {
     private RoomService roomService;
 
     @Test
-    void createShouldInvokeOnlyOnce() {
-        roomService.create(new Room(1, 101, 10, false));
+    void saveShouldInvokeOnlyOnce() {
+        roomService.save(new Room(1, 101, 10, false));
         verify(roomRepository, only()).save(any(Room.class));
     }
 
     @Test
-    void getAllShouldInvokeOnlyOnce() {
-        roomService.getAll();
+    void findAllShouldInvokeOnlyOnce() {
+        roomService.findAll();
         verify(roomRepository, only()).findAll();
     }
 
     @Test
-    void getAllActivatedShouldInvokeOnlyOnce() {
-        roomService.getAllActivated();
-        verify(roomRepository, only()).findAll();
-    }
-
-    @Test
-    void getByIdShouldInvokeOnlyOnce() {
+    void findByIdShouldInvokeOnlyOnce() {
         when(roomRepository.findById(1)).thenReturn(Optional.of(new Room()));
-        roomService.getById(1);
+        roomService.findById(1);
         verify(roomRepository, only()).findById(anyInt());
-    }
-
-    @Test
-    void updateShouldInvokeOnlyOnce() {
-        roomService.update(new Room(1, 101, 10, false));
-        verify(roomRepository, only()).save(any(Room.class));
     }
 
     @Test
@@ -77,7 +65,7 @@ class RoomServiceTest {
     @Test
     void whenGetByIdCatchRepositoryExceptionShouldThrowServiceException() {
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            roomService.getById(1);
+            roomService.findById(1);
         });
         assertTrue(thrown.getMessage().contains("Room with such id 1 does not exist"));
     }

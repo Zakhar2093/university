@@ -43,7 +43,7 @@ public class TeacherControllerTest {
 
     @Test
     void getAllShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        when(teacherService.getAllActivated()).thenReturn(testData.getTestTeachers());
+        when(teacherService.findAll()).thenReturn(testData.getTestTeachers());
 
         mockMvc.perform(get("/teachers/"))
                 .andExpect(view().name("teachers/index"))
@@ -57,13 +57,13 @@ public class TeacherControllerTest {
         mockMvc.perform(request)
                 .andExpect(view().name("redirect:/teachers"));
 
-        verify(teacherService, only()).create(teacher);
+        verify(teacherService, only()).save(teacher);
     }
 
     @Test
     void updateShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
         Teacher teacher = createTeacher();
-        when(teacherService.getById(anyInt())).thenReturn(teacher);
+        when(teacherService.findById(anyInt())).thenReturn(teacher);
 
         mockMvc.perform(get("/teachers/{id}/edit", 2))
                 .andExpect(view().name("teachers/update"))
@@ -78,7 +78,7 @@ public class TeacherControllerTest {
         mockMvc.perform(request)
                 .andExpect(view().name("redirect:/teachers"));
 
-        verify(teacherService, only()).update(teacher);
+        verify(teacherService, only()).save(teacher);
         int actualTeacherId = teacher.getTeacherId();
         assertEquals(expectedTeacherId, actualTeacherId);
     }

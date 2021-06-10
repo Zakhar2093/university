@@ -42,18 +42,18 @@ public class LessonController {
 
     @GetMapping("/lessons")
     public String getAll(Model model) {
-        model.addAttribute("lessons", lessonService.getAllActivated());
-        model.addAttribute("groups", groupService.getAllActivated());
-        model.addAttribute("rooms", roomService.getAllActivated());
-        model.addAttribute("teachers", teacherService.getAllActivated());
+        model.addAttribute("lessons", lessonService.findAll());
+        model.addAttribute("groups", groupService.findAll());
+        model.addAttribute("rooms", roomService.findAll());
+        model.addAttribute("teachers", teacherService.findAll());
         return "lessons/index";
     }
 
     @GetMapping("/lessons/add")
     public String create(@ModelAttribute("lessonDto") LessonDto lessonDto, Model model){
-        model.addAttribute("groups", groupService.getAllActivated());
-        model.addAttribute("rooms", roomService.getAllActivated());
-        model.addAttribute("teachers", teacherService.getAllActivated());
+        model.addAttribute("groups", groupService.findAll());
+        model.addAttribute("rooms", roomService.findAll());
+        model.addAttribute("teachers", teacherService.findAll());
         return "lessons/add";
     }
 
@@ -62,16 +62,16 @@ public class LessonController {
         if(result.hasErrors()){
             throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
         }
-        lessonService.create(lessonDto);
+        lessonService.save(lessonDto);
         return "redirect:/lessons";
     }
 
     @GetMapping("/lessons/{id}/edit")
     public String update(Model model, @PathVariable("id") int id) {
-        model.addAttribute("groups", groupService.getAllActivated());
-        model.addAttribute("rooms", roomService.getAllActivated());
-        model.addAttribute("teachers", teacherService.getAllActivated());
-        model.addAttribute("lessonDto", lessonService.getDtoById(id));
+        model.addAttribute("groups", groupService.findAll());
+        model.addAttribute("rooms", roomService.findAll());
+        model.addAttribute("teachers", teacherService.findAll());
+        model.addAttribute("lessonDto", lessonService.findDtoById(id));
         return "lessons/update";
     }
 
@@ -81,7 +81,7 @@ public class LessonController {
             throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
         }
         lessonDto.setLessonId(id);
-        lessonService.update(lessonDto);
+        lessonService.save(lessonDto);
         return "redirect:/lessons";
     }
 
@@ -114,28 +114,28 @@ public class LessonController {
 
     @GetMapping("teachers/{id}/lessons")
     public String showLessonsByTeacher(Model model, @PathVariable("id") int id) {
-        model.addAttribute("teacher", teacherService.getById(id));
+        model.addAttribute("teacher", teacherService.findById(id));
         model.addAttribute("lessons", lessonService.getLessonsByTeacherId(id));
-        model.addAttribute("rooms", roomService.getAllActivated());
-        model.addAttribute("groups", groupService.getAllActivated());
+        model.addAttribute("rooms", roomService.findAll());
+        model.addAttribute("groups", groupService.findAll());
         return "lessons/index";
     }
 
     @GetMapping("rooms/{id}/lessons")
     public String showLessonsByRoom(Model model, @PathVariable("id") int id) {
-        model.addAttribute("room", roomService.getById(id));
+        model.addAttribute("room", roomService.findById(id));
         model.addAttribute("lessons", lessonService.getLessonsByRoomId(id));
-        model.addAttribute("teachers", teacherService.getAllActivated());
-        model.addAttribute("groups", groupService.getAllActivated());
+        model.addAttribute("teachers", teacherService.findAll());
+        model.addAttribute("groups", groupService.findAll());
         return "lessons/index";
     }
 
     @GetMapping("groups/{id}/lessons")
     public String showLessonsByGroup(Model model, @PathVariable("id") int id) {
-        model.addAttribute("group", groupService.getById(id));
+        model.addAttribute("group", groupService.findById(id));
         model.addAttribute("lessons", lessonService.getLessonsByGroupId(id));
-        model.addAttribute("rooms", roomService.getAllActivated());
-        model.addAttribute("teachers", teacherService.getAllActivated());
+        model.addAttribute("rooms", roomService.findAll());
+        model.addAttribute("teachers", teacherService.findAll());
         return "lessons/index";
     }
 }
