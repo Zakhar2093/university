@@ -12,7 +12,6 @@ import ua.com.foxminded.university.model.model_dto.LessonDto;
 import ua.com.foxminded.university.repository.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -25,7 +24,7 @@ import static org.mockito.Mockito.*;
 @TestPropertySource(locations = "classpath:testApplication.properties")
 class LessonServiceTest {
 
-    private static final LocalDateTime TIME = LocalDateTime.now();
+    private static final LocalDate TIME = LocalDate.now();
 
     @Mock
     private GroupRepository groupRepository;

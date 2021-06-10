@@ -10,7 +10,6 @@ import ua.com.foxminded.university.DataSourceTestConfig;
 import ua.com.foxminded.university.model.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,7 @@ class LessonRepositoryTest {
 
     @Test
     void getLessonByTeacherForDayShouldReturnCorrectData() {
-        LocalDateTime date = LocalDateTime.parse("2021.01.20-23.55.11", FORMATTER);
+        LocalDate date = LocalDate.parse("2021-01-20");
         List<Lesson> allLessons = saveTestData();
 
         List<Lesson> expected = new ArrayList<>();
@@ -58,7 +57,7 @@ class LessonRepositoryTest {
 
     @Test
     void getLessonByTeacherForMonthShouldReturnCorrectData() {
-        LocalDateTime date = LocalDateTime.parse("2021.01.20-23.55.11", FORMATTER);
+        LocalDate date = LocalDate.parse("2021-01-20");
         List<Lesson> allLessons = saveTestData();
 
         List<Lesson> expected = new ArrayList<>();
@@ -75,7 +74,7 @@ class LessonRepositoryTest {
 
     @Test
     void getLessonByGroupForDayShouldReturnCorrectData() {
-        LocalDateTime date = LocalDateTime.parse("2021.01.20-23.55.11", FORMATTER);
+        LocalDate date = LocalDate.parse("2021-01-20");
         List<Lesson> allLessons = saveTestData();
 
         List<Lesson> expected = new ArrayList<>();
@@ -93,7 +92,7 @@ class LessonRepositoryTest {
 
     @Test
     void getLessonByGroupForMonthShouldReturnCorrectData() {
-        LocalDateTime date = LocalDateTime.parse("2021.01.20-23.55.11", FORMATTER);
+        LocalDate date = LocalDate.parse("2021-01-20");
         List<Lesson> allLessons = saveTestData();
 
         List<Lesson> expected = new ArrayList<>();

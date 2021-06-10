@@ -1,6 +1,8 @@
 package ua.com.foxminded.university.controller.validator;
 
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ua.com.foxminded.university.annotation.RoomCapacityConstraint;
 import ua.com.foxminded.university.service.RoomService;
 import ua.com.foxminded.university.service.StudentService;
@@ -8,16 +10,17 @@ import ua.com.foxminded.university.service.StudentService;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+@Component
 public class RoomCapacityValidator implements ConstraintValidator<RoomCapacityConstraint, Object> {
 
     private String group;
     private String room;
+    @Autowired
     private RoomService roomService;
+    @Autowired
     private StudentService studentService;
 
-    public RoomCapacityValidator(RoomService roomService, StudentService studentService) {
-        this.roomService = roomService;
-        this.studentService = studentService;
+    public RoomCapacityValidator() {
     }
 
     public void initialize(RoomCapacityConstraint constraintAnnotation) {

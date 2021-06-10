@@ -33,6 +33,7 @@ public class GroupController {
         if(result.hasErrors()){
             throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
         }
+        groupService.create(group);
         return "redirect:/groups";
     }
 

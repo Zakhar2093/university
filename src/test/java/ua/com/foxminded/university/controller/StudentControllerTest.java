@@ -60,7 +60,7 @@ public class StudentControllerTest {
     void createShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
         when(groupService.getAllActivated()).thenReturn(testData.getTestGroups());
 
-        StudentDto studentDto = new StudentDto();
+        StudentDto studentDto = createDto();
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/students/add").flashAttr("studentDto", studentDto);
         mockMvc.perform(request)
                 .andExpect(view().name("students/add"))
@@ -69,7 +69,7 @@ public class StudentControllerTest {
 
     @Test
     void submitCreateShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        StudentDto studentDto = new StudentDto();
+        StudentDto studentDto = createDto();
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/students/").flashAttr("studentDto", studentDto);
         mockMvc.perform(request)
                 .andExpect(view().name("redirect:/students"));
@@ -79,7 +79,7 @@ public class StudentControllerTest {
 
     @Test
     void updateShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        StudentDto studentDto = new StudentDto();
+        StudentDto studentDto = createDto();
         when(studentService.getDtoById(anyInt())).thenReturn(studentDto);
         when(groupService.getAllActivated()).thenReturn(testData.getTestGroups());
 
@@ -92,7 +92,7 @@ public class StudentControllerTest {
     @Test
     void submitUpdateShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
         int expectedStudentDtoId = 2;
-        StudentDto studentDto = new StudentDto();
+        StudentDto studentDto = createDto();
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.patch("/students/{id}", expectedStudentDtoId).flashAttr("studentDto", studentDto);
         mockMvc.perform(request)
                 .andExpect(view().name("redirect:/students"));
@@ -120,5 +120,9 @@ public class StudentControllerTest {
                 .andExpect(view().name("students/index"))
                 .andExpect(model().attribute("students", testData.getTestStudent()))
                 .andExpect(model().attribute("group", testData.getTestGroups().get(0)));
+    }
+
+    private StudentDto createDto(){
+        return new StudentDto(1, "Jack", "Smith", 1,false);
     }
 }

@@ -52,7 +52,7 @@ public class GroupControllerTest {
 
     @Test
     void createShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        Group group = new Group();
+        Group group = createGroup();
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/groups/").flashAttr("group", group);
         mockMvc.perform(request)
                 .andExpect(view().name("redirect:/groups"));
@@ -62,7 +62,7 @@ public class GroupControllerTest {
 
     @Test
     void updateShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        Group group = new Group();
+        Group group = createGroup();
         when(groupService.getById(anyInt())).thenReturn(group);
 
         mockMvc.perform(get("/groups/{id}/edit", 2))
@@ -73,7 +73,7 @@ public class GroupControllerTest {
     @Test
     void submitUpdateShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
         int expectedGroupId = 2;
-        Group group = new Group();
+        Group group = createGroup();
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.patch("/groups/{id}", expectedGroupId).flashAttr("group", group);
         mockMvc.perform(request)
                 .andExpect(view().name("redirect:/groups"));
@@ -89,5 +89,9 @@ public class GroupControllerTest {
                 .andExpect(view().name("redirect:/groups"));
 
         verify(groupService, only()).deactivate(anyInt());
+    }
+
+    private Group createGroup(){
+        return new Group(1, "Java", false);
     }
 }

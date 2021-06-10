@@ -52,7 +52,7 @@ public class RoomControllerTest {
 
     @Test
     void createShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        Room room = new Room();
+        Room room = createRoom();
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/rooms/").flashAttr("room", room);
         mockMvc.perform(request)
                 .andExpect(view().name("redirect:/rooms"));
@@ -62,7 +62,7 @@ public class RoomControllerTest {
 
     @Test
     void updateShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        Room room = new Room();
+        Room room = createRoom();
         when(roomService.getById(anyInt())).thenReturn(room);
 
         mockMvc.perform(get("/rooms/{id}/edit", 2))
@@ -73,7 +73,7 @@ public class RoomControllerTest {
     @Test
     void submitUpdateShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
         int expectedRoomId = 2;
-        Room room = new Room();
+        Room room = createRoom();
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.patch("/rooms/{id}", expectedRoomId).flashAttr("room", room);
         mockMvc.perform(request)
                 .andExpect(view().name("redirect:/rooms"));
@@ -89,5 +89,9 @@ public class RoomControllerTest {
                 .andExpect(view().name("redirect:/rooms"));
 
         verify(roomService, only()).deactivate(anyInt());
+    }
+
+    private Room createRoom(){
+        return new Room(1, 101, 30, false);
     }
 }
