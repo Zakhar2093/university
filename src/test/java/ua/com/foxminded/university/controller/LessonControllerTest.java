@@ -22,7 +22,6 @@ import ua.com.foxminded.university.service.RoomService;
 import ua.com.foxminded.university.service.TeacherService;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -34,8 +33,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = Application.class)
 @TestPropertySource(locations = "classpath:testApplication.properties")
 public class LessonControllerTest {
-    private static final String FORMAT = "yyyy-MM-dd";
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(FORMAT);
 
     @Autowired
     private TestData testData;
@@ -61,17 +58,6 @@ public class LessonControllerTest {
     public void setMocks() {
         mockMvc = MockMvcBuilders.standaloneSetup(lessonController).build();
     }
-
-    @Test
-    void submitCreateShouldReturnCorrectPageAndModelWithCorrectAttributes1() throws Exception {
-        LessonDto lessonDto = new LessonDto();
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/lessons/").flashAttr("lessonDto", lessonDto);
-        mockMvc.perform(request)
-                .andExpect(view().name("redirect:/lessons"));
-
-        verify(lessonService, only()).save(lessonDto);
-    }
-
 
     @Test
     void submitCreateShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
@@ -162,8 +148,8 @@ public class LessonControllerTest {
         String entity = "Student";
         String duration = "Day";
         int id = 1;
-        String date = "11 04 2021 12:44 AM";
-        LocalDate localDate = LocalDate.parse(date, FORMATTER);
+        String date = "2121-06-11";
+        LocalDate localDate = LocalDate.parse(date);
 
         when(lessonService.getLessonByStudentIdForDay(anyInt(), eq(localDate))).thenReturn(testData.getTestLessons());
 
@@ -187,8 +173,8 @@ public class LessonControllerTest {
         String entity = "Student";
         String duration = "Month";
         int id = 1;
-        String date = "11 04 2021 12:44 AM";
-        LocalDate localDate = LocalDate.parse(date, FORMATTER);
+        String date = "2121-06-11";
+        LocalDate localDate = LocalDate.parse(date);
 
         when(lessonService.getLessonByStudentIdForMonth(anyInt(), eq(localDate))).thenReturn(testData.getTestLessons());
 
@@ -212,8 +198,8 @@ public class LessonControllerTest {
         String entity = "Teacher";
         String duration = "Day";
         int id = 1;
-        String date = "11 04 2021 12:44 AM";
-        LocalDate localDate = LocalDate.parse(date, FORMATTER);
+        String date = "2121-06-11";
+        LocalDate localDate = LocalDate.parse(date);
 
         when(lessonService.getLessonByTeacherIdForDay(anyInt(), eq(localDate))).thenReturn(testData.getTestLessons());
 
@@ -237,8 +223,8 @@ public class LessonControllerTest {
         String entity = "Teacher";
         String duration = "Month";
         int id = 1;
-        String date = "11 04 2021 12:44 AM";
-        LocalDate localDate = LocalDate.parse(date, FORMATTER);
+        String date = "2121-06-11";
+        LocalDate localDate = LocalDate.parse(date);
 
         when(lessonService.getLessonByTeacherIdForMonth(anyInt(), eq(localDate))).thenReturn(testData.getTestLessons());
 

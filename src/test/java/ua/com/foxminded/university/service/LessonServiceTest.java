@@ -11,11 +11,13 @@ import ua.com.foxminded.university.model.*;
 import ua.com.foxminded.university.model.model_dto.LessonDto;
 import ua.com.foxminded.university.repository.*;
 
+import javax.validation.ValidationException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
@@ -47,7 +49,7 @@ class LessonServiceTest {
     @Test
     void saveShouldInvokeOnlyOnceWhenTakesLesson() {
         lessonService.save(new Lesson());
-        verify(lessonRepository, only()).save(any(Lesson.class));
+        verify(lessonRepository, times(1)).save(any(Lesson.class));
     }
 
     @Test
@@ -170,5 +172,78 @@ class LessonServiceTest {
             lessonService.getLessonByStudentIdForMonth(1, eq(TIME));
         });
         assertTrue(thrown.getMessage().contains("Student with such id 1 does not exist"));
+    }
+
+    @Test
+    void whenDtoWithGroupNullMapToLessonShouldThrowServiceException(){
+        when(roomRepository.findById(1)).thenReturn(Optional.of(new Room()));
+        when(teacherRepository.findById(1)).thenReturn(Optional.of(new Teacher()));
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            lessonService.save( new LessonDto(1, "1", 1, 1, 1, "2121-06-06", 1));
+        });
+        assertTrue(thrown.getMessage().contains("Group with such id 1 does not exist"));
+    }
+
+    @Test
+    void whenDtoWithTeacherNullMapToLessonShouldThrowServiceException(){
+        when(groupRepository.findById(1)).thenReturn(Optional.of(new Group()));
+        when(roomRepository.findById(1)).thenReturn(Optional.of(new Room()));
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            lessonService.save( new LessonDto(1, "1", 1, 1, 1, "2121-06-06", 1));
+        });
+        assertTrue(thrown.getMessage().contains("Teacher with such id 1 does not exist"));
+    }
+
+    @Test
+    void whenDtoWithRoomNullMapToLessonShouldThrowServiceException(){
+        when(groupRepository.findById(1)).thenReturn(Optional.of(new Group()));
+        when(teacherRepository.findById(1)).thenReturn(Optional.of(new Teacher()));
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            lessonService.save( new LessonDto(1, "1", 1, 1, 1, "2121-06-06", 1));
+        });
+        assertEquals(thrown.getMessage(), "Room with such id 1 does not exist");
+    }
+
+    @Test
+    void whenGroupIsBusyValidateShouldThrowValidationException(){
+        LocalDate date = LocalDate.parse("2021-06-11");
+        List<Lesson> lessons = new ArrayList<>();
+        lessons.add(new Lesson());
+        when(lessonRepository.findByGroupGroupIdAndDateAndLessonNumberAndLessonInactiveFalse(1, date, 1)).thenReturn(lessons);
+        ValidationException thrown = assertThrows(ValidationException.class, () -> {
+            lessonService.save(createLesson());
+        });
+        assertTrue(thrown.getMessage().contains("The group has already been busy in another lesson. Please choose another day or lesson number."));
+    }
+
+    @Test
+    void whenRoomIsBusyValidateShouldThrowValidationException(){
+        LocalDate date = LocalDate.parse("2021-06-11");
+        List<Lesson> lessons = new ArrayList<>();
+        lessons.add(new Lesson());
+        when(lessonRepository.findByRoomRoomIdAndDateAndLessonNumberAndLessonInactiveFalse(1, date, 1)).thenReturn(lessons);
+        ValidationException thrown = assertThrows(ValidationException.class, () -> {
+            lessonService.save(createLesson());
+        });
+        assertTrue(thrown.getMessage().contains("The room has already been busy in another lesson. Please choose another day or lesson number."));
+    }
+
+    @Test
+    void whenTeacherIsBusyValidateShouldThrowValidationException(){
+        LocalDate date = LocalDate.parse("2021-06-11");
+        List<Lesson> lessons = new ArrayList<>();
+        lessons.add(new Lesson());
+        when(lessonRepository.findByTeacherTeacherIdAndDateAndLessonNumberAndLessonInactiveFalse(1, date, 1)).thenReturn(lessons);
+        ValidationException thrown = assertThrows(ValidationException.class, () -> {
+            lessonService.save(createLesson());
+        });
+        assertTrue(thrown.getMessage().contains("The teacher has already been busy in another lesson. Please choose another day or lesson number."));
+    }
+
+    private Lesson createLesson(){
+        Group group = new Group(1, "Java", false);
+        Teacher teacher = new Teacher(1, "one", "one", false);
+        Room room = new Room(1, 101, 10, false);
+        return new Lesson(1, "Math", teacher, group, room, LocalDate.parse("2021-06-11"), 1);
     }
 }

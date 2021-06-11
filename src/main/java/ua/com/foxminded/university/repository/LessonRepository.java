@@ -39,7 +39,6 @@ public interface LessonRepository extends JpaRepository<Lesson, Integer> {
 
     List<Lesson> findByTeacherTeacherId(Integer teacherId);
 
-    // todo make tests
     List<Lesson> findByGroupGroupIdAndDateAndLessonNumberAndLessonInactiveFalse(int groupId, LocalDate date, int number);
 
     List<Lesson> findByTeacherTeacherIdAndDateAndLessonNumberAndLessonInactiveFalse(int teacherId, LocalDate date, int number);

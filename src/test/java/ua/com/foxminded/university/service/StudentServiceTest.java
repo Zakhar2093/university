@@ -96,10 +96,20 @@ class StudentServiceTest {
     }
 
     @Test
-    void whenGetByIdCatchRepositoryExceptionShouldThrowServiceException() {
+    void whenGetByIdGetUnexistIdShouldThrowServiceException() {
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
             studentService.findById(1);
         });
         assertTrue(thrown.getMessage().contains("Student with such id 1 does not exist"));
+    }
+
+    @Test
+    void whenDtoWithGroupNullMapToStudentShouldThrowServiceException(){
+        Optional<Group> optional = Optional.empty();
+        when(groupRepository.findById(1)).thenReturn(optional);
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            studentService.save(new StudentDto(1, "Josh", "Smith", 1, false));
+        });
+        assertTrue(thrown.getMessage().contains("Group with such id 1 does not exist"));
     }
 }

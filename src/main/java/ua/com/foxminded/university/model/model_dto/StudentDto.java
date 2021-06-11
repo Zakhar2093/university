@@ -19,7 +19,7 @@ public class StudentDto {
     public StudentDto() {
     }
 
-    public StudentDto(int studentId, String firstName, String lastName, int groupId, boolean studentInactive) {
+    public StudentDto(int studentId, String firstName, String lastName, Integer groupId, boolean studentInactive) {
         this.studentId = studentId;
         this.firstName = firstName;
         this.lastName = lastName;

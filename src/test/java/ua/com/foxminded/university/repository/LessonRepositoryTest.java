@@ -10,7 +10,6 @@ import ua.com.foxminded.university.DataSourceTestConfig;
 import ua.com.foxminded.university.model.*;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class LessonRepositoryTest {
 
-    private static final String FORMAT = "yyyy-MM-dd";
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(FORMAT);
+    private static final LocalDate date = LocalDate.parse("2121-01-20");
 
     private GroupRepository groupRepository;
     private LessonRepository lessonRepository;
@@ -41,7 +39,6 @@ class LessonRepositoryTest {
 
     @Test
     void getLessonByTeacherForDayShouldReturnCorrectData() {
-        LocalDate date = LocalDate.parse("2021-01-20");
         List<Lesson> allLessons = saveTestData();
 
         List<Lesson> expected = new ArrayList<>();
@@ -57,7 +54,6 @@ class LessonRepositoryTest {
 
     @Test
     void getLessonByTeacherForMonthShouldReturnCorrectData() {
-        LocalDate date = LocalDate.parse("2021-01-20");
         List<Lesson> allLessons = saveTestData();
 
         List<Lesson> expected = new ArrayList<>();
@@ -74,7 +70,6 @@ class LessonRepositoryTest {
 
     @Test
     void getLessonByGroupForDayShouldReturnCorrectData() {
-        LocalDate date = LocalDate.parse("2021-01-20");
         List<Lesson> allLessons = saveTestData();
 
         List<Lesson> expected = new ArrayList<>();
@@ -92,7 +87,6 @@ class LessonRepositoryTest {
 
     @Test
     void getLessonByGroupForMonthShouldReturnCorrectData() {
-        LocalDate date = LocalDate.parse("2021-01-20");
         List<Lesson> allLessons = saveTestData();
 
         List<Lesson> expected = new ArrayList<>();
@@ -148,6 +142,35 @@ class LessonRepositoryTest {
         assertEquals(expected, actual);
     }
 
+    @Test
+    void findByGroupGroupIdAndDateAndLessonNumberAndLessonInactiveFalseShouldReturnCorrectData(){
+        List<Lesson> lessons = saveTestData();
+        List<Lesson> expected = new ArrayList<>();
+        expected.add(lessons.get(0));
+        List<Lesson> actual = lessonRepository.findByGroupGroupIdAndDateAndLessonNumberAndLessonInactiveFalse(1, date, 1);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void findByTeacherTeacherIdAndDateAndLessonNumberAndLessonInactiveFalseShouldReturnCorrectData(){
+        List<Lesson> lessons = saveTestData();
+        List<Lesson> expected = new ArrayList<>();
+        expected.add(lessons.get(0));
+        expected.add(lessons.get(3));
+        List<Lesson> actual = lessonRepository.findByTeacherTeacherIdAndDateAndLessonNumberAndLessonInactiveFalse(1, date, 1);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void findByRoomRoomIdAndDateAndLessonNumberAndLessonInactiveFalseShouldReturnCorrectData(){
+        List<Lesson> lessons = saveTestData();
+        List<Lesson> expected = new ArrayList<>();
+        expected.add(lessons.get(0));
+        expected.add(lessons.get(6));
+        List<Lesson> actual = lessonRepository.findByRoomRoomIdAndDateAndLessonNumberAndLessonInactiveFalse(1, date, 1);
+        assertEquals(expected, actual);
+    }
+
     private List<Lesson> saveTestData(){
         Group group1 = new Group(1, "Java", false);
         Group group2 = new Group(2, "C++", false);
@@ -166,9 +189,9 @@ class LessonRepositoryTest {
         roomRepository.save(room1);
         roomRepository.save(room2);
 
-        LocalDate date1 = LocalDate.parse("2021-01-20", FORMATTER);
-        LocalDate date2 = LocalDate.parse("2021-02-21", FORMATTER);
-        LocalDate date3 = LocalDate.parse("2021-01-21", FORMATTER);
+        LocalDate date1 = LocalDate.parse("2121-01-20");
+        LocalDate date2 = LocalDate.parse("2121-02-21");
+        LocalDate date3 = LocalDate.parse("2121-01-21");
 
         List<Lesson> lessons = new ArrayList<>();
         lessons.add(new Lesson(1, "Math", teacher1, group1, room1, date1, 1));
