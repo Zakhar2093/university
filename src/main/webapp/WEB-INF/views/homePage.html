@@ -9,6 +9,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script th:src="@{/resources/js/selectDate.js}"></script>
 </head>
 <body>
 <nav class="navbar navbar-expand-sm bg-primary navbar-dark fixed-top">
@@ -88,12 +92,22 @@
         </div>
         <div class="form-group">
             <label for="datePicker">Date: </label>
-            <input type="text" class="form-control" id="datePicker" placeholder="Enter date" name="date" required>
+            <input type="text" class="form-control" id="datepicker" placeholder="Enter date" name="date" required>
         </div>
         <input class="btn btn-primary" type="submit" value="Submit">
     </form>
 </div>
-<script th:src="@{/resources/js/simplepicker.js}"></script>
-<script th:src="@{/resources/js/selectDate.js}"></script>
+<script>
+    $(function(){
+	$("#datepicker").datepicker({
+		minDate: 0
+	});
+});
+
+$.datepicker.regional['ru'] = {
+	dateFormat: 'yy-mm-dd'
+};
+$.datepicker.setDefaults($.datepicker.regional['ru']);
+</script>
 </body>
 </html>
