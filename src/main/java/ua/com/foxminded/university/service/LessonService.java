@@ -88,7 +88,6 @@ public class LessonService implements GenericService<Lesson, Integer>{
         lessonRepository.save(lesson);
     }
 
-    //todo fix it
     public List<Lesson> getLessonByTeacherIdForDay(int teacherId, LocalDate date) {
         return lessonRepository.getLessonByTeacherIdForDay(
                 teacherId,

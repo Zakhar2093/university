@@ -31,47 +31,40 @@
             <br/>
 
             <label>Select group: </label>
-            <input type="text" class="form-control" list="groups" th:field="*{groupId}">
-            <datalist id="groups" th:each="group: ${groups}">
-                <option th:each="group: ${groups}"
+            <select class="form-control" th:field="*{groupId}" required>
+                <option th:each="group : ${groups}"
+                        th:value="${group.getGroupId()}"
                         th:text="${group.getGroupName()}"
-                        th:value="${group.getGroupId()}">
-                </option>
-            </datalist>
+                ></option>
+            </select>
             <br/>
 
             <label>Select room: </label>
-            <input type="text" class="form-control" list="rooms" th:field="*{roomId}">
-            <datalist id="rooms" th:each="room: ${rooms}">
+            <select class="form-control" th:field="*{roomId}" required>
                 <option th:each="room: ${rooms}"
                         th:text="${room.getRoomNumber()}"
                         th:value="${room.getRoomId()}">
                 </option>
-            </datalist>
+            </select>
             <br/>
 
             <label>Select teacher: </label>
-            <input type="text" class="form-control" list="teachers" th:field="*{teacherId}">
-            <datalist id="teachers" th:each="teacher: ${teachers}">
+            <select class="form-control" th:field="*{teacherId}" required>
                 <option th:each="teacher: ${teachers}"
                         th:text="${teacher.getFirstName()} + ' ' + ${teacher.getLastName()}"
                         th:value="${teacher.getTeacherId()}">
                 </option>
-            </datalist>
+            </select>
             <br/>
 
             <label>Select Date: </label>
-            <input type="datetime" class="form-control" id="datepicker" th:field="*{date}">
+            <input type="text" class="form-control" id="datepicker" th:field="*{date}">
             <br/>
 
-            <label>Select Number: </label>
-            <select th:field="*{lessonNumber}" class="form-control" name="select" size="3" multiple>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
+            <label for="sel1" >Select Number: </label>
+            <select th:field="*{lessonNumber}" class="form-control" id="sel1">
+                <option th:each="i : ${#numbers.sequence(1, 6)}" th:value="${i}" th:text="${i}" th:selected="${i==3}">
+                </option>
             </select>
             <br/>
 

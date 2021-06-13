@@ -28,13 +28,14 @@
         <input type="text" class="form-control" th:field="*{lastName}" id="LastNameUpdate"/>
         <br/>
         <label for="LastNameUpdate">Select group : </label>
-        <input type="text" class="form-control" list="groups" th:field="*{groupId}">
-        <datalist id="groups" th:each="group: ${groups}">
-            <option th:each="group: ${groups}"
+
+        <select id="groups" class="form-control" th:field="*{groupId}" required>
+            <option th:each="group : ${groups}"
+                    th:value="${group.getGroupId()}"
                     th:text="${group.getGroupName()}"
-                    th:value="${group.getGroupId()}">
-            </option>
-        </datalist>
+            ></option>
+        </select>
+
         <br/>
         <input type="submit" class="btn btn-primary" value="Create!"/>
     </form>
