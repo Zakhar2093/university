@@ -43,7 +43,7 @@ public class GroupControllerTest {
 
     @Test
     void getAllShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        when(groupService.getAllActivated()).thenReturn(testData.getTestGroups());
+        when(groupService.findAll()).thenReturn(testData.getTestGroups());
 
         mockMvc.perform(get("/groups/"))
                 .andExpect(view().name("groups/index"))
@@ -52,18 +52,18 @@ public class GroupControllerTest {
 
     @Test
     void createShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        Group group = new Group();
+        Group group = createGroup();
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/groups/").flashAttr("group", group);
         mockMvc.perform(request)
                 .andExpect(view().name("redirect:/groups"));
 
-        verify(groupService, only()).create(group);
+        verify(groupService, only()).save(group);
     }
 
     @Test
     void updateShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        Group group = new Group();
-        when(groupService.getById(anyInt())).thenReturn(group);
+        Group group = createGroup();
+        when(groupService.findById(anyInt())).thenReturn(group);
 
         mockMvc.perform(get("/groups/{id}/edit", 2))
                 .andExpect(view().name("groups/update"))
@@ -73,12 +73,12 @@ public class GroupControllerTest {
     @Test
     void submitUpdateShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
         int expectedGroupId = 2;
-        Group group = new Group();
+        Group group = createGroup();
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.patch("/groups/{id}", expectedGroupId).flashAttr("group", group);
         mockMvc.perform(request)
                 .andExpect(view().name("redirect:/groups"));
 
-        verify(groupService, only()).update(group);
+        verify(groupService, only()).save(group);
         int actualGroupId = group.getGroupId();
         assertEquals(expectedGroupId, actualGroupId);
     }
@@ -89,5 +89,9 @@ public class GroupControllerTest {
                 .andExpect(view().name("redirect:/groups"));
 
         verify(groupService, only()).deactivate(anyInt());
+    }
+
+    private Group createGroup(){
+        return new Group(1, "Java", false);
     }
 }

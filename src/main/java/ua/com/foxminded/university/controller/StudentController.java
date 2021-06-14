@@ -3,11 +3,14 @@ package ua.com.foxminded.university.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ua.com.foxminded.university.model.model_dto.StudentDto;
-import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.StudentService;
+
+import javax.validation.Valid;
+import javax.validation.ValidationException;
 
 @Controller
 public class StudentController {
@@ -22,34 +25,40 @@ public class StudentController {
 
     @GetMapping("/students")
     public String getAll(Model model) {
-        model.addAttribute("students", studentService.getAllActivated());
-        model.addAttribute("groups", groupService.getAllActivated());
+        model.addAttribute("students", studentService.findAll());
+        model.addAttribute("groups", groupService.findAll());
         return "students/index";
     }
 
     @GetMapping("/students/add")
     public String create(@ModelAttribute("studentDto") StudentDto studentDto, Model model){
-        model.addAttribute("groups", groupService.getAllActivated());
+        model.addAttribute("groups", groupService.findAll());
         return "students/add";
     }
 
     @PostMapping("/students")
-    public String submitCreate(@ModelAttribute("studentDto") StudentDto studentDto) {
-        studentService.create(studentDto);
+    public String submitCreate(@Valid @ModelAttribute("studentDto") StudentDto studentDto, BindingResult result) {
+        if(result.hasErrors()){
+            throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
+        }
+        studentService.save(studentDto);
         return "redirect:/students";
     }
 
     @GetMapping("/students/{id}/update")
     public String update(Model model, @PathVariable("id") int id) {
-        model.addAttribute("groups", groupService.getAllActivated());
-        model.addAttribute("studentDto", studentService.getDtoById(id));
+        model.addAttribute("groups", groupService.findAll());
+        model.addAttribute("studentDto", studentService.findDtoById(id));
         return "students/update";
     }
 
     @PatchMapping("/students/{id}")
-    public String submitUpdate(@ModelAttribute("studentDto") StudentDto studentDto, @PathVariable("id") int id) {
+    public String submitUpdate(@Valid @ModelAttribute("studentDto") StudentDto studentDto, BindingResult result, @PathVariable("id") int id) {
+        if(result.hasErrors()){
+            throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
+        }
         studentDto.setStudentId(id);
-        studentService.update(studentDto);
+        studentService.save(studentDto);
         return "redirect:/students";
     }
 
@@ -61,7 +70,7 @@ public class StudentController {
 
     @GetMapping("groups/{id}/students")
     public String showStudentsInGroup(Model model, @PathVariable("id") int id) {
-        model.addAttribute("group", groupService.getById(id));
+        model.addAttribute("group", groupService.findById(id));
         model.addAttribute("students", studentService.getStudentsByGroupId(id));
         return "students/index";
     }

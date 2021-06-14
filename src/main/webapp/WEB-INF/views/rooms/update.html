@@ -19,10 +19,13 @@
     <br/>
     <form th:method="PATCH" th:action="@{/rooms/{id}(id=${room.getRoomId()})}" th:object="${room}">
         <div class="form-group">
-            <label for="roomNumber">Enter name: </label>
-            <input class="form-control" type="text" th:field="*{roomNumber}" id="roomNumber"/>
+            <label for="roomNumberUpdate">Enter number of room: </label>
+            <input type="text" class="form-control" th:field="*{roomNumber}" id="roomNumberUpdate"/>
             <br/>
-            <input class="btn btn-primary" type="submit" value="Update!"/>
+            <label for="roomCapacityUpdate">Enter capacity of room: </label>
+            <input type="text" class="form-control" th:field="*{roomCapacity}" id="roomCapacityUpdate"/>
+            <br/>
+            <input type="submit" class="btn btn-primary" value="Create!"/>
         </div>
     </form>
 </div>

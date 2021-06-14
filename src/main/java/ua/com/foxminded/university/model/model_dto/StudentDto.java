@@ -1,16 +1,25 @@
 package ua.com.foxminded.university.model.model_dto;
 
+import ua.com.foxminded.university.annotation.NameConstraint;
+
 public class StudentDto {
+
     private int studentId;
+
+    @NameConstraint
     private String firstName;
+
+    @NameConstraint
     private String lastName;
+
     private Integer groupId;
+
     private boolean studentInactive;
 
     public StudentDto() {
     }
 
-    public StudentDto(int studentId, String firstName, String lastName, int groupId, boolean studentInactive) {
+    public StudentDto(int studentId, String firstName, String lastName, Integer groupId, boolean studentInactive) {
         this.studentId = studentId;
         this.firstName = firstName;
         this.lastName = lastName;

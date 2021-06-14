@@ -3,6 +3,7 @@ package ua.com.foxminded.university.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ua.com.foxminded.university.model.Lesson;
 import ua.com.foxminded.university.model.model_dto.LessonDto;
@@ -11,14 +12,16 @@ import ua.com.foxminded.university.service.LessonService;
 import ua.com.foxminded.university.service.RoomService;
 import ua.com.foxminded.university.service.TeacherService;
 
-import java.time.LocalDateTime;
+import javax.validation.Valid;
+import javax.validation.ValidationException;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Controller
 public class LessonController {
 
-    private static final String FORMAT = "dd MM yyyy hh:mm a";
+    private static final String FORMAT = "yyyy-MM-dd";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(FORMAT);
 
     private LessonService lessonService;
@@ -39,40 +42,46 @@ public class LessonController {
 
     @GetMapping("/lessons")
     public String getAll(Model model) {
-        model.addAttribute("lessons", lessonService.getAllActivated());
-        model.addAttribute("groups", groupService.getAllActivated());
-        model.addAttribute("rooms", roomService.getAllActivated());
-        model.addAttribute("teachers", teacherService.getAllActivated());
+        model.addAttribute("lessons", lessonService.findAll());
+        model.addAttribute("groups", groupService.findAll());
+        model.addAttribute("rooms", roomService.findAll());
+        model.addAttribute("teachers", teacherService.findAll());
         return "lessons/index";
     }
 
     @GetMapping("/lessons/add")
     public String create(@ModelAttribute("lessonDto") LessonDto lessonDto, Model model){
-        model.addAttribute("groups", groupService.getAllActivated());
-        model.addAttribute("rooms", roomService.getAllActivated());
-        model.addAttribute("teachers", teacherService.getAllActivated());
+        model.addAttribute("groups", groupService.findAll());
+        model.addAttribute("rooms", roomService.findAll());
+        model.addAttribute("teachers", teacherService.findAll());
         return "lessons/add";
     }
 
     @PostMapping("/lessons")
-    public String submitCreate(@ModelAttribute("lessonDto") LessonDto lessonDto) {
-        lessonService.create(lessonDto);
+    public String submitCreate(@Valid @ModelAttribute("lessonDto") LessonDto lessonDto, BindingResult result) {
+        if(result.hasErrors()){
+            throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
+        }
+        lessonService.save(lessonDto);
         return "redirect:/lessons";
     }
 
     @GetMapping("/lessons/{id}/edit")
     public String update(Model model, @PathVariable("id") int id) {
-        model.addAttribute("groups", groupService.getAllActivated());
-        model.addAttribute("rooms", roomService.getAllActivated());
-        model.addAttribute("teachers", teacherService.getAllActivated());
-        model.addAttribute("lessonDto", lessonService.getDtoById(id));
+        model.addAttribute("groups", groupService.findAll());
+        model.addAttribute("rooms", roomService.findAll());
+        model.addAttribute("teachers", teacherService.findAll());
+        model.addAttribute("lessonDto", lessonService.findDtoById(id));
         return "lessons/update";
     }
 
     @PatchMapping("/lessons/{id}")
-    public String submitUpdate(@ModelAttribute("lessonDto") LessonDto lessonDto, @PathVariable("id") int id) {
+    public String submitUpdate(@Valid @ModelAttribute("lessonDto") LessonDto lessonDto, @PathVariable("id") int id, BindingResult result) {
+        if(result.hasErrors()){
+            throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
+        }
         lessonDto.setLessonId(id);
-        lessonService.update(lessonDto);
+        lessonService.save(lessonDto);
         return "redirect:/lessons";
     }
 
@@ -88,16 +97,16 @@ public class LessonController {
                               @RequestParam("duration") String duration,
                               @RequestParam("id") int id,
                               @RequestParam("date") String date){
-        LocalDateTime localDateTime = LocalDateTime.parse(date, FORMATTER);
+        LocalDate localDate = LocalDate.parse(date, FORMATTER);
         List<Lesson> lessons = null;
         if (entity.equals("Student") && duration.equals("Day")){
-            lessons = lessonService.getLessonByStudentIdForDay(id, localDateTime);
+            lessons = lessonService.getLessonByStudentIdForDay(id, localDate);
         } else if (entity.equals("Student") && duration.equals("Month")){
-            lessons = lessonService.getLessonByStudentIdForMonth(id, localDateTime);
+            lessons = lessonService.getLessonByStudentIdForMonth(id, localDate);
         } else if (entity.equals("Teacher") && duration.equals("Day")){
-            lessons = lessonService.getLessonByTeacherIdForDay(id, localDateTime);
+            lessons = lessonService.getLessonByTeacherIdForDay(id, localDate);
         } else if (entity.equals("Teacher") && duration.equals("Month")){
-            lessons = lessonService.getLessonByTeacherIdForMonth(id, localDateTime);
+            lessons = lessonService.getLessonByTeacherIdForMonth(id, localDate);
         }
         model.addAttribute("lessons", lessons);
         return "lessons/index";
@@ -105,28 +114,28 @@ public class LessonController {
 
     @GetMapping("teachers/{id}/lessons")
     public String showLessonsByTeacher(Model model, @PathVariable("id") int id) {
-        model.addAttribute("teacher", teacherService.getById(id));
+        model.addAttribute("teacher", teacherService.findById(id));
         model.addAttribute("lessons", lessonService.getLessonsByTeacherId(id));
-        model.addAttribute("rooms", roomService.getAllActivated());
-        model.addAttribute("groups", groupService.getAllActivated());
+        model.addAttribute("rooms", roomService.findAll());
+        model.addAttribute("groups", groupService.findAll());
         return "lessons/index";
     }
 
     @GetMapping("rooms/{id}/lessons")
     public String showLessonsByRoom(Model model, @PathVariable("id") int id) {
-        model.addAttribute("room", roomService.getById(id));
+        model.addAttribute("room", roomService.findById(id));
         model.addAttribute("lessons", lessonService.getLessonsByRoomId(id));
-        model.addAttribute("teachers", teacherService.getAllActivated());
-        model.addAttribute("groups", groupService.getAllActivated());
+        model.addAttribute("teachers", teacherService.findAll());
+        model.addAttribute("groups", groupService.findAll());
         return "lessons/index";
     }
 
     @GetMapping("groups/{id}/lessons")
     public String showLessonsByGroup(Model model, @PathVariable("id") int id) {
-        model.addAttribute("group", groupService.getById(id));
+        model.addAttribute("group", groupService.findById(id));
         model.addAttribute("lessons", lessonService.getLessonsByGroupId(id));
-        model.addAttribute("rooms", roomService.getAllActivated());
-        model.addAttribute("teachers", teacherService.getAllActivated());
+        model.addAttribute("rooms", roomService.findAll());
+        model.addAttribute("teachers", teacherService.findAll());
         return "lessons/index";
     }
 }

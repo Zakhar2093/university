@@ -11,7 +11,9 @@ import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.model_dto.LessonDto;
 import ua.com.foxminded.university.repository.*;
 
-import java.time.LocalDateTime;
+import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -19,7 +21,7 @@ import java.util.List;
 @Transactional
 public class LessonService implements GenericService<Lesson, Integer>{
 
-    private static final String FORMAT = "dd MM yyyy hh:mm a";
+    private static final String FORMAT = "yyyy-MM-dd";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(FORMAT);
 
     private LessonRepository lessonRepository;
@@ -41,46 +43,38 @@ public class LessonService implements GenericService<Lesson, Integer>{
         this.studentRepository = studentRepository;
     }
 
-    public void create(Lesson lesson) {
-        lessonRepository.save(lesson);
+    public void save(Lesson lesson) {
+        try {
+            validate(lesson);
+            lessonRepository.save(lesson);
+        } catch (ConstraintViolationException e) {
+            throw new ValidationException(e.getConstraintViolations().stream().findFirst().get().getMessage());
+        }
     }
 
-    public void create(LessonDto lessonDto) {
+    public void save(LessonDto lessonDto) {
         Lesson lesson = mapDtoToLesson(lessonDto);
-        lessonRepository.save(lesson);
+        save(lesson);
     }
 
-    public List<Lesson> getAll(){
-        return lessonRepository.findAll();
-    }
-
-    public List<Lesson> getAllActivated(){
+    public List<Lesson> findAll(){
         List<Lesson> lessons = lessonRepository.findAll();
         lessons.removeIf(p -> (p.isLessonInactive()));
         return lessons;
     }
 
-    public Lesson getById(Integer lessonId) {
+    public Lesson findById(Integer lessonId) {
         return lessonRepository.findById(lessonId)
                 .orElseThrow(() -> new ServiceException(
                         String.format("Lesson with such id %d does not exist", lessonId)));
     }
 
-    public LessonDto getDtoById(Integer lessonId) {
-        return mapLessonToDto(getById(lessonId));
-    }
-
-    public void update(Lesson lesson) {
-        lessonRepository.save(lesson);
-    }
-
-    public void update(LessonDto lessonDto) {
-        Lesson lesson = mapDtoToLesson(lessonDto);
-        lessonRepository.save(lesson);
+    public LessonDto findDtoById(Integer lessonId) {
+        return mapLessonToDto(findById(lessonId));
     }
 
     public void deactivate(Integer lessonId) {
-        Lesson lesson = getById(lessonId);
+        Lesson lesson = findById(lessonId);
         lesson.setRoom(null);
         lesson.setTeacher(null);
         lesson.setGroup(null);
@@ -89,12 +83,12 @@ public class LessonService implements GenericService<Lesson, Integer>{
     }
 
     public void activate(Integer lessonId) {
-        Lesson lesson = getById(lessonId);
+        Lesson lesson = findById(lessonId);
         lesson.setLessonInactive(false);
         lessonRepository.save(lesson);
     }
 
-    public List<Lesson> getLessonByTeacherIdForDay(int teacherId, LocalDateTime date) {
+    public List<Lesson> getLessonByTeacherIdForDay(int teacherId, LocalDate date) {
         return lessonRepository.getLessonByTeacherIdForDay(
                 teacherId,
                 date.getYear(),
@@ -102,14 +96,14 @@ public class LessonService implements GenericService<Lesson, Integer>{
                 date.getDayOfMonth());
     }
 
-    public List<Lesson> getLessonByTeacherIdForMonth(int teacherId, LocalDateTime date) {
+    public List<Lesson> getLessonByTeacherIdForMonth(int teacherId, LocalDate date) {
         return lessonRepository.getLessonByTeacherIdForMonth(
                 teacherId,
                 date.getYear(),
                 date.getMonthValue());
     }
 
-    public List<Lesson> getLessonByStudentIdForDay(int studentId, LocalDateTime date) {
+    public List<Lesson> getLessonByStudentIdForDay(int studentId, LocalDate date) {
         Group group = studentRepository.findById(studentId)
                 .orElseThrow(() -> new ServiceException(
                         String.format("Student with such id %d does not exist", studentId))).getGroup();
@@ -120,7 +114,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
                 date.getDayOfMonth());
     }
 
-    public List<Lesson> getLessonByStudentIdForMonth(int studentId, LocalDateTime date) {
+    public List<Lesson> getLessonByStudentIdForMonth(int studentId, LocalDate date) {
         Group group = studentRepository.findById(studentId)
                 .orElseThrow(() -> new ServiceException(
                         String.format("Student with such id %d does not exist", studentId))).getGroup();
@@ -142,28 +136,29 @@ public class LessonService implements GenericService<Lesson, Integer>{
         return lessonRepository.findByRoomRoomId(roomId);
     }
 
-    private Lesson mapDtoToLesson(LessonDto dto){
+    private Lesson mapDtoToLesson(LessonDto lessonDto){
         Lesson lesson = new Lesson();
-        lesson.setLessonId(dto.getLessonId());
-        lesson.setLessonName(dto.getLessonName());
+        lesson.setLessonId(lessonDto.getLessonId());
+        lesson.setLessonName(lessonDto.getLessonName());
 
-        Group group = groupRepository.findById(dto.getGroupId())
+        Group group = lessonDto.getGroupId() == null ? null : groupRepository.findById(lessonDto.getGroupId())
                 .orElseThrow(() -> new ServiceException(
-                    String.format("Group with such id %d does not exist", dto.getGroupId())));
+                    String.format("Group with such id %d does not exist", lessonDto.getGroupId())));
         lesson.setGroup(group);
 
-        Teacher teacher = teacherRepository.findById(dto.getTeacherId())
+        Teacher teacher = lessonDto.getTeacherId() == null ? null : teacherRepository.findById(lessonDto.getTeacherId())
                 .orElseThrow(() -> new ServiceException(
-                    String.format("Teacher with such id %d does not exist", dto.getTeacherId())));
+                    String.format("Teacher with such id %d does not exist", lessonDto.getTeacherId())));
         lesson.setTeacher(teacher);
 
-        Room room = roomRepository.findById(dto.getRoomId())
+        Room room = lessonDto.getRoomId() == null ? null : roomRepository.findById(lessonDto.getRoomId())
                 .orElseThrow(() -> new ServiceException(
-                    String.format("Room with such id %d does not exist", dto.getRoomId())));
+                    String.format("Room with such id %d does not exist", lessonDto.getRoomId())));
         lesson.setRoom(room);
 
-        lesson.setLessonInactive(dto.isLessonInactive());
-        lesson.setDate(LocalDateTime.parse(dto.getDate(), FORMATTER));
+        lesson.setLessonInactive(lessonDto.isLessonInactive());
+        lesson.setDate(LocalDate.parse(lessonDto.getDate(), FORMATTER));
+        lesson.setLessonNumber(lessonDto.getLessonNumber());
         return lesson;
     }
 
@@ -176,6 +171,25 @@ public class LessonService implements GenericService<Lesson, Integer>{
         dto.setRoomId(lesson.getRoom() == null ? null : lesson.getRoom().getRoomId());
         dto.setTeacherId(lesson.getTeacher() == null ? null : lesson.getTeacher().getTeacherId());
         dto.setDate(lesson.getDate().toString());
+        dto.setLessonNumber(lesson.getLessonNumber());
         return dto;
+    }
+
+    private void validate(Lesson lesson){
+        int roomId = lesson.getRoom() == null ? 0 : lesson.getRoom().getRoomId();
+        int groupId = lesson.getGroup() == null ? 0 : lesson.getGroup().getGroupId();
+        int teacherId = lesson.getTeacher() == null ? 0 : lesson.getTeacher().getTeacherId();
+        int number = lesson.getLessonNumber();
+        LocalDate date = lesson.getDate();
+
+        if (!lessonRepository.findByGroupGroupIdAndDateAndLessonNumberAndLessonInactiveFalse(groupId, date, number).isEmpty()){
+            throw new ValidationException("The group has already been busy in another lesson. Please choose another day or lesson number.");
+        }
+        if (!lessonRepository.findByRoomRoomIdAndDateAndLessonNumberAndLessonInactiveFalse(roomId, date, number).isEmpty()){
+            throw new ValidationException("The room has already been busy in another lesson. Please choose another day or lesson number.");
+        }
+        if (!lessonRepository.findByTeacherTeacherIdAndDateAndLessonNumberAndLessonInactiveFalse(teacherId, date, number).isEmpty()){
+            throw new ValidationException("The teacher has already been busy in another lesson. Please choose another day or lesson number.");
+        }
     }
 }

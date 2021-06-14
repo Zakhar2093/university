@@ -11,7 +11,7 @@ import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lesson;
 import ua.com.foxminded.university.model.Student;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -38,11 +38,11 @@ class GroupRepositoryTest {
         groupRepository.save(group1);
         Group group2 = new Group(2, "one",  false);
         groupRepository.save(group2);
-        Lesson lesson1 = new Lesson(1, "Math", null, group1, null, LocalDateTime.now(), false);
+        Lesson lesson1 = new Lesson(1, "Math", null, group1, null, LocalDate.now(), 1);
         lessonRepository.save(lesson1);
-        Lesson lesson2 = new Lesson(2, "Bio", null, group2, null, LocalDateTime.now(), false);
+        Lesson lesson2 = new Lesson(2, "Bio", null, group2, null, LocalDate.now(), 1);
         lessonRepository.save(lesson2);
-        Lesson lesson3 = new Lesson(3, "History", null, group1, null, LocalDateTime.now(), false);
+        Lesson lesson3 = new Lesson(3, "History", null, group1, null, LocalDate.now(), 1);
         lessonRepository.save(lesson3);
 
         groupRepository.removeGroupFromAllLessons(group1.getGroupId());

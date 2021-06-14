@@ -37,14 +37,14 @@ class StudentServiceTest {
     private StudentService studentService;
 
     @Test
-    void createShouldInvokeOnlyOnceWhenTakesStudent() {
-        studentService.create(new Student());
+    void saveShouldInvokeOnlyOnceWhenTakesStudent() {
+        studentService.save(new Student());
         verify(studentRepository, only()).save(any(Student.class));
     }
 
     @Test
-    void createShouldInvokeOnlyOnceWhenTakesStudentDto() {
-        studentService.create(createStudentDto());
+    void saveShouldInvokeOnlyOnceWhenTakesStudentDto() {
+        studentService.save(createStudentDto());
         verify(studentRepository, only()).save(any(Student.class));
     }
 
@@ -55,42 +55,24 @@ class StudentServiceTest {
     }
 
     @Test
-    void getAllShouldInvokeOnlyOnce() {
-        studentService.getAll();
+    void findAllShouldInvokeOnlyOnce() {
+        studentService.findAll();
         verify(studentRepository, only()).findAll();
     }
 
     @Test
-    void getAllActivatedShouldInvokeOnlyOnce() {
-        studentService.getAllActivated();
-        verify(studentRepository, only()).findAll();
-    }
-
-    @Test
-    void getByIdShouldInvokeOnlyOnce() {
+    void findByIdShouldInvokeOnlyOnce() {
         when(studentRepository.findById(1)).thenReturn(Optional.of(new Student()));
-        studentService.getById(1);
+        studentService.findById(1);
         verify(studentRepository, only()).findById(anyInt());
     }
 
     @Test
-    void getDtoByIdShouldInvokeOnlyOnce() {
+    void findDtoByIdShouldInvokeOnlyOnce() {
         Student student = new Student(1, "one", "two", new Group(), false);
         when(studentRepository.findById(anyInt())).thenReturn(Optional.of(student));
-        studentService.getDtoById(1);
+        studentService.findDtoById(1);
         verify(studentRepository, only()).findById(anyInt());
-    }
-
-    @Test
-    void updateShouldInvokeOnlyOnceWhenTakesStudent() {
-        studentService.update(new Student());
-        verify(studentRepository, only()).save(any(Student.class));
-    }
-
-    @Test
-    void updateShouldInvokeOnlyOnceWhenTakesStudentDto() {
-        studentService.update(createStudentDto());
-        verify(studentRepository, only()).save(any(Student.class));
     }
 
     @Test
@@ -114,10 +96,20 @@ class StudentServiceTest {
     }
 
     @Test
-    void whenGetByIdCatchRepositoryExceptionShouldThrowServiceException() {
+    void whenGetByIdGetUnexistIdShouldThrowServiceException() {
         ServiceException thrown = assertThrows(ServiceException.class, () -> {
-            studentService.getById(1);
+            studentService.findById(1);
         });
         assertTrue(thrown.getMessage().contains("Student with such id 1 does not exist"));
+    }
+
+    @Test
+    void whenDtoWithGroupNullMapToStudentShouldThrowServiceException(){
+        Optional<Group> optional = Optional.empty();
+        when(groupRepository.findById(1)).thenReturn(optional);
+        ServiceException thrown = assertThrows(ServiceException.class, () -> {
+            studentService.save(new StudentDto(1, "Josh", "Smith", 1, false));
+        });
+        assertTrue(thrown.getMessage().contains("Group with such id 1 does not exist"));
     }
 }

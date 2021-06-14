@@ -45,8 +45,8 @@ public class HelloPageControllerTest {
 
     @Test
     void getAllShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        when(studentService.getAllActivated()).thenReturn(getTestStudent());
-        when(teacherService.getAllActivated()).thenReturn(getTestTeachers());
+        when(studentService.findAll()).thenReturn(getTestStudent());
+        when(teacherService.findAll()).thenReturn(getTestTeachers());
 
         mockMvc.perform(get("/"))
                 .andExpect(view().name("homePage"))

@@ -43,7 +43,7 @@ public class RoomControllerTest {
 
     @Test
     void getAllShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        when(roomService.getAllActivated()).thenReturn(testData.getTestRooms());
+        when(roomService.findAll()).thenReturn(testData.getTestRooms());
 
         mockMvc.perform(get("/rooms/"))
                 .andExpect(view().name("rooms/index"))
@@ -52,18 +52,18 @@ public class RoomControllerTest {
 
     @Test
     void createShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        Room room = new Room();
+        Room room = createRoom();
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/rooms/").flashAttr("room", room);
         mockMvc.perform(request)
                 .andExpect(view().name("redirect:/rooms"));
 
-        verify(roomService, only()).create(room);
+        verify(roomService, only()).save(room);
     }
 
     @Test
     void updateShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        Room room = new Room();
-        when(roomService.getById(anyInt())).thenReturn(room);
+        Room room = createRoom();
+        when(roomService.findById(anyInt())).thenReturn(room);
 
         mockMvc.perform(get("/rooms/{id}/edit", 2))
                 .andExpect(view().name("rooms/update"))
@@ -73,12 +73,12 @@ public class RoomControllerTest {
     @Test
     void submitUpdateShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
         int expectedRoomId = 2;
-        Room room = new Room();
+        Room room = createRoom();
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.patch("/rooms/{id}", expectedRoomId).flashAttr("room", room);
         mockMvc.perform(request)
                 .andExpect(view().name("redirect:/rooms"));
 
-        verify(roomService, only()).update(room);
+        verify(roomService, only()).save(room);
         int actualRoomId = room.getRoomId();
         assertEquals(expectedRoomId, actualRoomId);
     }
@@ -89,5 +89,9 @@ public class RoomControllerTest {
                 .andExpect(view().name("redirect:/rooms"));
 
         verify(roomService, only()).deactivate(anyInt());
+    }
+
+    private Room createRoom(){
+        return new Room(1, 101, 30, false);
     }
 }

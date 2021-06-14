@@ -1,6 +1,7 @@
 package ua.com.foxminded.university.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 @Entity
@@ -11,6 +12,7 @@ public class Room {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int roomId;
 
+    @Positive(message = "Room number must be positive")
     @Column(name="room_number")
     private int roomNumber;
 
@@ -19,29 +21,20 @@ public class Room {
 
     @Column(name="room_inactive")
     private boolean roomInactive;
+
+    @Positive(message = "Room capacity must be positive")
+    @Column(name="room_capacity")
+    private int roomCapacity;
     
     public Room() {
         super();
     }
 
-    public Room(int roomId, int roomNumber) {
-        this.roomId = roomId;
-        this.roomNumber = roomNumber;
-    }
-
-    public Room(int roomId, int roomNumber, boolean roomInactive) {
-        super();
+    public Room(int roomId, int roomNumber, int roomCapacity, boolean roomInactive) {
         this.roomId = roomId;
         this.roomNumber = roomNumber;
         this.roomInactive = roomInactive;
-    }
-
-    public Room(int roomId, int roomNumber, List<Lesson> lessons, boolean roomInactive) {
-        super();
-        this.roomId = roomId;
-        this.roomNumber = roomNumber;
-        this.lessons = lessons;
-        this.roomInactive = roomInactive;
+        this.roomCapacity = roomCapacity;
     }
 
     public boolean isRoomInactive() {
@@ -76,14 +69,21 @@ public class Room {
         this.lessons = lessons;
     }
 
+    public int getRoomCapacity() {
+        return roomCapacity;
+    }
+
+    public void setRoomCapacity(int roomCapacity) {
+        this.roomCapacity = roomCapacity;
+    }
+
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((lessons == null) ? 0 : lessons.hashCode());
-        result = prime * result + roomId;
-        result = prime * result + (roomInactive ? 1231 : 1237);
-        result = prime * result + roomNumber;
+        int result = roomId;
+        result = 31 * result + roomNumber;
+        result = 31 * result + (lessons != null ? lessons.hashCode() : 0);
+        result = 31 * result + (roomInactive ? 1 : 0);
+        result = 31 * result + roomCapacity;
         return result;
     }
 
@@ -106,12 +106,18 @@ public class Room {
             return false;
         if (roomNumber != other.roomNumber)
             return false;
+        if (roomCapacity != other.roomCapacity) return false;
         return true;
     }
 
     @Override
     public String toString() {
-        return "Room [roomId=" + roomId + ", roomNumber=" + roomNumber + ", lessons=" + lessons + ", roomInactive="
-                + roomInactive + "]";
+        return "Room{" +
+                "roomId=" + roomId +
+                ", roomNumber=" + roomNumber +
+                ", lessons=" + lessons +
+                ", roomInactive=" + roomInactive +
+                ", roomCapacity=" + roomCapacity +
+                '}';
     }
 }

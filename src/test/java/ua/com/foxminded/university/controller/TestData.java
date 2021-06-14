@@ -3,21 +3,21 @@ package ua.com.foxminded.university.controller;
 import org.springframework.stereotype.Component;
 import ua.com.foxminded.university.model.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class TestData {
-    private static final String FORMAT = "dd MM yyyy hh:mm a";
+    private static final String FORMAT = "yyyy-MM-dd";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(FORMAT);
 
     protected List<Room> getTestRooms() {
         List<Room> rooms = new ArrayList<>();
-        rooms.add(new Room(1, 101));
-        rooms.add(new Room(2, 102));
-        rooms.add(new Room(3, 103));
+        rooms.add(new Room(1, 101, 10, false));
+        rooms.add(new Room(2, 102, 10, false));
+        rooms.add(new Room(3, 103, 10, false));
         return rooms;
     }
 
@@ -41,14 +41,14 @@ public class TestData {
         List<Teacher> teachers = getTestTeachers();
         List<Group> groups = getTestGroups();
         List<Room> rooms = getTestRooms();
-        LocalDateTime date = LocalDateTime.parse("11 04 2021 12:44 AM", FORMATTER);
+        LocalDate date = LocalDate.parse("2021-11-04", FORMATTER);
 
         List<Lesson> lessons = new ArrayList<>();
-        lessons.add(new Lesson(1, "Math", teachers.get(1), groups.get(0), rooms.get(0), date, false));
-        lessons.add(new Lesson(2, "History", teachers.get(1), groups.get(1), rooms.get(0), date, false));
-        lessons.add(new Lesson(3, "English", teachers.get(2), groups.get(2), rooms.get(2), date, false));
-        lessons.add(new Lesson(4, "Math", teachers.get(0), groups.get(1), rooms.get(1), date, false));
-        lessons.add(new Lesson(5, "Bio", teachers.get(0), groups.get(2), rooms.get(1), date, false));
+        lessons.add(new Lesson(1, "Math", teachers.get(1), groups.get(0), rooms.get(0), date, 1));
+        lessons.add(new Lesson(2, "History", teachers.get(1), groups.get(1), rooms.get(0), date, 1));
+        lessons.add(new Lesson(3, "English", teachers.get(2), groups.get(2), rooms.get(2), date, 1));
+        lessons.add(new Lesson(4, "Math", teachers.get(0), groups.get(1), rooms.get(1), date, 1));
+        lessons.add(new Lesson(5, "Bio", teachers.get(0), groups.get(2), rooms.get(1), date, 1));
         return lessons;
     }
 

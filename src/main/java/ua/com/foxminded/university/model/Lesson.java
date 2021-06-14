@@ -1,8 +1,17 @@
 package ua.com.foxminded.university.model;
 
-import javax.persistence.*;
-import java.time.LocalDateTime;
+import ua.com.foxminded.university.annotation.NameConstraint;
+import ua.com.foxminded.university.annotation.RoomCapacityConstraint;
 
+import javax.persistence.*;
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.Positive;
+import java.time.LocalDate;
+
+
+@RoomCapacityConstraint(
+        group = "group",
+        room = "room")
 @Entity
 @Table(name="lessons", schema = "university")
 public class Lesson {
@@ -12,6 +21,7 @@ public class Lesson {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int lessonId;
 
+    @NameConstraint
     @Column(name = "lesson_name")
     private String lessonName;
 
@@ -27,8 +37,13 @@ public class Lesson {
     @JoinColumn(name = "room_id")
     private Room room;
 
+    @FutureOrPresent(message = "Lesson date can not be past")
     @Column(name = "lesson_date")
-    private LocalDateTime date;
+    private LocalDate date;
+
+    @Positive(message = "Lesson number must be positive")
+    @Column(name = "lesson_number")
+    private int lessonNumber;
 
     @Column(name = "lesson_inactive")
     private boolean lessonInactive;
@@ -37,8 +52,13 @@ public class Lesson {
         super();
     }
 
-    public Lesson(int lessonId, String lessonName, Teacher teacher, Group group, Room room, LocalDateTime date,
-            boolean lessonInactive) {
+    public Lesson(int lessonId,
+                  String lessonName,
+                  Teacher teacher,
+                  Group group,
+                  Room room,
+                  LocalDate date,
+                  int lessonNumber) {
         super();
         this.lessonId = lessonId;
         this.lessonName = lessonName;
@@ -46,7 +66,7 @@ public class Lesson {
         this.group = group;
         this.room = room;
         this.date = date;
-        this.lessonInactive = lessonInactive;
+        this.lessonNumber = lessonNumber;
     }
 
     @Override
@@ -61,21 +81,20 @@ public class Lesson {
                 ", group=" + groupId +
                 ", room=" + roomId +
                 ", date=" + date +
+                ", lessonNumber=" + lessonNumber +
                 ", lessonInactive=" + lessonInactive +
                 '}';
     }
-
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((date == null) ? 0 : date.hashCode());
-        result = prime * result + ((group == null) ? 0 : group.hashCode());
-        result = prime * result + lessonId;
-        result = prime * result + (lessonInactive ? 1231 : 1237);
-        result = prime * result + ((lessonName == null) ? 0 : lessonName.hashCode());
-        result = prime * result + ((room == null) ? 0 : room.hashCode());
-        result = prime * result + ((teacher == null) ? 0 : teacher.hashCode());
+        int result = lessonId;
+        result = 31 * result + (lessonName != null ? lessonName.hashCode() : 0);
+        result = 31 * result + (teacher != null ? teacher.hashCode() : 0);
+        result = 31 * result + (group != null ? group.hashCode() : 0);
+        result = 31 * result + (room != null ? room.hashCode() : 0);
+        result = 31 * result + (date != null ? date.hashCode() : 0);
+        result = 31 * result + lessonNumber;
+        result = 31 * result + (lessonInactive ? 1 : 0);
         return result;
     }
 
@@ -88,11 +107,17 @@ public class Lesson {
         if (getClass() != obj.getClass())
             return false;
         Lesson other = (Lesson) obj;
+        if (lessonNumber != other.lessonNumber) return false;
+        if (lessonId != other.lessonId) return false;
+        if (lessonInactive != other.lessonInactive) return false;
+        if (lessonName != null ? !lessonName.equals(other.lessonName) : other.lessonName != null) return false;
+
         if (date == null) {
             if (other.date != null)
                 return false;
         } else if (!date.equals(other.date))
             return false;
+
         if (group == null) {
             if (other.group != null)
                 return false;
@@ -100,15 +125,7 @@ public class Lesson {
             if (group.getGroupId() != other.group.getGroupId())
                 return false;
         }
-        if (lessonId != other.lessonId)
-            return false;
-        if (lessonInactive != other.lessonInactive)
-            return false;
-        if (lessonName == null) {
-            if (other.lessonName != null)
-                return false;
-        } else if (!lessonName.equals(other.lessonName))
-            return false;
+
         if (room == null) {
             if (other.room != null)
                 return false;
@@ -116,6 +133,7 @@ public class Lesson {
             if (room.getRoomId() != other.room.getRoomId())
                 return false;
         }
+
         if (teacher == null) {
             if (other.teacher != null)
                 return false;
@@ -174,11 +192,19 @@ public class Lesson {
         this.room = room;
     }
     
-    public LocalDateTime getDate() {
+    public LocalDate getDate() {
         return date;
     }
     
-    public void setDate(LocalDateTime date) {
+    public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public int getLessonNumber() {
+        return lessonNumber;
+    }
+
+    public void setLessonNumber(int lessonNumber) {
+        this.lessonNumber = lessonNumber;
     }
 }

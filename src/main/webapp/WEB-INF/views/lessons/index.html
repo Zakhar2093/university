@@ -45,12 +45,13 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>LessonId</th>
-                <th>LessonName</th>
+                <th>Lesson id</th>
+                <th>Lesson name</th>
                 <th>Room</th>
                 <th>Group</th>
                 <th>Teacher</th>
                 <th>Date</th>
+                <th>Lesson number</th>
                 <th>Update</th>
             </tr>
         </thead>
@@ -94,6 +95,7 @@
                         Without date
                     </p>
                 </td>
+                <td th:text="${lesson.getLessonNumber()}">id</td>
                 <td>
                     <div style="display:  flex;">
                         <a class="btn btn-outline-primary" th:href="@{/lessons/{id}/edit(id=${lesson.getLessonId()})}">Update lesson</a>
@@ -106,6 +108,5 @@
         </tbody>
     </table>
 </div>
-<script th:src="@{/resources/js/convertDateFormat.js}"></script>
 </body>
 </html>

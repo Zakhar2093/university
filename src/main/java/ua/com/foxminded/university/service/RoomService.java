@@ -21,39 +21,31 @@ public class RoomService implements GenericService<Room, Integer>{
         this.roomRepository = roomRepository;
     }
 
-    public void create(Room room) {
+    public void save(Room room) {
         roomRepository.save(room);
     }
 
-    public List<Room> getAll() {
-        return roomRepository.findAll();
-    }
-
-    public List<Room> getAllActivated() {
+    public List<Room> findAll() {
         List<Room> rooms = roomRepository.findAll();
         rooms.removeIf(p -> (p.isRoomInactive()));
         return rooms;
     }
 
-    public Room getById(Integer roomId) {
+    public Room findById(Integer roomId) {
         return roomRepository.findById(roomId)
                 .orElseThrow(() -> new ServiceException(
                         String.format("Room with such id %d does not exist", roomId)));
     }
 
-    public void update(Room room) {
-        roomRepository.save(room);
-    }
-
     public void deactivate(Integer roomId) {
         roomRepository.removeRoomFromAllLessons(roomId);
-        Room room = getById(roomId);
+        Room room = findById(roomId);
         room.setRoomInactive(true);
         roomRepository.save(room);
     }
 
     public void activate(Integer roomId) {
-        Room room = getById(roomId);
+        Room room = findById(roomId);
         room.setRoomInactive(false);
         roomRepository.save(room);
     }

@@ -3,14 +3,13 @@ package ua.com.foxminded.university.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ua.com.foxminded.university.model.Room;
-import ua.com.foxminded.university.service.GroupService;
-import ua.com.foxminded.university.service.LessonService;
 import ua.com.foxminded.university.service.RoomService;
-import ua.com.foxminded.university.service.TeacherService;
 
-import java.util.List;
+import javax.validation.Valid;
+import javax.validation.ValidationException;
 
 @Controller
 @RequestMapping("/rooms")
@@ -24,27 +23,33 @@ public class RoomController {
     }
     @GetMapping
     public String getAll(@ModelAttribute("room") Room room, Model model) {
-        model.addAttribute("rooms", roomService.getAllActivated());
+        model.addAttribute("rooms", roomService.findAll());
         model.addAttribute("roomNumber", room.getRoomNumber());
         return "rooms/index";
     }
 
     @PostMapping
-    public String create(@ModelAttribute("room") Room room) {
-        roomService.create(room);
+    public String create(@Valid @ModelAttribute("room") Room room, BindingResult result) {
+        if(result.hasErrors()){
+            throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
+        }
+        roomService.save(room);
         return "redirect:/rooms";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
-        model.addAttribute("room", roomService.getById(id));
+        model.addAttribute("room", roomService.findById(id));
         return "rooms/update";
     }
 
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("room") Room room, @PathVariable("id") int id) {
+    public String update(@Valid @ModelAttribute("room") Room room, BindingResult result, @PathVariable("id") int id) {
+        if(result.hasErrors()){
+            throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
+        }
         room.setRoomId(id);
-        roomService.update(room);
+        roomService.save(room);
         return "redirect:/rooms";
     }
 

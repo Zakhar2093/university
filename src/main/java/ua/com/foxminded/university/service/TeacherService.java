@@ -21,39 +21,31 @@ public class TeacherService implements GenericService<Teacher, Integer>{
         this.teacherRepository = teacherRepository;
     }
 
-    public void create(Teacher teacher) {
+    public void save(Teacher teacher) {
         teacherRepository.save(teacher);
     }
 
-    public List<Teacher> getAll() {
-        return teacherRepository.findAll();
-    }
-
-    public List<Teacher> getAllActivated() {
+    public List<Teacher> findAll() {
         List<Teacher> teachers = teacherRepository.findAll();
         teachers.removeIf(p -> (p.isTeacherInactive()));
         return teachers;
     }
 
-    public Teacher getById(Integer teacherId) {
+    public Teacher findById(Integer teacherId) {
         return teacherRepository.findById(teacherId)
                 .orElseThrow(() -> new ServiceException(
                         String.format("Teacher with such id %d does not exist", teacherId)));
     }
 
-    public void update(Teacher teacher) {
-        teacherRepository.save(teacher);
-    }
-
     public void deactivate(Integer teacherId) {
         teacherRepository.removeTeacherFromAllLessons(teacherId);
-        Teacher teacher = getById(teacherId);
+        Teacher teacher = findById(teacherId);
         teacher.setTeacherInactive(true);
         teacherRepository.save(teacher);
     }
 
     public void activate(Integer teacherId) {
-        Teacher teacher = getById(teacherId);
+        Teacher teacher = findById(teacherId);
         teacher.setTeacherInactive(false);
         teacherRepository.save(teacher);
     }

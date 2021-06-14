@@ -1,27 +1,40 @@
 package ua.com.foxminded.university.model.model_dto;
 
-import java.time.LocalDateTime;
+import ua.com.foxminded.university.annotation.NameConstraint;
+
+import javax.validation.constraints.Positive;
+
 
 public class LessonDto {
     private int lessonId;
+
+    @NameConstraint
     private String lessonName;
+
     private Integer teacherId;
+
     private Integer groupId;
+
     private Integer roomId;
+
     private String date;
+
+    @Positive(message = "Lesson number must be positive")
+    private int lessonNumber;
+
     private boolean lessonInactive;
 
     public LessonDto() {
     }
 
-    public LessonDto(int lessonId, String lessonName, int teacherId, int groupId, int roomId, String date, boolean lessonInactive) {
+    public LessonDto(int lessonId, String lessonName, int teacherId, int groupId, int roomId, String date, int lessonNumber) {
         this.lessonId = lessonId;
         this.lessonName = lessonName;
         this.teacherId = teacherId;
         this.groupId = groupId;
         this.roomId = roomId;
         this.date = date;
-        this.lessonInactive = lessonInactive;
+        this.lessonNumber = lessonNumber;
     }
 
     public int getLessonId() {
@@ -80,6 +93,13 @@ public class LessonDto {
         this.lessonInactive = lessonInactive;
     }
 
+    public int getLessonNumber() {
+        return lessonNumber;
+    }
+
+    public void setLessonNumber(int lessonNumber) {
+        this.lessonNumber = lessonNumber;
+    }
 }
 
 

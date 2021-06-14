@@ -43,7 +43,7 @@ public class TeacherControllerTest {
 
     @Test
     void getAllShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        when(teacherService.getAllActivated()).thenReturn(testData.getTestTeachers());
+        when(teacherService.findAll()).thenReturn(testData.getTestTeachers());
 
         mockMvc.perform(get("/teachers/"))
                 .andExpect(view().name("teachers/index"))
@@ -52,18 +52,18 @@ public class TeacherControllerTest {
 
     @Test
     void createShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        Teacher teacher = new Teacher();
+        Teacher teacher = createTeacher();
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/teachers/").flashAttr("teacher", teacher);
         mockMvc.perform(request)
                 .andExpect(view().name("redirect:/teachers"));
 
-        verify(teacherService, only()).create(teacher);
+        verify(teacherService, only()).save(teacher);
     }
 
     @Test
     void updateShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        Teacher teacher = new Teacher();
-        when(teacherService.getById(anyInt())).thenReturn(teacher);
+        Teacher teacher = createTeacher();
+        when(teacherService.findById(anyInt())).thenReturn(teacher);
 
         mockMvc.perform(get("/teachers/{id}/edit", 2))
                 .andExpect(view().name("teachers/update"))
@@ -73,12 +73,12 @@ public class TeacherControllerTest {
     @Test
     void submitUpdateShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
         int expectedTeacherId = 2;
-        Teacher teacher = new Teacher();
+        Teacher teacher = createTeacher();
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.patch("/teachers/{id}", expectedTeacherId).flashAttr("teacher", teacher);
         mockMvc.perform(request)
                 .andExpect(view().name("redirect:/teachers"));
 
-        verify(teacherService, only()).update(teacher);
+        verify(teacherService, only()).save(teacher);
         int actualTeacherId = teacher.getTeacherId();
         assertEquals(expectedTeacherId, actualTeacherId);
     }
@@ -89,5 +89,9 @@ public class TeacherControllerTest {
                 .andExpect(view().name("redirect:/teachers"));
 
         verify(teacherService, only()).deactivate(anyInt());
+    }
+
+    private Teacher createTeacher(){
+        return new Teacher(1, "Jack", "Smith", false);
     }
 }

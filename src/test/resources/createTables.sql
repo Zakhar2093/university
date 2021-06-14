@@ -41,7 +41,8 @@ CREATE TABLE university.lessons(
     teacher_id INTEGER,
     group_id INTEGER,
     room_id INTEGER,
-    lesson_date timestamp,
+    lesson_date DATE NOT NULL DEFAULT CURRENT_DATE,
+    lesson_number INTEGER NOT NULL,
     PRIMARY KEY (lesson_id),
     FOREIGN KEY (teacher_id) REFERENCES university.teachers(teacher_id),
     FOREIGN KEY (group_id) REFERENCES university.groups(group_id),
@@ -58,3 +59,5 @@ ALTER TABLE university.rooms
   ADD COLUMN room_inactive BOOLEAN DEFAULT FALSE;
 ALTER TABLE university.lessons
   ADD COLUMN lesson_inactive BOOLEAN DEFAULT FALSE;
+ALTER TABLE university.rooms
+  ADD COLUMN room_capacity INTEGER NOT NULL;

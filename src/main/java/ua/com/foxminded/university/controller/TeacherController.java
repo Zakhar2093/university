@@ -3,14 +3,13 @@ package ua.com.foxminded.university.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ua.com.foxminded.university.model.Teacher;
-import ua.com.foxminded.university.service.GroupService;
-import ua.com.foxminded.university.service.LessonService;
-import ua.com.foxminded.university.service.RoomService;
 import ua.com.foxminded.university.service.TeacherService;
 
-import java.util.List;
+import javax.validation.Valid;
+import javax.validation.ValidationException;
 
 @Controller
 @RequestMapping("/teachers")
@@ -24,27 +23,33 @@ public class TeacherController {
     }
 
     @GetMapping
-    public String getAll(@ModelAttribute("teacher") Teacher teacher, Model model) { ;
-        model.addAttribute("teachers", teacherService.getAllActivated());
+    public String getAll(@ModelAttribute("teacher") Teacher teacher, Model model) {
+        model.addAttribute("teachers", teacherService.findAll());
         return "teachers/index";
     }
 
     @PostMapping
-    public String create(@ModelAttribute("teacher") Teacher teacher) {
-        teacherService.create(teacher);
+    public String create(@Valid @ModelAttribute("teacher") Teacher teacher, BindingResult result) {
+        if(result.hasErrors()){
+            throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
+        }
+        teacherService.save(teacher);
         return "redirect:/teachers";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
-        model.addAttribute("teacher", teacherService.getById(id));
+        model.addAttribute("teacher", teacherService.findById(id));
         return "teachers/update";
     }
 
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("teacher") Teacher teacher, @PathVariable("id") int id) {
+    public String update(@Valid @ModelAttribute("teacher") Teacher teacher, BindingResult result, @PathVariable("id") int id) {
+        if(result.hasErrors()){
+            throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
+        }
         teacher.setTeacherId(id);
-        teacherService.update(teacher);
+        teacherService.save(teacher);
         return "redirect:/teachers";
     }
 

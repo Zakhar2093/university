@@ -47,8 +47,8 @@ public class StudentControllerTest {
 
     @Test
     void getAllShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        when(studentService.getAllActivated()).thenReturn(testData.getTestStudent());
-        when(groupService.getAllActivated()).thenReturn(testData.getTestGroups());
+        when(studentService.findAll()).thenReturn(testData.getTestStudent());
+        when(groupService.findAll()).thenReturn(testData.getTestGroups());
 
         mockMvc.perform(get("/students/"))
                 .andExpect(view().name("students/index"))
@@ -58,9 +58,9 @@ public class StudentControllerTest {
 
     @Test
     void createShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        when(groupService.getAllActivated()).thenReturn(testData.getTestGroups());
+        when(groupService.findAll()).thenReturn(testData.getTestGroups());
 
-        StudentDto studentDto = new StudentDto();
+        StudentDto studentDto = createDto();
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/students/add").flashAttr("studentDto", studentDto);
         mockMvc.perform(request)
                 .andExpect(view().name("students/add"))
@@ -69,19 +69,19 @@ public class StudentControllerTest {
 
     @Test
     void submitCreateShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        StudentDto studentDto = new StudentDto();
+        StudentDto studentDto = createDto();
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/students/").flashAttr("studentDto", studentDto);
         mockMvc.perform(request)
                 .andExpect(view().name("redirect:/students"));
 
-        verify(studentService, only()).create(studentDto);
+        verify(studentService, only()).save(studentDto);
     }
 
     @Test
     void updateShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
-        StudentDto studentDto = new StudentDto();
-        when(studentService.getDtoById(anyInt())).thenReturn(studentDto);
-        when(groupService.getAllActivated()).thenReturn(testData.getTestGroups());
+        StudentDto studentDto = createDto();
+        when(studentService.findDtoById(anyInt())).thenReturn(studentDto);
+        when(groupService.findAll()).thenReturn(testData.getTestGroups());
 
         mockMvc.perform(get("/students/{id}/update", 2))
                 .andExpect(view().name("students/update"))
@@ -92,12 +92,12 @@ public class StudentControllerTest {
     @Test
     void submitUpdateShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
         int expectedStudentDtoId = 2;
-        StudentDto studentDto = new StudentDto();
+        StudentDto studentDto = createDto();
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.patch("/students/{id}", expectedStudentDtoId).flashAttr("studentDto", studentDto);
         mockMvc.perform(request)
                 .andExpect(view().name("redirect:/students"));
 
-        verify(studentService, only()).update(studentDto);
+        verify(studentService, only()).save(studentDto);
         int actualStudentDtoId = studentDto.getStudentId();
         assertEquals(expectedStudentDtoId, actualStudentDtoId);
     }
@@ -114,11 +114,15 @@ public class StudentControllerTest {
     void showStudentsByGroupShouldReturnCorrectPageAndModelWithCorrectAttributes() throws Exception {
         int id = 1;
         when(studentService.getStudentsByGroupId(id)).thenReturn(testData.getTestStudent());
-        when(groupService.getById(id)).thenReturn(testData.getTestGroups().get(0));
+        when(groupService.findById(id)).thenReturn(testData.getTestGroups().get(0));
 
         mockMvc.perform(get("/groups/{id}/students", id))
                 .andExpect(view().name("students/index"))
                 .andExpect(model().attribute("students", testData.getTestStudent()))
                 .andExpect(model().attribute("group", testData.getTestGroups().get(0)));
+    }
+
+    private StudentDto createDto(){
+        return new StudentDto(1, "Jack", "Smith", 1,false);
     }
 }

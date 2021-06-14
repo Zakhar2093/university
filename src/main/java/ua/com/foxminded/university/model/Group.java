@@ -1,6 +1,8 @@
 package ua.com.foxminded.university.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
@@ -11,6 +13,8 @@ public class Group {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int groupId;
 
+    @Size(min = 2, max = 12, message = "Group name size must be between 2 and 12")
+    @NotBlank(message = "Group name is mandatory")
     @Column(name="group_name")
     private String groupName;
 

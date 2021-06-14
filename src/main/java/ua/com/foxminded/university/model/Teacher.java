@@ -1,5 +1,7 @@
 package ua.com.foxminded.university.model;
 
+import ua.com.foxminded.university.annotation.NameConstraint;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -11,9 +13,11 @@ public class Teacher {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int teacherId;
 
+    @NameConstraint
     @Column(name="first_name")
     private String firstName;
 
+    @NameConstraint
     @Column(name="last_name")
     private String lastName;
 
