@@ -7,6 +7,12 @@ import javax.validation.ConstraintValidatorContext;
 
 public class NameValidator implements ConstraintValidator<NameConstraint, String> {
 
+    private static final String EMPTY_STRING = "";
+    private static final String NAME_FORMAT = "[a-zA-Z]+";
+    private static final int MIN_LENGHT = 2;
+    private static final int MAX_LENGHT = 12;
+
+
     @Override
     public void initialize(NameConstraint name) {
     }
@@ -14,8 +20,8 @@ public class NameValidator implements ConstraintValidator<NameConstraint, String
     @Override
     public boolean isValid(String name, ConstraintValidatorContext cxt) {
             return name != null
-                    && name != ""
-                    && name.matches("[a-zA-Z]+")
-                    && (name.length() > 2)
-                    && (name.length() < 12); }
+                    && name != EMPTY_STRING
+                    && name.matches(NAME_FORMAT)
+                    && (name.length() > MIN_LENGHT)
+                    && (name.length() < MAX_LENGHT); }
 }

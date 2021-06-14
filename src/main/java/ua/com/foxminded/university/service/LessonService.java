@@ -136,29 +136,29 @@ public class LessonService implements GenericService<Lesson, Integer>{
         return lessonRepository.findByRoomRoomId(roomId);
     }
 
-    private Lesson mapDtoToLesson(LessonDto dto){
+    private Lesson mapDtoToLesson(LessonDto lessonDto){
         Lesson lesson = new Lesson();
-        lesson.setLessonId(dto.getLessonId());
-        lesson.setLessonName(dto.getLessonName());
+        lesson.setLessonId(lessonDto.getLessonId());
+        lesson.setLessonName(lessonDto.getLessonName());
 
-        Group group = dto.getGroupId() == null ? null : groupRepository.findById(dto.getGroupId())
+        Group group = lessonDto.getGroupId() == null ? null : groupRepository.findById(lessonDto.getGroupId())
                 .orElseThrow(() -> new ServiceException(
-                    String.format("Group with such id %d does not exist", dto.getGroupId())));
+                    String.format("Group with such id %d does not exist", lessonDto.getGroupId())));
         lesson.setGroup(group);
 
-        Teacher teacher = dto.getTeacherId() == null ? null : teacherRepository.findById(dto.getTeacherId())
+        Teacher teacher = lessonDto.getTeacherId() == null ? null : teacherRepository.findById(lessonDto.getTeacherId())
                 .orElseThrow(() -> new ServiceException(
-                    String.format("Teacher with such id %d does not exist", dto.getTeacherId())));
+                    String.format("Teacher with such id %d does not exist", lessonDto.getTeacherId())));
         lesson.setTeacher(teacher);
 
-        Room room = dto.getRoomId() == null ? null : roomRepository.findById(dto.getRoomId())
+        Room room = lessonDto.getRoomId() == null ? null : roomRepository.findById(lessonDto.getRoomId())
                 .orElseThrow(() -> new ServiceException(
-                    String.format("Room with such id %d does not exist", dto.getRoomId())));
+                    String.format("Room with such id %d does not exist", lessonDto.getRoomId())));
         lesson.setRoom(room);
 
-        lesson.setLessonInactive(dto.isLessonInactive());
-        lesson.setDate(LocalDate.parse(dto.getDate(), FORMATTER));
-        lesson.setLessonNumber(dto.getLessonNumber());
+        lesson.setLessonInactive(lessonDto.isLessonInactive());
+        lesson.setDate(LocalDate.parse(lessonDto.getDate(), FORMATTER));
+        lesson.setLessonNumber(lessonDto.getLessonNumber());
         return lesson;
     }
 
