@@ -9,8 +9,8 @@ public class NameValidator implements ConstraintValidator<NameConstraint, String
 
     private static final String EMPTY_STRING = "";
     private static final String NAME_FORMAT = "[a-zA-Z]+";
-    private static final int MIN_LENGHT = 2;
-    private static final int MAX_LENGHT = 12;
+    private static final int MIN_LENGTH = 2;
+    private static final int MAX_LENGTH = 12;
 
 
     @Override
@@ -22,6 +22,6 @@ public class NameValidator implements ConstraintValidator<NameConstraint, String
             return name != null
                     && name != EMPTY_STRING
                     && name.matches(NAME_FORMAT)
-                    && (name.length() > MIN_LENGHT)
-                    && (name.length() < MAX_LENGHT); }
+                    && (name.length() > MIN_LENGTH)
+                    && (name.length() < MAX_LENGTH); }
 }
