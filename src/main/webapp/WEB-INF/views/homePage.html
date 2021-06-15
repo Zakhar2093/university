@@ -5,14 +5,14 @@
     <title>Title</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link th:href="@{/resources/css/simplepicker.css}" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script th:src="@{/resources/js/selectDate.js}"></script>
+    <script th:src="@{/resources/js/HomePageSelector.js}"></script>
+    <script th:src="@{/resources/js/datepicker.js}"></script>
 </head>
 <body>
 <nav class="navbar navbar-expand-sm bg-primary navbar-dark fixed-top">
@@ -69,27 +69,24 @@
                 </label>
             </div>
         </div>
-        <div class="form-group">
-            <label for="id">Id: </label>
-            <input type="text" class="form-control" list="students" id="id" placeholder="Enter id" name="id" required>
 
-            <datalist id="students" th:each="student: ${students}">
-                <option th:each="student: ${students}"
+        <div class="form-group">
+            <label>Id: </label>
+
+            <select id="id" list="students" class="form-control" required name="id" onclick="selectStudentOrTeachers()">
+                <option class="students"
+                        th:each="student: ${students}"
                         th:text="${student.getFirstName()} + ' ' + ${student.getLastName()}"
                         th:value="${student.getStudentId()}">
                 </option>
-            </datalist>
-
-            <datalist id="teachers" th:each="teacher: ${teachers}">
-                <option th:each="teacher: ${teachers}"
+                <option class="teachers"
+                        th:each="teacher: ${teachers}"
                         th:text="${teacher.getFirstName()} + ' ' + ${teacher.getLastName()}"
                         th:value="${teacher.getTeacherId()}">
                 </option>
-            </datalist>
-            <script>
-
-            </script>
+            </select>
         </div>
+
         <div class="form-group">
             <label for="datePicker">Date: </label>
             <input type="text" class="form-control" id="datepicker" placeholder="Enter date" name="date" required>
@@ -97,17 +94,6 @@
         <input class="btn btn-primary" type="submit" value="Submit">
     </form>
 </div>
-<script>
-    $(function(){
-	$("#datepicker").datepicker({
-		minDate: 0
-	});
-});
 
-$.datepicker.regional['ru'] = {
-	dateFormat: 'yy-mm-dd'
-};
-$.datepicker.setDefaults($.datepicker.regional['ru']);
-</script>
 </body>
 </html>
