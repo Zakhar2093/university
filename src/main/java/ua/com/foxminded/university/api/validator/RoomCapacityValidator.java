@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.controller.validator;
+package ua.com.foxminded.university.api.validator;
 
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.stereotype.Component;

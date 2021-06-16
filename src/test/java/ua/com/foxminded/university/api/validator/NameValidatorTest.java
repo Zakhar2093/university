@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.controller.validator;
+package ua.com.foxminded.university.api.validator;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,8 +11,8 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ua.com.foxminded.university.Application;
-import ua.com.foxminded.university.controller.LessonController;
-import ua.com.foxminded.university.controller.exception_handler.ControllerExceptionHandler;
+import ua.com.foxminded.university.api.controler.LessonController;
+import ua.com.foxminded.university.api.exception_handler.ControllerExceptionHandler;
 import ua.com.foxminded.university.model.model_dto.LessonDto;
 import ua.com.foxminded.university.service.LessonService;
 

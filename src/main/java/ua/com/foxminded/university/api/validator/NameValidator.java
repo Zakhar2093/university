@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.controller.validator;
+package ua.com.foxminded.university.api.validator;
 
 import ua.com.foxminded.university.annotation.NameConstraint;
 

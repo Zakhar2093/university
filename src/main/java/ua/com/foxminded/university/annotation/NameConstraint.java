@@ -1,6 +1,6 @@
 package ua.com.foxminded.university.annotation;
 
-import ua.com.foxminded.university.controller.validator.NameValidator;
+import ua.com.foxminded.university.api.validator.NameValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

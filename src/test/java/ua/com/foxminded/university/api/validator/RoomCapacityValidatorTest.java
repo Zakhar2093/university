@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.controller.validator;
+package ua.com.foxminded.university.api.validator;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
