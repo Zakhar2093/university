@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.api;
+package ua.com.foxminded.university.api.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

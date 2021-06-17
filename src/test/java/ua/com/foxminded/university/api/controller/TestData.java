@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.api;
+package ua.com.foxminded.university.api.controller;
 
 import org.springframework.stereotype.Component;
 import ua.com.foxminded.university.model.*;
