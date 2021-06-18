@@ -25,8 +25,6 @@ import static org.mockito.Mockito.*;
 @TestPropertySource(locations = "classpath:testApplication.properties")
 class StudentServiceTest {
 
-    private static final String EMPTY_STRING = "";
-
     @Mock
     private GroupRepository groupRepository;
 
@@ -57,6 +55,12 @@ class StudentServiceTest {
     @Test
     void findAllShouldInvokeOnlyOnce() {
         studentService.findAll();
+        verify(studentRepository, only()).findAll();
+    }
+
+    @Test
+    void findAllDtoShouldInvokeOnlyOnce() {
+        studentService.findAllDto();
         verify(studentRepository, only()).findAll();
     }
 
@@ -92,6 +96,12 @@ class StudentServiceTest {
     @Test
     void getStudentsByGroupIdShouldInvokeOnlyOnce() {
         studentService.getStudentsByGroupId(1);
+        verify(studentRepository, only()).findByGroupGroupId(anyInt());
+    }
+
+    @Test
+    void getStudentsDtoByGroupIdShouldInvokeOnlyOnce() {
+        studentService.getStudentsDtoByGroupId(1);
         verify(studentRepository, only()).findByGroupGroupId(anyInt());
     }
 

@@ -10,6 +10,7 @@ import ua.com.foxminded.university.model.model_dto.StudentDto;
 import ua.com.foxminded.university.repository.GroupRepository;
 import ua.com.foxminded.university.repository.StudentRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -41,6 +42,10 @@ public class StudentService implements GenericService<Student, Integer>{
         return students;
     }
 
+    public List<StudentDto> findAllDto(){
+        return mapListOfStudentsToListOfStudentsDto(findAll());
+    }
+
     public Student findById(Integer studentId) {
         return studentRepository.findById(studentId)
                 .orElseThrow(() -> new ServiceException(
@@ -68,6 +73,11 @@ public class StudentService implements GenericService<Student, Integer>{
         return studentRepository.findByGroupGroupId(groupId);
     }
 
+    public List<StudentDto> getStudentsDtoByGroupId(Integer groupId) {
+        List<Student> students = studentRepository.findByGroupGroupId(groupId);
+        return mapListOfStudentsToListOfStudentsDto(students);
+    }
+
     private Student mapDtoToStudent(StudentDto dto){
         Student student = new Student();
         student.setStudentId(dto.getStudentId());
@@ -93,5 +103,13 @@ public class StudentService implements GenericService<Student, Integer>{
             dto.setGroupId(student.getGroup().getGroupId());
         }
         return dto;
+    }
+
+    private List<StudentDto> mapListOfStudentsToListOfStudentsDto(List<Student> students){
+        List<StudentDto> studentsDto = new ArrayList<>();
+        for (Student student: students) {
+            studentsDto.add(mapStudentToDto(student));
+        }
+        return studentsDto;
     }
 }

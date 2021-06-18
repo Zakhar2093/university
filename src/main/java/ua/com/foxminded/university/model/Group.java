@@ -1,5 +1,7 @@
 package ua.com.foxminded.university.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -18,12 +20,15 @@ public class Group {
     @Column(name="group_name")
     private String groupName;
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "group", fetch = FetchType.LAZY)
     private List<Student> students;
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "group", fetch = FetchType.LAZY)
     private List<Lesson> lessons;
 
+    @JsonIgnore
     @Column(name="group_inactive")
     private boolean groupInactive;
 

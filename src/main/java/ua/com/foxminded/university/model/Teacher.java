@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import ua.com.foxminded.university.annotation.NameConstraint;
 
 import javax.persistence.*;
@@ -21,9 +22,11 @@ public class Teacher {
     @Column(name="last_name")
     private String lastName;
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "teacher", fetch = FetchType.LAZY)
     private List<Lesson> lessons;
 
+    @JsonIgnore
     @Column(name="teacher_inactive")
     private boolean teacherInactive;
     

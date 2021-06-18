@@ -13,7 +13,7 @@ public class TestData {
     private static final String FORMAT = "yyyy-MM-dd";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(FORMAT);
 
-    protected List<Room> getTestRooms() {
+    public List<Room> getTestRooms() {
         List<Room> rooms = new ArrayList<>();
         rooms.add(new Room(1, 101, 10, false));
         rooms.add(new Room(2, 102, 10, false));
@@ -21,7 +21,7 @@ public class TestData {
         return rooms;
     }
 
-    protected List<Group> getTestGroups() {
+    public List<Group> getTestGroups() {
         List<Group> groups = new ArrayList<>();
         groups.add(new Group(1, "Java", false));
         groups.add(new Group(2, "C++", false));
@@ -29,7 +29,7 @@ public class TestData {
         return groups;
     }
 
-    protected List<Teacher> getTestTeachers() {
+    public List<Teacher> getTestTeachers() {
         List<Teacher> teachers = new ArrayList<>();
         teachers.add(new Teacher(1, "one", "one", false));
         teachers.add(new Teacher(2, "two", "two", false));
@@ -37,7 +37,7 @@ public class TestData {
         return teachers;
     }
 
-    protected List<Lesson> getTestLessons() {
+    public List<Lesson> getTestLessons() {
         List<Teacher> teachers = getTestTeachers();
         List<Group> groups = getTestGroups();
         List<Room> rooms = getTestRooms();
@@ -52,7 +52,7 @@ public class TestData {
         return lessons;
     }
 
-    protected List<Student> getTestStudent() {
+    public List<Student> getTestStudent() {
         List<Group> groups = getTestGroups();
         List<Student> students = new ArrayList<>();
         students.add(new Student(1, "one", "one", groups.get(0), false));

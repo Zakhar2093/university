@@ -1,5 +1,7 @@
 package ua.com.foxminded.university.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.Positive;
 import java.util.List;
@@ -16,9 +18,11 @@ public class Room {
     @Column(name="room_number")
     private int roomNumber;
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "room", fetch = FetchType.LAZY)
     private List<Lesson> lessons;
 
+    @JsonIgnore
     @Column(name="room_inactive")
     private boolean roomInactive;
 

@@ -1,6 +1,9 @@
 package ua.com.foxminded.university.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+
 
 @Entity
 @Table(name="students", schema = "university")
@@ -20,6 +23,7 @@ public class Student {
     @JoinColumn(name = "group_id")
     private Group group;
 
+    @JsonIgnore
     @Column(name="student_inactive")
     private boolean studentInactive;
 

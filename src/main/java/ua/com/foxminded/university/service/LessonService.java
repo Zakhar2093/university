@@ -15,6 +15,7 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -61,6 +62,10 @@ public class LessonService implements GenericService<Lesson, Integer>{
         List<Lesson> lessons = lessonRepository.findAll();
         lessons.removeIf(p -> (p.isLessonInactive()));
         return lessons;
+    }
+
+    public List<LessonDto> findAllDto(){
+        return mapListOfLessonsToListOfLessonsDto(findAll());
     }
 
     public Lesson findById(Integer lessonId) {
@@ -136,6 +141,21 @@ public class LessonService implements GenericService<Lesson, Integer>{
         return lessonRepository.findByRoomRoomId(roomId);
     }
 
+    public List<LessonDto> getLessonsDtoByGroupId(Integer groupId) {
+        List<Lesson> lessons = getLessonsByGroupId(groupId);
+        return mapListOfLessonsToListOfLessonsDto(lessons);
+    }
+
+    public List<LessonDto> getLessonsDtoByTeacherId(Integer teacherId) {
+        List<Lesson> lessons = getLessonsByTeacherId(teacherId);
+        return mapListOfLessonsToListOfLessonsDto(lessons);
+    }
+
+    public List<LessonDto> getLessonsDtoByRoomId(Integer roomId) {
+        List<Lesson> lessons = getLessonsByRoomId(roomId);
+        return mapListOfLessonsToListOfLessonsDto(lessons);
+    }
+
     private Lesson mapDtoToLesson(LessonDto lessonDto){
         Lesson lesson = new Lesson();
         lesson.setLessonId(lessonDto.getLessonId());
@@ -191,5 +211,13 @@ public class LessonService implements GenericService<Lesson, Integer>{
         if (!lessonRepository.findByTeacherTeacherIdAndDateAndLessonNumberAndLessonInactiveFalse(teacherId, date, number).isEmpty()){
             throw new ValidationException("The teacher has already been busy in another lesson. Please choose another day or lesson number.");
         }
+    }
+
+    public List<LessonDto> mapListOfLessonsToListOfLessonsDto(List<Lesson> lessons){
+        List<LessonDto> lessonsDto = new ArrayList<>();
+        for (Lesson lesson: lessons) {
+            lessonsDto.add(mapLessonToDto(lesson));
+        }
+        return lessonsDto;
     }
 }
