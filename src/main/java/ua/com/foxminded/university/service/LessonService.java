@@ -12,6 +12,7 @@ import ua.com.foxminded.university.model.model_dto.LessonDto;
 import ua.com.foxminded.university.repository.*;
 
 import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
 import javax.validation.ValidationException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -44,7 +45,7 @@ public class LessonService implements GenericService<Lesson, Integer>{
         this.studentRepository = studentRepository;
     }
 
-    public void save(Lesson lesson) {
+    public void save(@Valid Lesson lesson) {
         try {
             validate(lesson);
             lessonRepository.save(lesson);
@@ -202,13 +203,21 @@ public class LessonService implements GenericService<Lesson, Integer>{
         int number = lesson.getLessonNumber();
         LocalDate date = lesson.getDate();
 
-        if (!lessonRepository.findByGroupGroupIdAndDateAndLessonNumberAndLessonInactiveFalse(groupId, date, number).isEmpty()){
+        List<Lesson> groups = lessonRepository.findByGroupGroupIdAndDateAndLessonNumberAndLessonInactiveFalse(groupId, date, number);
+        List<Lesson> rooms = lessonRepository.findByRoomRoomIdAndDateAndLessonNumberAndLessonInactiveFalse(roomId, date, number);
+        List<Lesson> teachers = lessonRepository.findByTeacherTeacherIdAndDateAndLessonNumberAndLessonInactiveFalse(teacherId, date, number);
+
+        groups.removeIf(p -> p.getLessonId() == lesson.getLessonId());
+        rooms.removeIf(p -> p.getLessonId() == lesson.getLessonId());
+        teachers.removeIf(p -> p.getLessonId() == lesson.getLessonId());
+
+        if (!groups.isEmpty()){
             throw new ValidationException("The group has already been busy in another lesson. Please choose another day or lesson number.");
         }
-        if (!lessonRepository.findByRoomRoomIdAndDateAndLessonNumberAndLessonInactiveFalse(roomId, date, number).isEmpty()){
+        if (!rooms.isEmpty()){
             throw new ValidationException("The room has already been busy in another lesson. Please choose another day or lesson number.");
         }
-        if (!lessonRepository.findByTeacherTeacherIdAndDateAndLessonNumberAndLessonInactiveFalse(teacherId, date, number).isEmpty()){
+        if (!teachers.isEmpty()){
             throw new ValidationException("The teacher has already been busy in another lesson. Please choose another day or lesson number.");
         }
     }
