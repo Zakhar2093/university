@@ -1,5 +1,7 @@
 package ua.com.foxminded.university.api.rest_controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -25,10 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(locations = "classpath:testApplication.properties")
 public class StudentRestControllerTest {
 
-    private static final String jsonStudent = "{\"studentId\": 1, \"firstName\": \"one\", \"lastName\": \"one\", \"groupId\": 1}";
-    private static final String jsonListOfStudent = "[{'studentId': 1, 'firstName': 'one', 'lastName': 'one', 'groupId': 1}," +
-                                                     "{'studentId': 2, 'firstName': 'two', 'lastName': 'two', 'groupId': 2}," +
-                                                     "{'studentId': 3, 'firstName': 'three', 'lastName': 'three', 'groupId': 1}]";
+    private final String jsonStudent = new ObjectMapper().writeValueAsString(getTestStudentDto());
+    private final String jsonListOfStudent = new ObjectMapper().writeValueAsString(getTestListOfStudentsDto());
 
     @Mock
     private StudentService studentService;
@@ -37,6 +37,9 @@ public class StudentRestControllerTest {
     private StudentRestController studentRestController;
 
     private MockMvc mockMvc;
+
+    public StudentRestControllerTest() throws JsonProcessingException {
+    }
 
     @BeforeEach
     public void setMocks() {

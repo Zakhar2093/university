@@ -1,5 +1,7 @@
 package ua.com.foxminded.university.api.rest_controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -27,10 +29,9 @@ public class TeacherRestControllerTest {
     @Autowired
     private TestData testData;
 
-    private static final String jsonTeacher = "{\"teacherId\": 1, \"firstName\": \"one\", \"lastName\": \"one\"}";
-    private static final String jsonListOfTeacher = "[{'teacherId': 1, 'firstName': 'one', 'lastName': 'one'}," +
-                                                    "{'teacherId': 2, 'firstName': 'two', 'lastName': 'two'}," +
-                                                    "{'teacherId': 3, 'firstName': 'Three', 'lastName': 'Three'}]";
+    private String jsonTeacher;
+    private String jsonListOfTeacher;
+
     private Teacher testTeacher;
 
     @Mock
@@ -42,9 +43,11 @@ public class TeacherRestControllerTest {
     private MockMvc mockMvc;
 
     @BeforeEach
-    public void setMocks() {
+    public void setMocks() throws JsonProcessingException {
         mockMvc = MockMvcBuilders.standaloneSetup(teacherRestController).build();
         testTeacher = testData.getTestTeachers().get(0);
+        jsonTeacher = new ObjectMapper().writeValueAsString(testData.getTestTeachers().get(0));
+        jsonListOfTeacher = new ObjectMapper().writeValueAsString(testData.getTestTeachers());
     }
 
     @Test

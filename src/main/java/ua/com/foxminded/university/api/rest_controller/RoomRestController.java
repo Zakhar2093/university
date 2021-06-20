@@ -19,7 +19,6 @@ public class RoomRestController {
         this.roomService = roomService;
     }
 
-
     @GetMapping
     public List<Room> findAll(){
         List<Room> rooms = roomService.findAll();

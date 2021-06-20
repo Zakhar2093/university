@@ -18,7 +18,6 @@ public class StudentRestController {
         this.studentService = studentService;
     }
 
-
     @GetMapping("/students")
     public List<StudentDto> findAll(){
         List<StudentDto> students = studentService.findAllDto();

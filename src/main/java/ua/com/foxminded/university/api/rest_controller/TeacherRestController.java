@@ -19,7 +19,6 @@ public class TeacherRestController {
         this.roomService = roomService;
     }
 
-
     @GetMapping
     public List<Teacher> findAll(){
         List<Teacher> teacher = roomService.findAll();

@@ -1,5 +1,7 @@
 package ua.com.foxminded.university.api.rest_controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -27,8 +29,8 @@ public class GroupRestControllerTest {
     @Autowired
     private TestData testData;
 
-    private static final String jsonGroup = "{\"groupId\": 1, \"groupName\": \"Java\"}";
-    private static final String jsonListOfGroup = "[{'groupId': 1, 'groupName': 'Java'},{'groupId': 2, 'groupName': 'C++'},{'groupId': 3, 'groupName': 'PHP'}]";
+    private String jsonGroup;
+    private String jsonListOfGroup;
     private Group testGroup;
 
     @Mock
@@ -40,9 +42,11 @@ public class GroupRestControllerTest {
     private MockMvc mockMvc;
 
     @BeforeEach
-    public void setMocks() {
+    public void setMocks() throws JsonProcessingException {
         mockMvc = MockMvcBuilders.standaloneSetup(groupRestController).build();
         testGroup = testData.getTestGroups().get(0);
+        jsonGroup = new ObjectMapper().writeValueAsString(testData.getTestGroups().get(0));
+        jsonListOfGroup = new ObjectMapper().writeValueAsString(testData.getTestGroups());
     }
 
     @Test

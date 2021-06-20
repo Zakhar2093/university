@@ -1,5 +1,7 @@
 package ua.com.foxminded.university.api.rest_controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -30,42 +32,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(locations = "classpath:testApplication.properties")
 public class LessonRestControllerTest {
 
-    private static final String jsonLesson = "{" +
-                                                      "\"lessonId\": 1,\n" +
-                                                      "\"lessonName\": \"Math\",\n" +
-                                                      "\"teacherId\": 1,\n" +
-                                                      "\"groupId\": 1,\n" +
-                                                      "\"roomId\": 2,\n" +
-                                                      "\"date\": \"2021-11-04\",\n" +
-                                                      "\"lessonNumber\": 1" +
-                                                "}";
-    private static final String jsonListOfLesson = "[    {\n" +
-                                                    "        \"lessonId\": 1,\n" +
-                                                    "        \"lessonName\": \"Math\",\n" +
-                                                    "        \"teacherId\": 1,\n" +
-                                                    "        \"groupId\": 1,\n" +
-                                                    "        \"roomId\": 2,\n" +
-                                                    "        \"date\": \"2021-11-04\",\n" +
-                                                    "        \"lessonNumber\": 1\n" +
-                                                    "    }," +
-                                                    "    {\n" +
-                                                    "        \"lessonId\": 2,\n" +
-                                                    "        \"lessonName\": \"History\",\n" +
-                                                    "        \"teacherId\": 1,\n" +
-                                                    "        \"groupId\": 1,\n" +
-                                                    "        \"roomId\": 1,\n" +
-                                                    "        \"date\": \"2021-11-04\",\n" +
-                                                    "        \"lessonNumber\": 2\n" +
-                                                    "    }," +
-                                                    "    {\n" +
-                                                    "        \"lessonId\": 3,\n" +
-                                                    "        \"lessonName\": \"English\",\n" +
-                                                    "        \"teacherId\": 2,\n" +
-                                                    "        \"groupId\": 2,\n" +
-                                                    "        \"roomId\": 1,\n" +
-                                                    "        \"date\": \"2021-11-04\",\n" +
-                                                    "        \"lessonNumber\": 3\n" +
-                                                    "    }]";
+    private String jsonLesson = new ObjectMapper().writeValueAsString(getTestLessonDto());
+    private String jsonListOfLesson = new ObjectMapper().writeValueAsString(getTestListOfLessonsDto());
 
     @Autowired
     TestData testData;
@@ -77,6 +45,9 @@ public class LessonRestControllerTest {
     private LessonRestController lessonRestController;
 
     private MockMvc mockMvc;
+
+    public LessonRestControllerTest() throws JsonProcessingException {
+    }
 
     @BeforeEach
     public void setMocks() {
@@ -275,11 +246,9 @@ public class LessonRestControllerTest {
         verify(lessonService, times(1)).getLessonByTeacherIdForMonth(id, localDate);
     }
 
-
     private LessonDto getTestLessonDto(){
         return new LessonDto(1, "Math", 1, 1, 2, "2021-11-04", 1);
     }
-
 
     private List<LessonDto> getTestListOfLessonsDto() {
         List<LessonDto> lessons = new ArrayList<>();

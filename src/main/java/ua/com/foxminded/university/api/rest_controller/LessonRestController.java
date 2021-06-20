@@ -25,7 +25,6 @@ public class LessonRestController {
         this.lessonService = lessonService;
     }
 
-
     @GetMapping("/lessons")
     public List<LessonDto> findAll(){
         List<LessonDto> lessons = lessonService.findAllDto();

@@ -19,7 +19,6 @@ public class GroupRestController {
         this.groupService = groupService;
     }
 
-
     @GetMapping
     public List<Group> findAll(){
         List<Group> groups = groupService.findAll();

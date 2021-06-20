@@ -1,5 +1,7 @@
 package ua.com.foxminded.university.api.rest_controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -27,10 +29,8 @@ public class RoomRestControllerTest {
     @Autowired
     private TestData testData;
 
-    private static final String jsonRoom = "{\"roomId\": 1, \"roomNumber\": 101, \"roomCapacity\": 10}";
-    private static final String jsonListOfRoom = "[{'roomId': 1, 'roomNumber': 101, 'roomCapacity': 10}," +
-                                                  "{'roomId': 2, 'roomNumber': 102, 'roomCapacity': 10}," +
-                                                  "{'roomId': 3, 'roomNumber': 103, 'roomCapacity': 10}]";
+    private String jsonRoom;
+    private String jsonListOfRoom;
     private Room testRoom;
 
     @Mock
@@ -41,10 +41,15 @@ public class RoomRestControllerTest {
 
     private MockMvc mockMvc;
 
+    public RoomRestControllerTest() throws JsonProcessingException {
+    }
+
     @BeforeEach
-    public void setMocks() {
+    public void setMocks() throws JsonProcessingException {
         mockMvc = MockMvcBuilders.standaloneSetup(roomRestController).build();
         testRoom = testData.getTestRooms().get(0);
+        jsonRoom = new ObjectMapper().writeValueAsString(testData.getTestRooms().get(0));
+        jsonListOfRoom = new ObjectMapper().writeValueAsString(testData.getTestRooms());
     }
 
     @Test
