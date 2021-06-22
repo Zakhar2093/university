@@ -197,6 +197,8 @@ public class LessonService implements GenericService<Lesson, Integer>{
     }
 
     private void validate(Lesson lesson){
+        validateDate(lesson);
+        validateLessonNumber(lesson);
         int roomId = lesson.getRoom() == null ? 0 : lesson.getRoom().getRoomId();
         int groupId = lesson.getGroup() == null ? 0 : lesson.getGroup().getGroupId();
         int teacherId = lesson.getTeacher() == null ? 0 : lesson.getTeacher().getTeacherId();
@@ -219,6 +221,18 @@ public class LessonService implements GenericService<Lesson, Integer>{
         }
         if (!teachers.isEmpty()){
             throw new ValidationException("The teacher has already been busy in another lesson. Please choose another day or lesson number.");
+        }
+    }
+
+    private void validateDate(Lesson lesson){
+        if (lesson.getDate().isBefore(LocalDate.now())){
+            throw new ValidationException("Lesson date can not be past");
+        }
+    }
+
+    private void validateLessonNumber(Lesson lesson){
+        if(lesson.getLessonNumber() > 6 || lesson.getLessonNumber() < 1){
+            throw new ValidationException("Lesson number must be from 1 to 6");
         }
     }
 
