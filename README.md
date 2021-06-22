@@ -25,7 +25,7 @@ The main feature of the application is Class Timetable for students and teachers
 :white_check_mark: Used **PostgreSQL** as main DB and **H2** as test DB;    
 :white_check_mark: Added service layer, exceptions and logging;    
 :white_check_mark: Used **JUnit** and **Mockito** for tests;    
-:white_check_mark: Added UI layer using **Spring MVC, HTML, Bootstrap, Thymeleaf** (It was the most challenging task for me, but I cope with it :muscle:);    
+:white_check_mark: Added UI layer using **Spring MVC, HTML, Bootstrap, Thymeleaf**;    
 :white_check_mark: Rewrote DAO layer using **Hibernate JPA**;    
 :white_check_mark: Added **Spring Boot** support;     
 :white_check_mark: Rewrote DAO layer again using **Spring Data JPA**;    
